@@ -1,21 +1,17 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
-import Galeria from './pages/galeria';
-import Nosotros from './pages/nosotros';
-import Sedes from './pages/sedes';
+import Faq from './pages/Faq';
 
 function App() {
   return (
     <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/galeria" element={<Galeria />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/sedes" element={<Sedes />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/Faq" element={<Faq />} />
+      </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
 export default App
