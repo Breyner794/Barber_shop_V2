@@ -1,0 +1,158 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useBooking } from '../context/BookingContext';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import {BriefcaseBusiness, MapPin, CircleUserRound, CalendarRange, Clock } from 'lucide-react'
+import ProgressBar from "../components/ProgressBar";
+import apiService from '../api/services';
+import Spinner from '../components/Spinner';
+
+// const mockApi_createAppointment = (bookingData) => {
+//   console.log(
+//     "Enviando los siguientes datos a la API para crear la cita:",
+//     bookingData
+//   );
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       // Simulamos un caso de éxito
+//       if (bookingData.clientName.toLowerCase() !== "error") {
+//         console.log("API Responde: Cita creada con éxito.");
+//         resolve({
+//           success: true,
+//           message: "¡Tu cita ha sido confirmada!",
+//           appointmentId: "mock123xyz",
+//         });
+//       } else {
+//         // Simulamos un caso de error
+//         console.log("API Responde: Error al crear la cita.");
+//         reject({
+//           success: false,
+//           message:
+//             "Hubo un error al procesar tu solicitud. Inténtalo de nuevo.",
+//         });
+//       }
+//     }, 1500); // Simula 1.5 segundos de espera
+//   });
+// };
+
+const ConfirmationScreen = () => {
+    const { bookingDetails, resetBooking} = useBooking();
+    const navigate = useNavigate();
+
+    const [clientInfo, setClientInfo] = useState({name: '', phone: '', email: ''});
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    // Redirigir si no hay datos de los pasos anteriores
+    useEffect(()=>{
+        if(!bookingDetails.service || !bookingDetails.site || !bookingDetails.barber || !bookingDetails.date){
+            navigate('/reservar');
+        }
+    }, [bookingDetails, navigate]);
+
+    const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setClientInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleBack = () => navigate(-1);
+
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    setError(null);
+    try{
+
+      const finalBookingData = {
+        serviceId: bookingDetails.service._id,
+        siteId: bookingDetails.site._id,
+        barberId: bookingDetails.barber._id,
+        date: bookingDetails.date,
+        startTime: bookingDetails.startTime,
+        endTime: bookingDetails.endTime,
+        clientName: clientInfo.name,
+        clientPhone: clientInfo.phone,
+        clientEmail: clientInfo.email,
+      };
+
+      console.log("Enviando datos de la reserva a la API:", finalBookingData);
+
+        const response = await apiService.createAppointment(finalBookingData);
+
+        console.log("Respuesta de la API:", response);
+        alert("¡Tu cita ha sido confirmada con éxito!"); // En una app real, mostrarías un modal o una página de éxito
+        resetBooking(); // Limpia el contexto para una nueva reserva
+        navigate('/'); // Envía al usuario a la página de inicio
+
+    }catch (apiError) {
+       // 4. Manejamos cualquier error que la API nos devuelva.
+      console.error("Error al confirmar la reserva:", apiError);
+      setError(apiError.message || "No se pudo crear la cita. Inténtalo de nuevo.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+   // Prevenimos renderizar si los detalles no están listos
+  if (!bookingDetails.service) return null;
+return (
+    <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
+      <div className="max-w-4xl w-full">
+        <h2 className="text-3xl md:text-4xl font-black text-center mb-8">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-white to-red-500">
+            Paso Final: Confirma tus Datos
+          </span>
+        </h2>
+
+        <ProgressBar currentStep={5}/>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Columna del Formulario */}
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold border-l-4 border-red-500 pl-4">Completa tus datos</h3>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">Nombre Completo</label>
+                <input type="text" name="name" id="name" value={clientInfo.name} onChange={handleInputChange} className="w-full bg-gray-800 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"/>
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">Teléfono</label>
+                <input type="tel" name="phone" id="phone" value={clientInfo.phone} onChange={handleInputChange} className="w-full bg-gray-800 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"/>
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">Correo Electrónico (Opcional)</label>
+                <input type="email" name="email" id="email" value={clientInfo.email} onChange={handleInputChange} className="w-full bg-gray-800 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"/>
+              </div>
+            </div>
+          </div>
+
+          {/* Columna del Resumen */}
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold border-l-4 border-blue-500 pl-4">Resumen de tu reserva</h3>
+            <div className="bg-gray-800 p-6 rounded-lg space-y-4">
+              <div className="flex items-center gap-4"><BriefcaseBusiness className="h-6 w-6 text-blue-400"/><span><strong>Servicio:</strong> {bookingDetails.service.name}</span></div>
+              <div className="flex items-center gap-4"><MapPin className="h-6 w-6 text-red-400"/><span><strong>Sede:</strong> {bookingDetails.site.name_site}</span></div>
+              <div className="flex items-center gap-4"><CircleUserRound className="h-6 w-6 text-blue-400"/><span><strong>Barbero:</strong> {bookingDetails.barber.name} {bookingDetails.barber.last_name}</span></div>
+              <div className="flex items-center gap-4"><CalendarRange className="h-6 w-6 text-red-400"/><span><strong>Fecha:</strong> {format(new Date(bookingDetails.date + 'T00:00:00'), "EEEE, d 'de' MMMM", { locale: es })}</span></div>
+              <div className="flex items-center gap-4"><Clock className="h-6 w-6 text-blue-400"/><span><strong>Hora:</strong> {bookingDetails.startTime}</span></div>
+            </div>
+            {error && <p className="text-red-500 text-center font-bold">{error}</p>}
+          </div>
+        </div>
+
+        <div className="mt-10 lg:mt-12 flex flex-col sm:flex-row gap-4">
+          <button onClick={handleBack} className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform border-2 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white">Anterior</button>
+          <button
+            onClick={handleConfirm}
+            disabled={!clientInfo.name || !clientInfo.phone || isLoading}
+            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform bg-gradient-to-r from-blue-600 to-red-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
+          >
+            {isLoading ? <Spinner/> : 'Confirmar Reserva'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ConfirmationScreen;
