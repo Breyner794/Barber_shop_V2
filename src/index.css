@@ -6,3 +6,44 @@ body {
   background-color: rgb(218, 207, 207);
   color: white
 }
+
+/* --- Estilos para la barra de scroll personalizada (para navegadores WebKit como Chrome, Safari, Edge) --- */
+
+/* La barra de scroll horizontal */
+::-webkit-scrollbar {
+  height: 8px; /* Altura de la barra horizontal */
+  width: 8px;  /* Ancho de la barra vertical */
+}
+
+/* El fondo de la barra (el track) */
+::-webkit-scrollbar-track {
+  background: #2d3748; /* Un gris oscuro (bg-gray-800) */
+  border-radius: 10px;
+}
+
+/* El manejador del scroll (el thumb) */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #3b82f6, #ef4444); /* Degradado de azul a rojo */
+  border-radius: 10px;
+}
+
+/* El manejador al pasar el mouse por encima */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to right, #60a5fa, #f87171); /* Versión más clara del degradado */
+}
+
+/* --- Animación para el Spinner --- */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Aplicamos la animación a cualquier elemento con la clase 'spinner' */
+.spinner {
+  animation: spin 1s linear infinite;
+}
