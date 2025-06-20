@@ -175,7 +175,7 @@ function Barbershop() {
                 }}
                 className="text-white hover:text-red-500 transition-colors duration-300 tracking-wide text-sm uppercase"
               >
-                RESERVAS
+                <Link to={'/reservar'}>RESERVAS</Link>
               </a>
               <a
                 href="#servicios"
@@ -300,7 +300,7 @@ function Barbershop() {
                 name: "Reservas",
                 icon: Calendar,
                 color: "text-blue-500",
-                href: "#reservas",
+                href: "/reservar",
               },
               {
                 name: "Nuestros Servicios",
@@ -432,10 +432,10 @@ function Barbershop() {
                   <button className="group relative overflow-hidden bg-gradient-to-r from-blue-600 via-white to-red-500 text-black font-black py-6 px-16 text-xl transition-all duration-500 hover:scale-110 hover:shadow-2xl transform hover:rotate-1">
                     <span className="relative z-10 flex items-center gap-3">
                       <Calendar className="w-6 h-6" />
-                      RESERVAR AHORA
+                      <Link to={'/reservar'}>RESERVAR AHORA</Link>
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-blue-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    {/* <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-blue-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div> */}
                   </button>
                 </div>
               </div>
@@ -1296,6 +1296,3 @@ function Barbershop() {
 }
 
 export default Barbershop;
-
-
-
