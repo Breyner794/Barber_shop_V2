@@ -4,6 +4,7 @@ import { useBooking } from '../context/BookingContext';
 import { CircleCheckBig } from 'lucide-react';
 import ProgressBar from '../components/ProgressBar';
 import apiService from '../api/services'
+import ServiceScreenSkeleton from '../components/Skeleton/ServiceScreenSkeleton';
 import ErrorComponent from '../components/ErrorComponent';
 
 const ServiceScreen = () => {
@@ -19,6 +20,8 @@ const ServiceScreen = () => {
   useEffect(() => {
     const fetchServices = async () => {
       console.log ("Iniciando carga de servicios desde la API...");
+      setIsLoading(true);
+      setError(null);
       try{
         const data = await apiService.getAllServices();
         setServices(data);
@@ -41,15 +44,7 @@ const ServiceScreen = () => {
 
    // --- Renderizado Condicional ---
   if (isLoading) {
-  return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col justify-center items-center">
-      <ProgressBar currentStep={1} />
-      <div className="flex flex-col items-center justify-center flex-grow gap-6">
-        <Spinner /> {/* <-- 2. Usa el componente Spinner */}
-        <p className="text-xl text-gray-300">Cargando servicios...</p>
-      </div>
-    </div>
-  );
+   return <ServiceScreenSkeleton />;
 }
 
   if (error) {
