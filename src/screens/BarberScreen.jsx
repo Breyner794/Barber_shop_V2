@@ -4,6 +4,7 @@ import { useBooking } from "../context/BookingContext";
 import { CircleUserRound, CircleCheckBig } from "lucide-react";
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
+import SkeletonScreenBarber from "../components/Skeleton/BarbersScreenSkeleton";
 import RedirectNotice from "../components/RedirectNotice";
 
 const BarberScreen = () => {
@@ -66,6 +67,13 @@ const BarberScreen = () => {
   const handleBack = () => {
     navigate(-1);
   };
+
+  if (isLoading){
+    return (
+      <SkeletonScreenBarber/>
+    )
+  }
+
 
   // --- Renderizado Condicional ---
   // if (error) {
