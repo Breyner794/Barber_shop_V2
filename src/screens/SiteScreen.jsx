@@ -4,19 +4,7 @@ import { useBooking } from "../context/BookingContext";
 import {MapPin, CircleCheckBig} from "lucide-react"
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
-
-// const mockSites = [
-//     { 
-//     id: 'site1', 
-//     nombre: 'Sede Compartir', 
-//     direccion: 'Cl. 118 #43L-43, Cali, Valle del Cauca' 
-//   },
-//   { 
-//     id: 'site2', 
-//     nombre: 'Sede Vallegrande', 
-//     direccion: 'Cl. 118 #24-12, Cali, Valle del Cauca' 
-//   },
-// ]
+import SiteScreenSkeleton from "../components/Skeleton/SiteScreenSkeleton";
 
 const SiteScreen = () =>{
   
@@ -54,10 +42,7 @@ const SiteScreen = () =>{
     // --- Renderizado Condicional ---
   if (isLoading) {
     return (
-      <div className="bg-gray-900 text-white min-h-screen flex flex-col justify-center items-center">
-        <ProgressBar currentStep={1} />
-        <p className="text-xl mt-8">Cargando servicios...</p>
-      </div>
+      <SiteScreenSkeleton/>
     );
   }
 
