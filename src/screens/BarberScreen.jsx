@@ -150,7 +150,10 @@ const BarberScreen = () => {
           <button
             onClick={handleContinue}
             disabled={!bookingDetails.barber}
-            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform bg-gradient-to-r from-blue-600 to-red-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
+            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
+            bg-gradient-to-r from-blue-600 via-white to-red-600 text-black 
+            hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 
+            disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
           >
             Continuar
           </button>
