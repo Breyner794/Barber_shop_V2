@@ -34,6 +34,7 @@ const BarberScreen = () => {
     );
     }
 
+  useEffect(() => {
     const fetchBarbers = async () => {
       console.log(
         `Iniciando la carga de barberos para la sede: ${bookingDetails.site.name_site}`
