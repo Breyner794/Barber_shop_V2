@@ -18,6 +18,7 @@ const DateTimeScreen = () => {
   const [availableSlots, setAvailableSlots] = useState([]); // Almacena los horarios devueltos por la API
   const [selectedSlot, setSelectedSlot] = useState(null); // Almacena el horario ELEGIDO (ej: {startTime, endTime})
   const [isPageLoading ,setIsPageLoading] = useState(true) //Para recargar toda la pagina y mostrar el skeleton
+  const [isLoading, setIsLoading] = useState(false); // Para mostrar un indicador de carga Spinner
   const [error, setError] = useState(null); // Para mostrar errores
 
   const upcomingDays = useMemo(
@@ -71,7 +72,6 @@ const DateTimeScreen = () => {
             selectedDate
           );
 
-          // La validación clave: nos aseguramos de que lo que recibimos es un arreglo.
           if (Array.isArray(data)) {
             console.log(
               "Datos recibidos y es un arreglo. Actualizando estado:",
@@ -79,12 +79,12 @@ const DateTimeScreen = () => {
             );
             setAvailableSlots(data);
           } else {
-            // Si la API no devuelve un arreglo, lo tratamos como si no hubiera horarios.
+            
             console.warn(
               "La API no devolvió un arreglo de horarios. Se recibió:",
               data
             );
-            setAvailableSlots([]); // Establece un arreglo vacío para mostrar el mensaje correcto.
+            setAvailableSlots([]); 
           }
         } catch (err) {
           console.error("Error al cargar los horarios:", err);
@@ -235,7 +235,10 @@ const DateTimeScreen = () => {
           <button
             onClick={handleContinue}
             disabled={!selectedSlot} // Deshabilitado si no hay FECHA Y HORA seleccionadas
-            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform bg-gradient-to-r from-blue-600 to-red-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
+            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
+            bg-gradient-to-r from-blue-600 via-white to-red-600 text-black 
+            hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 
+            disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
           >
             Continuar
           </button>
