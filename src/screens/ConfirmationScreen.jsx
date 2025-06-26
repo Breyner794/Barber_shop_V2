@@ -10,6 +10,8 @@ import Spinner from '../components/Spinner';
 import ConfirmationScreenSkeleton from '../components/Skeleton/ConfirmationScreenSkeleton';
 import RedirectNotice from '../components/RedirectNotice';
 import Alert from '../components/Alert';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const ConfirmationScreen = () => {
     const { bookingDetails, resetBooking} = useBooking();
@@ -87,13 +89,36 @@ const ConfirmationScreen = () => {
       console.log("Enviando datos de la reserva a la API:", finalBookingData);
 
         const response = await apiService.createAppointment(finalBookingData);
-
-        console.log("Respuesta de la API:", response);
-        alert("¡Tu cita ha sido confirmada con éxito!"); // En una app real, mostrarías un modal o una página de éxito
-        resetBooking(); // Limpia el contexto para una nueva reserva
-        navigate('/'); // Envía al usuario a la página de inicio
-
-    }catch (apiError) {
+        Swal.fire({
+        icon: 'success',
+        title: '<span style="font-size: 24px;">¡Reserva Confirmada!</span>',
+        html: `
+          <div style="text-align: left; margin-top: 20px;">
+            <p style="margin-bottom: 15px;">Gracias, <strong>${response.clientName}</strong>. Tu cita ha sido agendada con éxito.</p>
+            <p style="margin-bottom: 25px;">Usa el siguiente código para consultar tu reserva:</p>
+            
+            <div style="background-color: #1F2937; color: #E5E7EB; padding: 15px; border-radius: 8px; border: 2px dashed #4B5563; text-align: center;">
+              <span style="font-size: 14px; letter-spacing: 1px; display: block; margin-bottom: 5px;">Tu código de confirmación</span>
+              <strong style="font-size: 28px; font-weight: bold; letter-spacing: 4px; color: #60A5FA;">${response.confirmationCode}</strong>
+            </div>
+            
+            <p style="margin-top: 25px; font-size: 14px; color: #9CA3AF;">Recibirás un resumen de tu reserva en tu correo electrónico.</p>
+          </div>
+        `,
+        confirmButtonText: '¡Excelente!',
+        confirmButtonColor: '#2563EB',
+        allowOutsideClick: false, 
+        background: '#111827',
+        color: '#FFFFFF'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          resetBooking();
+          navigate('/reserva-exitosa', { 
+        replace: true, // Para que el usuario no pueda volver a la pantalla de confirmación
+        state: { booking: response } 
+      });
+        }
+      });
        // 4. Manejamos cualquier error que la API nos devuelva.
       console.error("Error al confirmar la reserva:", apiError);
       setError(apiError.message || "No se pudo crear la cita. Inténtalo de nuevo.");
