@@ -21,7 +21,7 @@ const DateTimeScreen = () => {
   const [error, setError] = useState(null); // Para mostrar errores
 
   const upcomingDays = useMemo(
-    () => Array.from({ length: 14 }, (_, i) => addDays(new Date(), i)),
+    () => Array.from({ length: 14 }, (_, i) => addDays(new Date(), i + 1)),
     []
   );
 
