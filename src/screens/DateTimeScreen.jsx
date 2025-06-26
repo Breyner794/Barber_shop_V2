@@ -6,6 +6,7 @@ import { es } from "date-fns/locale";
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import Spinner from "../components/Spinner";
+import InlineError from "../components/InlineError";
 import RedirectNotice from "../components/RedirectNotice";
 
 const DateTimeScreen = () => {
@@ -80,7 +81,7 @@ const DateTimeScreen = () => {
           }
         } catch (err) {
           console.error("Error al cargar los horarios:", err);
-          setError(err.message || "No se pudieron cargar los horarios.");
+          setError(err.message);
         } finally {
           setIsLoading(false);
         }
@@ -101,6 +102,10 @@ const DateTimeScreen = () => {
         startTime: slot.startTime,
         endTime: slot.endTime,
       });
+  };
+
+  const handleRetry = () => {
+    window.location.reload(); // La forma más simple de reintentar.
   };
 
   const handleContinue = () => {
@@ -173,7 +178,9 @@ const DateTimeScreen = () => {
                 </p>
               </div>
             )}
-            {error && <p className="text-center text-red-500">{error}</p>}
+            {error && !isLoading && (
+              <InlineError message={error} onRetry={handleRetry} />
+              )}
             {!isLoading && !error && availableSlots.length > 0 && (
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
                 {availableSlots.map((slot) => (
