@@ -22,7 +22,6 @@ const ConfirmationScreen = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Redirigir si no hay datos de los pasos anteriores
     useEffect(()=>{
       setTimeout(() => {
         setIsPageLoading(false);
@@ -184,11 +183,11 @@ return (
                </p></div>
               ):(
                 <div className="w-full space-y-4">
-              <div className="flex items-center gap-4"><BriefcaseBusiness className="h-6 w-6 text-blue-400"/><span><strong>Servicio:</strong> {bookingDetails.service.name}</span></div>
-              <div className="flex items-center gap-4"><MapPin className="h-6 w-6 text-red-400"/><span><strong>Sede:</strong> {bookingDetails.site.name_site}</span></div>
-              <div className="flex items-center gap-4"><CircleUserRound className="h-6 w-6 text-blue-400"/><span><strong>Barbero:</strong> {bookingDetails.barber.name} {bookingDetails.barber.last_name}</span></div>
-              <div className="flex items-center gap-4"><CalendarRange className="h-6 w-6 text-red-400"/><span><strong>Fecha:</strong> {format(new Date(bookingDetails.date + 'T00:00:00'), "EEEE, d 'de' MMMM", { locale: es })}</span></div>
-              <div className="flex items-center gap-4"><Clock className="h-6 w-6 text-blue-400"/><span><strong>Hora:</strong> {bookingDetails.startTime}</span></div>
+                <div className="flex items-center gap-4"><BriefcaseBusiness className="h-6 w-6 text-blue-400"/><span><strong>Servicio:</strong> {bookingDetails.service.name}</span></div>
+                <div className="flex items-center gap-4"><MapPin className="h-6 w-6 text-red-400"/><span><strong>Sede:</strong> {bookingDetails.site.name_site}</span></div>
+                <div className="flex items-center gap-4"><CircleUserRound className="h-6 w-6 text-blue-400"/><span><strong>Barbero:</strong> {bookingDetails.barber.name} {bookingDetails.barber.last_name}</span></div>
+                <div className="flex items-center gap-4"><CalendarRange className="h-6 w-6 text-red-400"/><span><strong>Fecha:</strong> {format(new Date(bookingDetails.date + 'T00:00:00'), "EEEE, d 'de' MMMM", { locale: es })}</span></div>
+                <div className="flex items-center gap-4"><Clock className="h-6 w-6 text-blue-400"/><span><strong>Hora:</strong> {bookingDetails.startTime}</span></div>
               </div>
             )}
             </div>
