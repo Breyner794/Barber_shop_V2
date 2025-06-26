@@ -119,9 +119,11 @@ const ConfirmationScreen = () => {
       });
         }
       });
+
+    }catch (err) {
        // 4. Manejamos cualquier error que la API nos devuelva.
-      console.error("Error al confirmar la reserva:", apiError);
-      setError(apiError.message || "No se pudo crear la cita. Inténtalo de nuevo.");
+       console.error("Error al confirmar la reserva:", err);
+       setError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -171,11 +173,24 @@ return (
           <div className="space-y-6">
             <h3 className="text-2xl font-bold border-l-4 border-blue-500 pl-4">Resumen de tu reserva</h3>
             <div className="bg-gray-800 p-6 rounded-lg space-y-4">
+              {isLoading ? (
+               <div className="flex flex-col items-center justify-center min-h-[280px] text-center">
+                <Spinner />
+                <p className="mt-4 text-lg font-semibold text-gray-200">
+                Confirmando tu reserva...
+               </p>
+               <p className="mt-1 text-sm text-gray-400">
+                Estamos asegurando tu espacio. ¡Un momento, por favor!
+               </p></div>
+              ):(
+                <div className="w-full space-y-4">
               <div className="flex items-center gap-4"><BriefcaseBusiness className="h-6 w-6 text-blue-400"/><span><strong>Servicio:</strong> {bookingDetails.service.name}</span></div>
               <div className="flex items-center gap-4"><MapPin className="h-6 w-6 text-red-400"/><span><strong>Sede:</strong> {bookingDetails.site.name_site}</span></div>
               <div className="flex items-center gap-4"><CircleUserRound className="h-6 w-6 text-blue-400"/><span><strong>Barbero:</strong> {bookingDetails.barber.name} {bookingDetails.barber.last_name}</span></div>
               <div className="flex items-center gap-4"><CalendarRange className="h-6 w-6 text-red-400"/><span><strong>Fecha:</strong> {format(new Date(bookingDetails.date + 'T00:00:00'), "EEEE, d 'de' MMMM", { locale: es })}</span></div>
               <div className="flex items-center gap-4"><Clock className="h-6 w-6 text-blue-400"/><span><strong>Hora:</strong> {bookingDetails.startTime}</span></div>
+              </div>
+            )}
             </div>
             {error && (
               <Alert 
@@ -188,13 +203,20 @@ return (
         </div>
 
         <div className="mt-10 lg:mt-12 flex flex-col sm:flex-row gap-4">
-          <button onClick={handleBack} className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform border-2 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white">Anterior</button>
+          <button onClick={handleBack} className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
+          border-2 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+          >
+            Anterior
+            </button>
           <button
             onClick={handleConfirm}
             disabled={!clientInfo.name || !clientInfo.phone || isLoading}
-            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform bg-gradient-to-r from-blue-600 to-red-600 text-white hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
+            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
+            bg-gradient-to-r from-blue-600 via-white to-red-600 text-black
+            hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 
+            disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
           >
-            {isLoading ? <Spinner/> : 'Confirmar Reserva'}
+            Confirmar Reserva
           </button>
         </div>
       </div>
