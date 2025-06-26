@@ -54,14 +54,8 @@ const BarberScreen = () => {
     fetchBarbers();
   }, [bookingDetails.site, navigate]);
 
-  // Filtramos los barberos basados en la sede seleccionada en el paso anterior.
-  // const availableBarbers = useMemo(()=>
-  //     barbers.filter(barber => barber.siteId === bookingDetails.site?._id)
-  // );
-
   const handleContinue = () => {
     navigate("/reservar/fecha-hora");
-    //alert('Navegando a la selección de disponibilidad de barbero (aún no implementada)');
   };
 
   const handleBack = () => {
@@ -96,17 +90,11 @@ const BarberScreen = () => {
 
         <ProgressBar currentStep={3} />
 
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center flex-grow gap-6">
-            <Spinner />
-            <p className="text-xl text-gray-300">Cargando servicios...</p>
-          </div>
-        ) : barbers.length > 0 ? (
-          <div className="flex flex-col gap-6">
-            {barbers.map((barber) => {
-              const isSelected = bookingDetails.barber?._id === barber._id;
+        <div className="flex flex-col gap-6">
+          {barbers.map((barber) => {
+            const isSelected = bookingDetails.barber?._id === barber._id;
 
-              const cardClasses = `
+            const cardClasses = `
               relative bg-gray-800 border-2 rounded-lg p-4 cursor-pointer flex items-center gap-4
               transition-all duration-300 ease-in-out transform hover:scale-105
               ${
@@ -115,31 +103,39 @@ const BarberScreen = () => {
                   : "border-gray-700 hover:border-blue-600"
               }
             `;
-
-              return (
-                <div
-                  key={barber._id}
-                  className={cardClasses}
-                  onClick={() => setBarber(barber)}
-                >
-                  <img
-                    src={barber.imageUrl}
-                    alt={barber.name}
-                    className="h-16 w-16 rounded-full object-cover border-2 border-gray-600"
-                  />
-                  <p className="flex-grow text-xl font-bold text-white">
-                    {barber.name}
+            return (
+              <div
+                key={barber._id}
+                className={cardClasses}
+                onClick={() => setBarber(barber)}
+              >
+                <img
+                  src={barber.imageUrl}
+                  alt={barber.name}
+                  className="h-16 w-16 rounded-full object-cover border-2 border-gray-600"
+                />
+                <div className="flex-grow">
+                  <p className=" text-xl font-bold text-white">
+                    {barber.name} {barber.last_name}
                   </p>
-                  {isSelected && (
-                    <CircleCheckBig className="h-8 w-8 text-blue-400" />
-                  )}
+                  <p className=" text-sm text-gray-400">
+                    {barber.site_barber.name_site}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-4">
-            No hay barberos disponibles para esta sede
+                {isSelected && (
+                  <CircleCheckBig className="h-8 w-8 text-blue-400" />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {!isLoading && !error && barbers.length === 0 && (
+          <div className="text-center bg-gray-800 p-6 rounded-lg">
+            <p className="font-bold">
+              No hay barberos disponibles para esta sede
+            </p>
+            <p className="text-gray-400">Por favor, selecciona otra sede.</p>
           </div>
         )}
 
