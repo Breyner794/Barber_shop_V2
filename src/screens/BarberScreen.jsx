@@ -4,14 +4,7 @@ import { useBooking } from "../context/BookingContext";
 import { CircleUserRound, CircleCheckBig } from "lucide-react";
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
-import Spinner from "../components/Spinner";
-
-// const mockBarbers = [
-//   { id: 'barber1', nombre: 'Carlos Gomez', siteId: 'site1', avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1887&auto=format&fit=crop' },
-//   { id: 'barber2', nombre: 'Alejandro Torres', siteId: 'site1', avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1887&auto=format&fit=crop' },
-//   { id: 'barber3', nombre: 'Juan David', siteId: 'site2', avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop' },
-//   { id: 'barber4', nombre: 'Mateo Rendón', siteId: 'site2', avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1887&auto=format&fit=crop' },
-// ];
+import RedirectNotice from "../components/RedirectNotice";
 
 const BarberScreen = () => {
   const [barbers, setBarbers] = useState([]);
@@ -21,10 +14,22 @@ const BarberScreen = () => {
   const { bookingDetails, setBarber } = useBooking();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  if (!bookingDetails.service) {
+    // Si falta el servicio (el primer paso de todos), lo mandamos ahí.
+    return (
+      <RedirectNotice
+        message="Para continuar, primero debes seleccionar un servicio."
+        redirectTo="/reservar"
+      />
+    );
+  }
     if (!bookingDetails.site) {
-      console.log("No hay sede seleccionada, redirigiendo...");
-      navigate("/reservar/sede");
+      return (
+      <RedirectNotice
+        message="Para elegir un barbero, primero debes seleccionar una sede."
+        redirectTo="/reservar/sede"
+      />
+    );
     }
 
     const fetchBarbers = async () => {
