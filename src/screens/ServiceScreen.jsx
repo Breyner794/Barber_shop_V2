@@ -51,7 +51,7 @@ const ServiceScreen = () => {
     return(
     <ErrorComponent message={error} onRetry={handleRetry} />
     )
-  }
+}
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
