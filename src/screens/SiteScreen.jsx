@@ -5,12 +5,22 @@ import {MapPin, CircleCheckBig} from "lucide-react"
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import SiteScreenSkeleton from "../components/Skeleton/SiteScreenSkeleton";
+import RedirectNotice from "../components/RedirectNotice";
 
 const SiteScreen = () =>{
   
     const [sites, setSites] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    if (!bookingDetails.service) {
+      return(
+        <RedirectNotice 
+        message="Para continuar, primero debes seleccionar un servicio."
+        redirectTo="/reservar"
+        />
+        )
+      }
 
     useEffect(()=>{
       const fetchSites = async () =>{
