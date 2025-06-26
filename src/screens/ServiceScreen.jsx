@@ -125,9 +125,9 @@ const ServiceScreen = () => {
             onClick={handleContinue}
             disabled={!bookingDetails.service}
             className="w-full py-4 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
-                       bg-gradient-to-r from-blue-600 to-red-600 text-white
+                       bg-gradient-to-r from-blue-600 via-white to-red-600 text-black
                        hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30
-                       disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
+                       disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
           >
             Continuar
           </button>
