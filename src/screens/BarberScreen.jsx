@@ -6,6 +6,7 @@ import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import SkeletonScreenBarber from "../components/Skeleton/BarbersScreenSkeleton";
 import RedirectNotice from "../components/RedirectNotice";
+import ErrorComponent from "../components/ErrorComponent";
 
 const BarberScreen = () => {
   const [barbers, setBarbers] = useState([]);
@@ -45,8 +46,7 @@ const BarberScreen = () => {
         console.log("Barberos recibidos:", data);
         setBarbers(data);
       } catch (err) {
-        console.error("Error al cargar los barberos:", err);
-        setError(err.message || "No se pudieron cargar los barberos.");
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -74,16 +74,16 @@ const BarberScreen = () => {
     )
   }
 
+  const handleRetry = () => {
+    window.location.reload(); // La forma más simple de reintentar.
+  };
 
   // --- Renderizado Condicional ---
-  // if (error) {
-  //   return (
-  //     <div className="bg-gray-900 text-white min-h-screen flex flex-col justify-center items-center">
-  //       <ProgressBar currentStep={3} />
-  //       <p className="text-red-500 text-xl mt-8">Error: {error}</p>
-  //     </div>
-  //   );
-  // }
+  if (error) {
+    return(
+      <ErrorComponent message={error} onRetry={handleRetry}/>
+    )
+}
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
