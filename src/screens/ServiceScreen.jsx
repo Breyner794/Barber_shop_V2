@@ -4,15 +4,7 @@ import { useBooking } from '../context/BookingContext';
 import { CircleCheckBig } from 'lucide-react';
 import ProgressBar from '../components/ProgressBar';
 import apiService from '../api/services'
-import Spinner from '../components/Spinner';
-
-// Datos de ejemplo actualizados con imágenes
-// const mockServices = [
-//   { id: '1', nombre: 'Corte de Cabello', duracion: 40, precio: 20000, image_Url: '../../public/barba1.jpg' },
-//   { id: '2', nombre: 'Corte y Barba', duracion: 60, precio: 16000, image_Url: '../../public/barba2.jpg' },
-//   { id: '3', nombre: 'Afeitado Clásico', duracion: 40, precio: 18000, image_Url: '../../public/barbero2.jpg' },
-//   { id: '4', nombre: 'Tratamiento Capilar', duracion: 60, precio: 22000, image_Url: '../../public/corteClasico1.jpg' },
-// ];
+import ErrorComponent from '../components/ErrorComponent';
 
 const ServiceScreen = () => {
 
@@ -30,9 +22,8 @@ const ServiceScreen = () => {
       try{
         const data = await apiService.getAllServices();
         setServices(data);
-      }catch (error){
-        console.error("Error al cargar servicios:", err);
-        setError(err.message || "No se pudieron cargar los servicios.");
+      }catch (err){
+        setError(err.message);
       }finally {
         setIsLoading(false);
       }
@@ -40,6 +31,9 @@ const ServiceScreen = () => {
     fetchServices();
   }, []);
 
+  const handleRetry = () => {
+    window.location.reload(); // La forma más simple de reintentar.
+  };
 
   const handleContinue = () => {
     navigate('/reservar/sede');
@@ -59,12 +53,9 @@ const ServiceScreen = () => {
 }
 
   if (error) {
-    return (
-      <div className="bg-gray-900 text-white min-h-screen flex flex-col justify-center items-center">
-        <ProgressBar currentStep={1} />
-        <p className="text-red-500 text-xl mt-8">Error: {error}</p>
-      </div>
-    );
+    return(
+    <ErrorComponent message={error} onRetry={handleRetry} />
+    )
   }
 
   return (
