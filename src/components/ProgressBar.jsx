@@ -22,7 +22,7 @@ const ProgressBar = ({ currentStep, totalSteps = 5}) => {
         {/* Barra de progreso visual */}
         <div className="w-full bg-gray-700 rounded-full h-2">
           <div
-            className="bg-gradient-to-r from-blue-500 to-red-500 rounded-full h-2 transition-all duration-500 ease-out"
+            className="bg-gradient-to-r from-blue-500 via-white to-red-500 rounded-full h-2 transition-all duration-500 ease-out"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
