@@ -33,7 +33,7 @@ const SiteScreen = () =>{
         );
         setIsLoading(true);
         setError(null)
-        try {
+        try {  
           const data = await apiService.getAllSite();
           setSites(data);
         } catch (err) {
@@ -44,9 +44,6 @@ const SiteScreen = () =>{
       };
       fetchSites();
     },[]);
-
-    const { bookingDetails, setSite } = useBooking();
-    const navigate = useNavigate();
 
     const handleContinue = () => {
         navigate('/reservar/barbero');
@@ -71,7 +68,7 @@ const SiteScreen = () =>{
     return(
       <ErrorComponent message={error} onRetry={handleRetry}/>
     )
-  }
+}
 
 return (
     <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
