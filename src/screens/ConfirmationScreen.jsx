@@ -7,34 +7,7 @@ import {BriefcaseBusiness, MapPin, CircleUserRound, CalendarRange, Clock } from 
 import ProgressBar from "../components/ProgressBar";
 import apiService from '../api/services';
 import Spinner from '../components/Spinner';
-
-// const mockApi_createAppointment = (bookingData) => {
-//   console.log(
-//     "Enviando los siguientes datos a la API para crear la cita:",
-//     bookingData
-//   );
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       // Simulamos un caso de éxito
-//       if (bookingData.clientName.toLowerCase() !== "error") {
-//         console.log("API Responde: Cita creada con éxito.");
-//         resolve({
-//           success: true,
-//           message: "¡Tu cita ha sido confirmada!",
-//           appointmentId: "mock123xyz",
-//         });
-//       } else {
-//         // Simulamos un caso de error
-//         console.log("API Responde: Error al crear la cita.");
-//         reject({
-//           success: false,
-//           message:
-//             "Hubo un error al procesar tu solicitud. Inténtalo de nuevo.",
-//         });
-//       }
-//     }, 1500); // Simula 1.5 segundos de espera
-//   });
-// };
+import RedirectNotice from '../components/RedirectNotice';
 
 const ConfirmationScreen = () => {
     const { bookingDetails, resetBooking} = useBooking();
@@ -46,10 +19,39 @@ const ConfirmationScreen = () => {
 
     // Redirigir si no hay datos de los pasos anteriores
     useEffect(()=>{
-        if(!bookingDetails.service || !bookingDetails.site || !bookingDetails.barber || !bookingDetails.date){
-            navigate('/reservar');
+
+    if (!bookingDetails.service) {
+          return (
+            <RedirectNotice
+              message="Primero debes seleccionar un servicio."
+              redirectTo="/reservar"
+            />
+          );
         }
-    }, [bookingDetails, navigate]);
+        if (!bookingDetails.site) {
+          return (
+            <RedirectNotice
+              message="Ahora debes seleccionar una sede para continuar."
+              redirectTo="/reservar/sede"
+            />
+          );
+        }
+        if (!bookingDetails.barber) {
+          return (
+            <RedirectNotice
+              message="Ahora debes seleccionar un barbero para continuar."
+              redirectTo="/reservar/barbero"
+            />
+          );
+        }
+        if(!bookingDetails.date){
+          return (
+            <RedirectNotice 
+              message="Ahora debes de seleccionar una fecha y hora" 
+              redirectTo="/reservar/fecha-hora" 
+            />
+          );
+        };
 
     const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -95,6 +97,7 @@ const ConfirmationScreen = () => {
 
    // Prevenimos renderizar si los detalles no están listos
   if (!bookingDetails.service) return null;
+
 return (
     <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
       <div className="max-w-4xl w-full">
