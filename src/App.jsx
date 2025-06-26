@@ -8,6 +8,7 @@ import BarberScreen from './screens/BarberScreen';
 import DateTimeScreen from './screens/DateTimeScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
 import CheckReservationPage from './pages/CheckReservationPage';
+import BookingSuccess from './screens/BookingSuccess';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/Faq" element={<Faq />} />
         <Route path="/consultar-reserva" element={<CheckReservationPage />} />
+         <Route path="/reserva-exitosa" element={<BookingSuccess />} />
         <Route path="/reservar" element={<ServiceScreen />} />
         <Route path="/reservar/sede" element={<SiteScreen />} />
         <Route path="/reservar/barbero" element={<BarberScreen />} />
