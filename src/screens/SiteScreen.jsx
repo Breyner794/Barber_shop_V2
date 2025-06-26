@@ -14,6 +14,9 @@ const SiteScreen = () =>{
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const { bookingDetails, setSite } = useBooking();
+    const navigate = useNavigate();
+
     if (!bookingDetails.service) {
       return(
         <RedirectNotice 
@@ -25,13 +28,16 @@ const SiteScreen = () =>{
 
     useEffect(()=>{
       const fetchSites = async () =>{
-        console.log('Iniciando carga de las sedes desde la API');
+        console.log(
+          'Iniciando carga de las sedes desde la API'
+        );
+        setIsLoading(true);
+        setError(null)
         try {
           const data = await apiService.getAllSite();
           setSites(data);
-        } catch (error) {
-          console.error("Error al cargar servicios:", err);
-          setError(err.message || "No se pudieron cargar los servicios.");
+        } catch (err) {
+          setError(err.message );
         } finally {
           setIsLoading(false);
         }
@@ -121,9 +127,9 @@ return (
             onClick={handleContinue}
             disabled={!bookingDetails.site}
             className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
-                       bg-gradient-to-r from-blue-600 to-red-600 text-white
+                       bg-gradient-to-r from-blue-600 via-white to-red-600 text-black
                        hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30
-                       disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
+                       disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
           >
             Continuar
           </button>
