@@ -7,6 +7,7 @@ import {BriefcaseBusiness, MapPin, CircleUserRound, CalendarRange, Clock } from 
 import ProgressBar from "../components/ProgressBar";
 import apiService from '../api/services';
 import Spinner from '../components/Spinner';
+import ConfirmationScreenSkeleton from '../components/Skeleton/ConfirmationScreenSkeleton';
 import RedirectNotice from '../components/RedirectNotice';
 import Alert from '../components/Alert';
 
@@ -15,11 +16,16 @@ const ConfirmationScreen = () => {
     const navigate = useNavigate();
 
     const [clientInfo, setClientInfo] = useState({name: '', phone: '', email: ''});
+    const [isPageLoading, setIsPageLoading] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
     // Redirigir si no hay datos de los pasos anteriores
     useEffect(()=>{
+      setTimeout(() => {
+        setIsPageLoading(false);
+      }, 500);
+    },[])
 
     if (!bookingDetails.service) {
           return (
@@ -98,6 +104,12 @@ const ConfirmationScreen = () => {
 
    // Prevenimos renderizar si los detalles no están listos
   if (!bookingDetails.service) return null;
+
+  if(isPageLoading){
+    return(
+      <ConfirmationScreenSkeleton/>
+    )
+  }
 
 return (
     <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
