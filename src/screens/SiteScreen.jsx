@@ -5,6 +5,7 @@ import {MapPin, CircleCheckBig} from "lucide-react"
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import SiteScreenSkeleton from "../components/Skeleton/SiteScreenSkeleton";
+import ErrorComponent from "../components/ErrorComponent";
 import RedirectNotice from "../components/RedirectNotice";
 
 const SiteScreen = () =>{
@@ -44,6 +45,10 @@ const SiteScreen = () =>{
     const handleContinue = () => {
         navigate('/reservar/barbero');
     };
+
+    const handleRetry = () => {
+    window.location.reload(); // La forma más simple de reintentar.
+    };
     
     const handleBack = () =>{
     navigate(-1);
@@ -57,12 +62,9 @@ const SiteScreen = () =>{
   }
 
   if (error) {
-    return (
-      <div className="bg-gray-900 text-white min-h-screen flex flex-col justify-center items-center">
-        <ProgressBar currentStep={1} />
-        <p className="text-red-500 text-xl mt-8">Error: {error}</p>
-      </div>
-    );
+    return(
+      <ErrorComponent message={error} onRetry={handleRetry}/>
+    )
   }
 
 return (
