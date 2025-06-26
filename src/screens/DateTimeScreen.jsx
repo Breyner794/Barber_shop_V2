@@ -6,29 +6,7 @@ import { es } from "date-fns/locale";
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import Spinner from "../components/Spinner";
-
-// const mockApi_getAvailableSlots = (date, barberId) => {
-//     console.log (`Simulando API: Buscando slots para el barbero ${barberId} en la fecha ${date}`);
-//     return new Promise((resolve) =>{
-// // Lógica de ejemplo: Los días pares tienen horarios, los impares no.
-//         setTimeout(() => {
-//           const dayOfMounth = parseInt(date.split('-')[2], 10);
-//           if (dayOfMounth % 2 === 0) {
-//             resolve([
-//               { startTime: "09:00", endTime: "09:45" },
-//               { startTime: "10:00", endTime: "10:45" },
-//               { startTime: "11:00", endTime: "11:45" },
-//               { startTime: "14:00", endTime: "14:45" },
-//               { startTime: "15:00", endTime: "15:45" },
-//               { startTime: "16:00", endTime: "16:45" },
-//             ]);
-//           } else {
-//             // Devuelve un arreglo vacío si no hay horarios
-//             resolve([]);
-//           }
-//         }, 800); // Simula 0.8 segundos de espera de red
-//     });
-// };
+import RedirectNotice from "../components/RedirectNotice";
 
 const DateTimeScreen = () => {
   const { bookingDetails, setTimeSlot } = useBooking();
@@ -45,7 +23,30 @@ const DateTimeScreen = () => {
     []
   );
 
-  // Este efecto se ejecuta CADA VEZ que el usuario selecciona una nueva fecha.
+  if (!bookingDetails.service){
+    return(
+      <RedirectNotice 
+      message="Primero debes seleccionar un servicio." 
+      redirectTo="/reservar" 
+      />
+    );
+  }
+  if (!bookingDetails.site){
+    return(
+      <RedirectNotice 
+      message="Ahora debes seleccionar una sede para continuar." 
+      redirectTo="/reservar/sede" 
+      />
+    );
+  }
+  if (!bookingDetails.barber){
+    return(
+      <RedirectNotice 
+      message="Ahora debes seleccionar un barbero para continuar." 
+      redirectTo="/reservar/barbero" 
+      />
+    );
+  }
 
   useEffect(() => {
     if (selectedDate && bookingDetails.barber) {
