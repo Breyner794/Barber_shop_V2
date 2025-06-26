@@ -8,6 +8,7 @@ import ProgressBar from "../components/ProgressBar";
 import apiService from '../api/services';
 import Spinner from '../components/Spinner';
 import RedirectNotice from '../components/RedirectNotice';
+import Alert from '../components/Alert';
 
 const ConfirmationScreen = () => {
     const { bookingDetails, resetBooking} = useBooking();
@@ -139,7 +140,13 @@ return (
               <div className="flex items-center gap-4"><CalendarRange className="h-6 w-6 text-red-400"/><span><strong>Fecha:</strong> {format(new Date(bookingDetails.date + 'T00:00:00'), "EEEE, d 'de' MMMM", { locale: es })}</span></div>
               <div className="flex items-center gap-4"><Clock className="h-6 w-6 text-blue-400"/><span><strong>Hora:</strong> {bookingDetails.startTime}</span></div>
             </div>
-            {error && <p className="text-red-500 text-center font-bold">{error}</p>}
+            {error && (
+              <Alert 
+                type='error' 
+                message={error} 
+                onClose={() => setError(null)} 
+              />
+            )}
           </div>
         </div>
 
