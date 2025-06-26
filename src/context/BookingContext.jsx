@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext } from "react";
+import React, { createContext, useReducer, useContext, useEffect } from "react";
 
 const initialState = {
   service: null,
@@ -13,6 +13,22 @@ const initialState = {
 };
 
 const BookingContext = createContext (initialState);
+
+// Nombre de la clave para guardar en localStorage
+const BOOKING_STATE_KEY = 'bookingInProgress';
+
+const init = (initialState) => {
+  try{
+
+    const saveBooking = window.localStorage.getItem(BOOKING_STATE_KEY);
+
+    return saveBooking ? JSON.parse(saveBooking): initialState;
+
+  }catch (err){
+    console.error("Error al cargar la reserva desde localStorage", err);
+    return initialState;
+  }
+}
 
 const bookingReducer = (state, action) => {
     switch (action.type) {
@@ -37,6 +53,7 @@ const bookingReducer = (state, action) => {
                                 clientEmail: action.payload.email,
                             }
                             case 'RESET_BOOKING':
+                                window.localStorage.removeItem(BOOKING_STATE_KEY);
                                 return initialState;
                                 default:
                                     return state;
@@ -44,7 +61,15 @@ const bookingReducer = (state, action) => {
 };
 
 export const BookingProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(bookingReducer, initialState);
+    const [state, dispatch] = useReducer(bookingReducer, initialState, init);
+
+    useEffect(()=>{
+      try{
+        window.localStorage.setItem(BOOKING_STATE_KEY, JSON.stringify(state))
+      }catch (err){
+        console.error("Error al guardar la reserva en localStorage", err);
+      }
+    },[state])
 
     const setService = (service) => dispatch({type: 'SET_SERVICE', payload: service});
     const setSite = (site) => dispatch({type: 'SET_SITE', payload: site});
