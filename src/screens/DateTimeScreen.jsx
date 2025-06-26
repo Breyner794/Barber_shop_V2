@@ -6,6 +6,7 @@ import { es } from "date-fns/locale";
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import Spinner from "../components/Spinner";
+import DateTimeScreenSkeleton from "../components/Skeleton/DateTimeScreenSkeleton";
 import InlineError from "../components/InlineError";
 import RedirectNotice from "../components/RedirectNotice";
 
@@ -16,7 +17,7 @@ const DateTimeScreen = () => {
   const [selectedDate, setSelectedDate] = useState(null); // Almacena la fecha ELEGIDA (ej: '2025-06-17')
   const [availableSlots, setAvailableSlots] = useState([]); // Almacena los horarios devueltos por la API
   const [selectedSlot, setSelectedSlot] = useState(null); // Almacena el horario ELEGIDO (ej: {startTime, endTime})
-  const [isLoading, setIsLoading] = useState(false); // Para mostrar un indicador de carga
+  const [isPageLoading ,setIsPageLoading] = useState(true) //Para recargar toda la pagina y mostrar el skeleton
   const [error, setError] = useState(null); // Para mostrar errores
 
   const upcomingDays = useMemo(
@@ -48,6 +49,12 @@ const DateTimeScreen = () => {
       />
     );
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsPageLoading(false);
+    }, 500);
+  }, []);
 
   useEffect(() => {
     if (selectedDate && bookingDetails.barber) {
@@ -116,6 +123,13 @@ const DateTimeScreen = () => {
   const handleBack = () => {
     navigate(-1);
   };
+
+  if (isPageLoading){
+    return (
+      <DateTimeScreenSkeleton/>
+    )
+  }
+
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
       <div className="max-w-4xl w-full">
