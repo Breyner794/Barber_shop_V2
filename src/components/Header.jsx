@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {Menu,X,Scissors,Calendar,Users,MapPin,Camera,Info,Phone,} from "lucide-react";
 
 const Header = () => {
@@ -58,7 +59,7 @@ const Header = () => {
       name: "Reservas",
       icon: Calendar,
       color: "text-blue-500",
-      href: "reservas",
+      href: "/reservar",
     },
     {
       name: "Nuestros Servicios",
@@ -120,10 +121,9 @@ const Header = () => {
                 HOME
               </button>
               <button
-                onClick={() => handleNavigation("reservas")}
                 className="text-white hover:text-red-500 transition-colors duration-300 tracking-wide text-sm uppercase"
               >
-                RESERVAS
+                 <Link to={'/reservar'}>RESERVAR</Link>
               </button>
               <button
                 onClick={() => handleNavigation("servicios")}
