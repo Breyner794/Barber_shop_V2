@@ -9,10 +9,14 @@ import DateTimeScreen from './screens/DateTimeScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
 import CheckReservationPage from './pages/CheckReservationPage';
 import BookingSuccess from './screens/BookingSuccess';
-
+import Dashboard from './pages/Dashboard';
+import { AuthProvider } from './context/AuthContext';
+import LoginPage from './pages/LoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
+    <AuthProvider>
     <BookingProvider>
     <BrowserRouter>
       <Routes>
@@ -26,9 +30,16 @@ function App() {
         <Route path="/reservar/barbero" element={<BarberScreen />} />
         <Route path='/reservar/fecha-hora' element={<DateTimeScreen/>}/>
         <Route path='/reservar/confirmacion' element={<ConfirmationScreen/>}/>
+        <Route path='/login' element={<LoginPage/>}/>
+        <Route path='/dashboard/*' element={
+          <ProtectedRoute>
+          <Dashboard/>
+          </ProtectedRoute>
+          }/>
       </Routes>
     </BrowserRouter>
     </BookingProvider>
+    </AuthProvider>
   );
 }
 
