@@ -7,7 +7,67 @@ const apiClient = axios.create({
     },
 });
 
+apiClient.interceptors.request.use(
+  (config)=>{
+    const token = localStorage.getItem('authToken');
+    if(token){
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+)
+
 const apiService = {
+
+    loginUser: async (credentials) => {
+      try{
+
+        const response = await apiClient.post('/auth/login', credentials);
+
+        if(response.data && response.data.token){
+          localStorage.setItem('authToken', response.data.token);
+          return response.data.data.user;
+        }
+      }catch (error){
+        throw new Error(error.response?.data?.message || 'Login failed');
+      }
+    },
+
+    saveDayAvailability : async (barberId, dayOfWeek, dayData) => {
+      try{
+        const response = await apiClient.post(`availability/barber/${barberId}/day/${dayOfWeek}`, dayData)
+        return response.data;
+      }catch (error){
+        console.error(`Error guardando disponibilidad para el día ${dayOfWeek}:`, error);
+        throw new Error(error.response?.data?.message || 'Could not save schedule for this day.');
+      }
+    },
+
+    fetchMyProfile: async () => {
+      try{
+        const response = await apiClient.get('/user/me');
+        return response.data.data;
+      }catch(error){
+        console.error("Error fetching user profile:", error);
+        // Lanzamos el error para que AuthContext sepa que la sesión no es válida.
+        throw new Error(error.response?.data?.message || 'Invalid session.');
+      }
+    },
+
+    getAllBarbers: async () => {
+      try {
+        // Usamos los query params que tu controlador getAllUser espera
+        const response = await apiClient.get('/user?role=barbero&isActive=true&limit=100');
+        return response.data.data; // Devuelve el array de usuarios
+      } catch (error) {
+        console.error("Error fetching barbers list:", error);
+        throw new Error(error.response?.data?.message || 'Could not fetch barbers.');
+      }
+    },
+
     getAllServices : async () => {
         try{
             const response = await apiClient.get('/services');
@@ -139,6 +199,30 @@ const apiService = {
         throw new Error(
           error.response?.data?.message || "Error al buscar la reserva."
         );
+      }
+    },
+
+    getBarberAvailability: async (barberId) =>{
+      try{
+
+        const response = await apiClient.get(`/availability/barber/${barberId}`);
+        return response.data.data;
+
+      }catch (error){
+        console.error("Error técnico al obtener la disponibilidad del barbero:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
       }
     },
 };
