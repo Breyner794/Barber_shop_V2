@@ -25,13 +25,13 @@ const BarberSelector = ({ barbers, selectedBarber, onSelect, currentUser, isPriv
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <label className="text-sm text-gray-400">Showing availability for</label>
+      <label className="text-sm text-gray-400">Mostrando disponibilidad para</label>
       
       {/* Botón que muestra la selección actual y abre el menú */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={!isPrivileged}
-        className="w-full mt-1 p-3 bg-gray-800/50 border-2 border-gray-700 rounded-xl flex items-center justify-between text-left disabled:opacity-70 disabled:cursor-not-allowed hover:border-blue-500/50 transition-colors"
+        className="w-full mt-1 p-3 bg-gray-800/50 border-2 border-gray-700 rounded-xl flex items-center justify-between text-left disabled:opacity-70 disabled:cursor-not-allowed hover:border-blue-500/50 transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-4">
           <img
@@ -41,7 +41,7 @@ const BarberSelector = ({ barbers, selectedBarber, onSelect, currentUser, isPriv
           />
           <div>
             <p className="font-bold text-lg text-white">{displayUser?.name} {displayUser?.last_name}</p>
-            {!isPrivileged && <p className="text-xs text-gray-400">(Your Schedule)</p>}
+            {!isPrivileged && <p className="text-xs text-gray-400">(Tu horario)</p>}
           </div>
         </div>
         {isPrivileged && (
@@ -58,7 +58,7 @@ const BarberSelector = ({ barbers, selectedBarber, onSelect, currentUser, isPriv
               <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search barber..."
+                placeholder="Buscar peluquer@ ..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-gray-900 text-white pl-9 pr-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -73,14 +73,14 @@ const BarberSelector = ({ barbers, selectedBarber, onSelect, currentUser, isPriv
                 <button
                   key={barber._id}
                   onClick={() => handleSelect(barber)}
-                  className={`w-full text-left p-3 flex items-center gap-3 transition-colors ${selectedBarber?._id === barber._id ? 'bg-blue-600/50' : 'hover:bg-gray-700/50'}`}
+                  className={`w-full text-left p-3 flex items-center cursor-pointer gap-3 transition-colors ${selectedBarber?._id === barber._id ? 'bg-blue-600/50' : 'hover:bg-gray-700/50'}`}
                 >
                   <img src={barber.imageUrl} alt={barber.name} className="w-8 h-8 rounded-full object-cover" />
                   <span>{barber.name} {barber.last_name}</span>
                 </button>
               ))
             ) : (
-              <p className="text-center text-gray-400 text-sm p-4">No barbers found.</p>
+              <p className="text-center text-gray-400 text-sm p-4">No se encontraron peluquer@s.</p>
             )}
           </div>
         </div>
