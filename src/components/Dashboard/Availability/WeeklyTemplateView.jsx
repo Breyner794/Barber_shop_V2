@@ -6,6 +6,7 @@ import {
   Copy,
   AlertTriangle,
   LoaderCircle,
+  Save
 } from "lucide-react";
 
 const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
@@ -19,13 +20,13 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
   }, [initialSchedule]);
   
   const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
   ];
 
   if (!schedule) {
@@ -93,10 +94,10 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
     <div className="bg-gray-800/50 border border-gray-700 rounded-2xl w-full h-full flex flex-col">
       <div className="p-5 border-b border-gray-700">
         <h3 className="text-xl font-bold text-white">
-          Weekly Recurring Template
+          Plantilla recurrente semanal
         </h3>
         <p className="text-sm text-gray-400">
-          Set the default working hours for all future weeks.
+          Establezca el horario laboral predeterminado para las próximas semanas.
         </p>
       </div>
 
@@ -107,7 +108,7 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
             <button
               key={index}
               onClick={() => setActiveDay(index)}
-              className={`w-full text-left p-3 rounded-lg transition-colors flex justify-between items-center ${
+              className={`w-full text-left p-3 rounded-lg cursor-pointer transition-colors flex justify-between items-center ${
                 activeDay === index
                   ? "bg-blue-600/80 text-white"
                   : "hover:bg-gray-700/50"
@@ -122,8 +123,8 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                 }`}
               >
                 {schedule[index].isWorkingDay
-                  ? `${schedule[index].timeSlots.length} slots`
-                  : "Day Off"}
+                  ? `${schedule[index].timeSlots.length} franjas horarias`
+                  : "Día libre"}
               </span>
             </button>
           ))}
@@ -133,7 +134,7 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
         <div className="w-full md:w-2/3 p-5 overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
             <h4 className="text-lg font-bold text-white">
-              Editing: {daysOfWeek[activeDay]}
+              Edición: {daysOfWeek[activeDay]}
             </h4>
             <div className="flex items-center gap-2">
               <span
@@ -141,11 +142,11 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                   activeDayData.isWorkingDay ? "text-white" : "text-gray-500"
                 }`}
               >
-                Working Day
+                Día laborable
               </span>
               <button
                 onClick={handleToggleWorkingDay}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
                   activeDayData.isWorkingDay ? "bg-green-500" : "bg-gray-600"
                 }`}
               >
@@ -174,7 +175,7 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                   </div>
                   <button
                     onClick={() => handleRemoveTimeSlot(i)}
-                    className="p-1 text-red-500 hover:text-red-400"
+                    className="p-1 text-red-500 hover:text-red-400 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -182,16 +183,16 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
               ))}
               {activeDayData.timeSlots.length === 0 && (
                 <p className="text-center text-gray-500 py-4">
-                  No time slots added yet.
+                  Aún no se han añadido franjas horarias.
                 </p>
               )}
               <div className="border-t border-gray-700 pt-4 space-y-2">
                 <h5 className="text-sm font-semibold text-white">
-                  Add new slot:
+                 Añadir nueva franja horaria:
                 </h5>
 
                 {error && (
-                  <div className="p-2 rounded-md bg-red-500/10 text-red-400 text-xs flex items-center gap-2">
+                  <div className="p-2 rounded-md bg-red-500/10 text-red-400 text-sm flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4" /> {error}
                   </div>
                 )}
@@ -199,7 +200,7 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                 <div className="flex flex-col sm:flex-row gap-2 sm:items-end">
                   <div className="flex-1">
                     <label className="block text-xs text-gray-400 mb-1">
-                      Start:
+                      Inicio:
                     </label>
                     <input
                       type="time"
@@ -210,12 +211,12 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                           startTime: e.target.value,
                         })
                       }
-                      className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md"
+                      className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer"
                     />
                   </div>
                   <div className="flex-1">
                     <label className="block text-xs text-gray-400 mb-1">
-                      End:
+                      Fin:
                     </label>
                     <input
                       type="time"
@@ -223,12 +224,12 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                       onChange={(e) =>
                         setNewTimeSlot({ ...newTimeSlot, endTime: e.target.value })
                       }
-                      className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md"
+                      className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer"
                     />
                   </div>
                   <button
                     onClick={handleAddTimeSlot}
-                    className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md sm:w-auto w-full justify-center flex"
+                    className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md sm:w-auto w-full justify-center flex cursor-pointer"
                   >
                     <Plus className="w-5 h-5" />
                   </button>
@@ -239,9 +240,10 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                   <Copy className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <select
                     onChange={handleCopySchedule}
-                    className="w-full appearance-none pl-9 p-2 bg-gray-700 text-sm rounded-md border border-gray-600 focus:ring-1 focus:ring-blue-500"
+                    className="w-full appearance-none pl-9 p-2 bg-gray-700 text-sm rounded-md 
+                    border border-gray-600 focus:ring-1 focus:ring-blue-500 cursor-pointer"
                   >
-                    <option value="">Copy schedule from...</option>
+                    <option value="">Copiar horario de...</option>
                     {[1, 2, 3, 4, 5, 6, 0].map(
                       (i) =>
                         activeDay !== i && (
@@ -256,9 +258,9 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
             </div>
           ) : (
             <div className="text-center py-16 text-gray-500">
-              <p className="font-bold">This is a day off.</p>
+              <p className="font-bold">Este es un día libre.</p>
               <p className="text-sm mt-1">
-                Enable "Working Day" to add availability.
+                Habilite “Día laborable” para agregar disponibilidad.
               </p>
             </div>
           )}
@@ -268,13 +270,15 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
         <button
           onClick={() => onSave(schedule)}
           disabled={isSaving}
-          className="px-8 py-2 w-40 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold flex items-center justify-center disabled:bg-gray-500 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 font-bold py-2 px-4 rounded-lg transition-colors 
+          cursor-pointer bg-green-600 hover:bg-green-700 text-white"
         >
           {isSaving ? (
-            <LoaderCircle className="animate-spin" />
+             <Clock className="w-5 h-5 animate-spin" />
           ) : (
-            "Save Template"
+             <Save className="w-5 h-5" />
           )}
+          {isSaving ? "Guardando..." : "Guardar plantilla"}
         </button>
       </div>
     </div>
