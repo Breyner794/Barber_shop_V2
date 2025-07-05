@@ -7,10 +7,12 @@ import {
   ListChecks,
   Calendar,
   Settings,
+  RefreshCw
 } from "lucide-react";
 import WeeklyTemplateView from "../../components/Dashboard/Availability/WeeklyTemplateView.jsx";
 import CalendarAndExceptionsView from "../../components/Dashboard/Availability/CalendarAndExceptionsView";
 import BarberSelector from "../../components/Dashboard/Availability/BarberSelector.jsx";
+import Swal from "sweetalert2";
 
 const AvailabilityModule = () => {
   //const { users } = mockData;
@@ -24,26 +26,7 @@ const AvailabilityModule = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
-
-  // useEffect(()=>{
-  //   if(currentUser){
-  //     setSelectedBarberId(currentUser._id);
-  //   }
-  // },[currentUser]);
-
-  // useEffect(()=>{
-  //   const loadBarbers = async () =>{
-  //     if(privilegedRoles.includes(currentUser?.role)){
-  //       try{
-  //         const barbers = await apiService.getAllBarbers();
-  //         setBarbersList(barbers)
-  //       }catch (error){
-  //         console.error("Failed to load barbers list for admin view.", error);
-  //       }
-  //     }
-  //   };
-  //   loadBarbers();
-  // }, [currentUser]);
+  const [retryTrigger, setRetryTrigger] = useState(0);
 
   useEffect(() => {
     if (!currentUser) return; // Esperamos a que currentUser exista
@@ -51,39 +34,43 @@ const AvailabilityModule = () => {
     const privilegedRoles = ["admin", "superadmin"];
     const isPrivileged = privilegedRoles.includes(currentUser?.role);
 
-    if (isPrivileged) {
       const loadBarbers = async () => {
         setIsLoading(true);
+        setError(null);
         try {
-          const barbers = await apiService.getAllBarbers();
-          setBarbersList(barbers);
-          
-          if (barbers.length > 0) {
-            // Por defecto, seleccionamos el primer barbero de la lista
-            setSelectedBarberId(barbers[0]._id);
+          if (isPrivileged) {
+            const barbers = await apiService.getAllBarbers();
+            setBarbersList(barbers);
+
+            if (barbers.length > 0) {
+              // Por defecto, seleccionamos el primer barbero de la lista
+              setSelectedBarberId(barbers[0]._id);
+            } else {
+              setHasNoAvailability(true);
+            }
           } else {
-            setHasNoAvailability(true);
-            setIsLoading(false);
+            // Si no es un usuario privilegiado, es un barbero normal.
+            // Establecemos el ID a sí mismo y la lista de barberos vacía.
+            setBarbersList([]);
+            setSelectedBarberId(currentUser._id);
           }
         } catch (err) {
-          setError("Failed to load barbers list.");
+          setError("Error al cargar la lista de barberos.");
+          setBarbersList([]);
+        } finally {
           setIsLoading(false);
         }
       };
       loadBarbers();
-    } else {
-      // Si no es un usuario privilegiado, es un barbero normal.
-      // Establecemos el ID a sí mismo y la lista de barberos vacía.
-      setBarbersList([]);
-      setSelectedBarberId(currentUser._id);
-    }
-  }, [currentUser]);
+    }, [currentUser, retryTrigger]);
 
   useEffect(() => {
     if (!selectedBarberId) {
-      if(!isLoading) setIsLoading(true);
+      if(!isLoading && !error){
       const timer = setTimeout(() => setIsLoading(false), 500);
       return () => clearTimeout(timer);
+      };
+      return;
     }
 
     const fetchAvailability = async () => {
@@ -97,7 +84,7 @@ const AvailabilityModule = () => {
           selectedBarberId
         );
         if (!availabilityData) {
-          throw new Error("API did not return data.");
+          throw new Error("La API no devolvió datos de disponibilidad.");
         }
         if (availabilityData.length === 0) {
           setHasNoAvailability(true);
@@ -117,20 +104,26 @@ const AvailabilityModule = () => {
           setOriginalSchedule(scheduleObject);
         }
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "Error al cargar la disponibilidad. Intenta de nuevo.");
       } finally {
         setIsLoading(false);
       }
     };
     fetchAvailability();
-  }, [selectedBarberId]);
+  }, [selectedBarberId, retryTrigger]);
+
+  const handleRetry = () => {
+    setError(null); // Limpiar el error actual
+    setIsLoading(true); // Mostrar el loader mientras reintenta
+    setRetryTrigger(prev => prev + 1); // Incrementa para re-ejecutar los useEffects
+  };
 
   const handleSaveSchedule = async (editedSchedule) => {
     setIsSaving(true);
     setError(null);
 
     if (!originalSchedule) {
-      setError("Cannot save, original schedule not loaded.");
+      setError("No se puede guardar, el cronograma original no se cargó.");
       setIsSaving(false);
       return;
     }
@@ -158,9 +151,39 @@ const AvailabilityModule = () => {
       await Promise.all(promises);
       setWeeklySchedule(editedSchedule);
       setOriginalSchedule(editedSchedule);
-      //Implementar un pop-up
+
+      await Swal.fire({
+              icon: "success",
+              title: "Los Cambios Se Aplicaron Exitosamente",
+              showConfirmButton: false,
+              timer: 1500,
+              customClass: {
+                popup: "swal2-dark-mode",
+                title: "text-white",
+                htmlContainer: "text-gray-300",
+                confirmButton: "px-4 py-2 rounded-lg text-sm font-semibold",
+              },
+              background: "#1F2937",
+              color: "#E5E7EB",
+            });
+
     } catch (err) {
-      setError(err.message || "An error occurred while saving.");
+      console.error(err.message || "Se produjo un error al guardar.");
+      Swal.fire({
+              title: "¡Error!", // Puedes hacer el título más expresivo
+              text: `No se pudo guardar la plantilla de la disponibilidad. Detalles: ${err.message || err}`,
+              icon: "error", // El icono de error rojo por defecto
+              confirmButtonText: "Entendido", // Un texto de botón más amigable
+              confirmButtonColor: "#2563EB", // Un color de botón azul (blue-600 de Tailwind)
+              customClass: {
+                popup: "swal2-dark-mode", // Clase personalizada para tu modo oscuro global (si la tienes definida)
+                title: "text-white", // Título blanco para contrastar con el fondo oscuro
+                htmlContainer: "text-gray-300", // Texto del mensaje en gris claro
+                confirmButton: "px-4 py-2 rounded-lg text-sm font-semibold", // Estilos para el botón de confirmar
+              },
+              background: "#1F2937", // Fondo oscuro (gray-800 de Tailwind)
+              color: "#E5E7EB", // Color del texto principal (gray-200 de Tailwind)
+            });
     } finally {
       setIsSaving(false);
     }
@@ -200,34 +223,34 @@ const AvailabilityModule = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
         <h2 className="text-3xl md:text-4xl font-black text-white text-center sm:text-left">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-sky-400">
-            Availability
+            Gestión de Disponibilidad
           </span>
         </h2>
         <div className="flex items-center gap-2 p-1 rounded-lg bg-gray-800 border border-gray-700">
           <button
             onClick={() => setViewMode("weekly")}
-            className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors cursor-pointer ${
               viewMode === "weekly"
                 ? "bg-blue-600 text-white"
                 : "text-gray-400 hover:bg-gray-700"
             }`}
           >
-            <ListChecks className="w-5 h-5 inline mr-2" /> Weekly Template
+            <ListChecks className="w-5 h-5 inline mr-2" /> Plantilla semanal
           </button>
           <button
             onClick={() => setViewMode("calendar")}
-            className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors cursor-pointer ${
               viewMode === "calendar"
                 ? "bg-blue-600 text-white"
                 : "text-gray-400 hover:bg-gray-700"
             }`}
           >
-            <Calendar className="w-5 h-5 inline mr-2" /> Daily Exceptions
+            <Calendar className="w-5 h-5 inline mr-2 " /> Excepciones diarias
           </button>
         </div>
       </div>
 
-        <div className="mb-6">
+      <div className="mb-6">
         <BarberSelector
           barbers={barbersList}
           selectedBarber={selectedBarberObject}
@@ -236,26 +259,38 @@ const AvailabilityModule = () => {
           isPrivileged={isPrivilegedUser}
         />
       </div>
-     
 
-      {/* --- ESTRUCTURA DE RENDERIZADO CORREGIDA --- */}
       <div className="min-h-[60vh] flex flex-col justify-center">
-        {isLoading ? (
+        {error ? (
+          <div className="flex w-full flex-col items-center justify-center bg-red-500/10 p-30 rounded-2xl text-center">
+            <AlertTriangle className="w-12 h-12 text-red-400 mb-4" />
+            <p className="text-xl font-bold text-red-400">
+              ¡Oops! Algo salió mal
+            </p>
+            <p className="mt-2 text-gray-300">{error}</p>
+            <button
+              onClick={handleRetry}
+              className="mt-6 px-6 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-semibold flex items-center gap-2 cursor-pointer"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Reintentar
+            </button>
+          </div>
+        ) : isLoading ? (
           <div className="flex w-full items-center justify-center">
             <LoaderCircle className="w-12 h-12 text-blue-500 animate-spin" />
             <p className="ml-4 text-xl text-gray-400">
-              Loading Availability...
+              Cargando disponibilidad...
             </p>
           </div>
         ) : hasNoAvailability ? (
           <div className="flex w-full flex-col items-center justify-center text-center bg-gray-800/50 p-8 rounded-2xl border border-dashed border-gray-700">
             <Calendar className="w-16 h-16 text-sky-400" />
             <h3 className="mt-4 text-2xl font-bold text-white">
-              No Schedule Found
+              No se encontró horario
             </h3>
             <p className="mt-2 max-w-md text-gray-400">
-              The selected barber has not yet configured their weekly recurring
-              availability.
+              El barbero seleccionado aún no ha configurado su disponibilidad semanal recurrente.
             </p>
             <button
               onClick={() => {
@@ -273,7 +308,7 @@ const AvailabilityModule = () => {
               className="mt-6 px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold flex items-center gap-2"
             >
               <Settings className="w-4 h-4" />
-              Set Up Schedule Now
+              Configurar horario ahora
             </button>
           </div>
         ) : weeklySchedule ? (
@@ -282,7 +317,7 @@ const AvailabilityModule = () => {
               <div className="flex w-full flex-col items-center justify-center bg-red-500/10 p-8 rounded-2xl">
                 <AlertTriangle className="w-12 h-12 text-red-400" />
                 <p className="mt-4 text-xl font-bold text-red-400">
-                  An Error Occurred
+                  Se produjo un error
                 </p>
                 <p className="mt-2 text-gray-300">{error}</p>
               </div>
@@ -301,7 +336,7 @@ const AvailabilityModule = () => {
               ) : (
                 <CalendarAndExceptionsView
                   weeklySchedule={weeklySchedule}
-                  onExceptionSave={() => {}}
+                  selectedBarberId={selectedBarberId}
                 />
               ))}
           </>
