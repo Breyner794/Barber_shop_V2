@@ -41,8 +41,18 @@ const apiService = {
         const response = await apiClient.post(`availability/barber/${barberId}/day/${dayOfWeek}`, dayData)
         return response.data;
       }catch (error){
-        console.error(`Error guardando disponibilidad para el día ${dayOfWeek}:`, error);
-        throw new Error(error.response?.data?.message || 'Could not save schedule for this day.');
+
+          console.error("Error técnico al guardar la plantilla semanal:", error);
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor.";
+          }
+          throw new Error(userFriendlyMessage);
       }
     },
 
@@ -51,9 +61,9 @@ const apiService = {
         const response = await apiClient.get('/user/me');
         return response.data.data;
       }catch(error){
-        console.error("Error fetching user profile:", error);
+        console.error("Error al obtener el perfil de usuario:", error);
         // Lanzamos el error para que AuthContext sepa que la sesión no es válida.
-        throw new Error(error.response?.data?.message || 'Invalid session.');
+        throw new Error(error.response?.data?.message || 'Sesión no válida.');
       }
     },
 
@@ -225,6 +235,83 @@ const apiService = {
           throw new Error(userFriendlyMessage);
       }
     },
-};
+
+    /*Esta Api traera las disponibilidades excepcionales.*/
+    getAvailabilityExceptions: async (barberId, date) => {
+      try{
+        const response = await apiClient.get(`availability/exceptions/barber/${barberId}/${date}`);
+        return response.data.data;
+      }catch (error){
+        console.error("Error técnico al obtener la disponibilidad excepcionales del barbero:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    saveBarberExceptionForDate: async (barberId, date, timeSlots, isWorkingDay) => {
+      try{
+
+        const response = await apiClient.post('/availability/exceptions',{
+          barberId,
+          date,
+          timeSlots,
+          isWorkingDay,
+        });
+
+        return response.data;
+
+      }catch (error) {
+        console.error("Error técnico al obtener la disponibilidad excepcionales del barbero:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    deleteBarberExceptionForDate : async (barberId, date) =>{
+      try{
+        const response = await apiClient.delete(`/availability/exceptions/delete/barber/${barberId}/date/${date}`);
+
+      return response.data;
+      }catch (error){
+          console.error("Error técnico al obtener la disponibilidad excepcionales del barbero:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+  
+  };
 
 export default apiService;
