@@ -9,6 +9,8 @@ import Spinner from "../components/Spinner";
 import DateTimeScreenSkeleton from "../components/Skeleton/DateTimeScreenSkeleton";
 import InlineError from "../components/InlineError";
 import RedirectNotice from "../components/RedirectNotice";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const DateTimeScreen = () => {
   const { bookingDetails, setTimeSlot } = useBooking();
@@ -131,119 +133,139 @@ const DateTimeScreen = () => {
   }
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
-      <div className="max-w-4xl w-full">
-        <h2 className="text-3xl md:text-4xl font-black text-center mb-4">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-white to-red-500">
-            Paso 4: Elige Fecha y Hora
-          </span>
-        </h2>
+    <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col">
+      <Header />
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-black text-center mb-4">
+            <span className="text-transparent bg-clip-text bg-white">
+              Paso 4: Elige Fecha y Hora
+            </span>
+          </h2>
 
-        <ProgressBar currentStep={4} />
+          <ProgressBar currentStep={4} />
 
-        {/* Sección de Selección de Fecha */}
-        <div className="mb-8">
-          <p className="font-bold mb-4 text-lg">Selecciona una fecha:</p>
-          <div className="flex overflow-x-auto space-x-4 pb-4">
-            {upcomingDays.map((day) => {
-              const dayString = format(day, "yyyy-MM-dd");
-              const isSelected = selectedDate === dayString;
-              return (
-                <button
-                  key={dayString}
-                  onClick={() => handleSelectDate(day)}
-                  className={`flex-shrink-0 text-center p-4 rounded-lg w-24 transition-all duration-200
+          {/* Sección de Selección de Fecha */}
+          <div className="mb-8">
+            <p className="font-bold mb-4 text-lg">Selecciona una fecha:</p>
+            <div
+              className="flex overflow-x-auto space-x-4 pb-4
+              scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-blue-500
+              hover:scrollbar-thumb-blue-400 scrollbar-thumb-rounded-full"
+            >
+              {upcomingDays.map((day) => {
+                const dayString = format(day, "yyyy-MM-dd");
+                const isSelected = selectedDate === dayString;
+                return (
+                  <button
+                    key={dayString}
+                    onClick={() => handleSelectDate(day)}
+                    className={`flex-shrink-0 text-center p-4 rounded-lg w-24 transition-all duration-200
                               ${
                                 isSelected
-                                  ? "bg-blue-600 text-white scale-105"
-                                  : "bg-gray-800 hover:bg-gray-700"
+                                  ? "bg-blue-200/30 text-white scale-105"
+                                  : "bg-black/50 hover:bg-gray-700"
                               }`}
-                >
-                  <p className="font-bold text-sm capitalize">
-                    {format(day, "EEE", { locale: es })}
-                  </p>
-                  <p className="font-black text-2xl">{format(day, "d")}</p>
-                  <p className="text-xs capitalize">
-                    {format(day, "MMM", { locale: es })}
-                  </p>
-                </button>
-              );
-            })}
+                  >
+                    <p className="font-bold text-sm capitalize">
+                      {format(day, "EEE", { locale: es })}
+                    </p>
+                    <p className="font-black text-2xl">{format(day, "d")}</p>
+                    <p className="text-xs capitalize">
+                      {format(day, "MMM", { locale: es })}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Sección de Selección de Hora */}
-        {selectedDate && (
-          <div>
-            <p className="font-bold mb-4 text-lg">
-              Horarios disponibles para el{" "}
-              {format(
-                new Date(selectedDate + "T00:00:00"),
-                "eeee, d 'de' MMMM",
-                { locale: es }
+          {/* Sección de Selección de Hora */}
+          {selectedDate && (
+            <div>
+              <p className="font-bold mb-4 text-lg">
+                Horarios disponibles para el{" "}
+                {format(
+                  new Date(selectedDate + "T00:00:00"),
+                  "eeee, d 'de' MMMM",
+                  { locale: es }
+                )}
+                :
+              </p>
+              {isLoading && (
+                <div className="flex flex-col items-center justify-center flex-grow gap-6">
+                  <Spinner />
+                  <p className="text-center text-gray-400">
+                    Buscando horarios...
+                  </p>
+                </div>
               )}
-              :
-            </p>
-            {isLoading && (
-              <div className="flex flex-col items-center justify-center flex-grow gap-6">
-                <Spinner />
-                <p className="text-center text-gray-400">
-                  Buscando horarios...
-                </p>
-              </div>
-            )}
-            {error && !isLoading && (
-              <InlineError message={error} onRetry={handleRetry} />
+              {error && !isLoading && (
+                <InlineError message={error} onRetry={handleRetry} />
               )}
-            {!isLoading && !error && availableSlots.length > 0 && (
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                {availableSlots.map((slot) => (
-                  <button
-                    key={slot.startTime}
-                    onClick={() => handleSelectSlot(slot)}
-                    className={`p-3 rounded-lg text-center font-bold transition-all duration-200
+              {!isLoading && !error && availableSlots.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
+                  {availableSlots.map((slot) => (
+                    <button
+                      key={slot.startTime}
+                      onClick={() => handleSelectSlot(slot)}
+                      className={`p-3 rounded-lg text-center font-bold transition-all duration-200
                                 ${
                                   selectedSlot?.startTime === slot.startTime
-                                    ? "bg-gradient-to-r from-blue-600 to-red-600 scale-105"
-                                    : "bg-gray-800 hover:bg-gray-700"
+                                    ? "bg-blue-200/30 text-white scale-105"
+                                    : "bg-black/50  hover:bg-gray-700"
                                 }`}
-                  >
-                    {slot.startTime}
-                  </button>
-                ))}
-              </div>
-            )}
-            {!isLoading && !error && availableSlots.length === 0 && (
-              <div className="text-center bg-gray-800 p-6 rounded-lg">
-                <p className="font-bold">No hay horarios disponibles</p>
-                <p className="text-gray-400">
-                  Por favor, selecciona otra fecha.
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+                    >
+                      {slot.startTime}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {!isLoading && !error && availableSlots.length === 0 && (
+                <div className="text-center bg-gray-800 p-6 rounded-lg">
+                  <p className="font-bold">No hay horarios disponibles</p>
+                  <p className="text-gray-400">
+                    Por favor, selecciona otra fecha.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
-        {/* Footer con botones */}
-        <div className="mt-10 lg:mt-12 flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={handleBack}
-            className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform border-2 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
-          >
-            Anterior
-          </button>
-          <button
-            onClick={handleContinue}
-            disabled={!selectedSlot} // Deshabilitado si no hay FECHA Y HORA seleccionadas
-            className="w-full sm:w-2/3 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
-            bg-gradient-to-r from-blue-600 via-white to-red-600 text-black 
-            hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30 
-            disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none"
-          >
-            Continuar
-          </button>
+          <div className="mt-10 lg:mt-12 flex flex-col sm:flex-row gap-4">
+            {/* Botón Anterior */}
+            <button
+              onClick={handleBack}
+              className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
+               border-2 border-gray-400 text-gray-300 bg-transparent
+               hover:bg-white hover:text-black hover:border-gray-300
+               transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            >
+              Anterior
+            </button>
+
+            {/* Botón Continuar */}
+            <button
+              onClick={handleContinue}
+              disabled={!bookingDetails.service}
+              className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
+               transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden
+               disabled:bg-gray-500 disabled:cursor-not-allowed disabled:hover:shadow-none"
+            >
+              <span className="relative z-10 group-hover:text-black transition-colors duration-500">
+                Continuar
+              </span>
+              {/* Gradiente en hover */}
+              <div
+                className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 via-white to-red-600 
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out
+                    disabled:group-hover:opacity-0"
+              ></div>
+            </button>
+          </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

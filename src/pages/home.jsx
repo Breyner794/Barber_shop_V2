@@ -87,7 +87,7 @@ function Barbershop() {
 
                 {/* Botón de acción */}
                 <div className="pt-6 mt-6">
-                  <button className="group relative overflow-hidden bg-red-600 text-white font-extrabold py-5 px-14 text-xl rounded-3xl transition-all duration-500 hover:scale-105 hover:shadow-xl  focus:outline-none">
+                  <button className="group relative overflow-hidden bg-red-600 text-white font-extrabold py-5 px-14 text-xl rounded-2xl transition-all duration-500 hover:scale-105 hover:shadow-xl  focus:outline-none">
                     <span className="relative z-10 flex items-center gap-3 group-hover:text-black transition-color duration-500">
                       <Calendar className="w-6 h-6" />
                       <Link to={'/reservar'}>RESERVAR AHORA</Link>
@@ -159,7 +159,7 @@ function Barbershop() {
 
               {/* Valores adicionales */}
               <div className="grid sm:grid-cols-3 gap-6 mt-12">
-                <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm">
+                <div className="text-center p-4 bg-white/6 rounded-lg backdrop-blur-sm">
                   <div className="text-3xl font-bold text-blue-500 mb-2">
                     10+
                   </div>
@@ -167,7 +167,7 @@ function Barbershop() {
                     Años de Experiencia
                   </div>
                 </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg backdrop-blur-sm">
+                <div className="text-center p-4 bg-white/6 rounded-lg backdrop-blur-sm">
                   <div className="text-3xl font-bold text-red-500 mb-2">
                     100%
                   </div>
@@ -175,7 +175,7 @@ function Barbershop() {
                     Servicios personalizados
                   </div>
                 </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg backdrop-blur-sm">
+                <div className="text-center p-4 bg-white/6 rounded-lg backdrop-blur-sm">
                   <div className="text-3xl font-bold text-yellow-400 mb-2">
                     2
                   </div>
