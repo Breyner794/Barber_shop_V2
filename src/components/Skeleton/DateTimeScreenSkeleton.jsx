@@ -1,18 +1,20 @@
-// src/components/DateTimeScreenSkeleton.jsx
 import React from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
 import ProgressBar from "../ProgressBar";
 import SkeletonDateButton from "./SkeletonDateButton";
 import SkeletonTimeSlot from "./SkeletonTimeSlot";
 import SkeletonButtonGroup from "./SkeletonButtonGroup";
+import Footer from "../Footer";
+import Header from "../Header";
 
 const DateTimeScreenSkeleton = () => {
   return (
     <SkeletonTheme baseColor="#2D3748" highlightColor="#4A5568">
-      <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8 flex justify-center">
-        <div className="max-w-4xl w-full">
+      <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col">
+        <Header/>
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-4xl mx-auto">
           {/* --- ESQUELETO DEL HEADER --- */}
           <h2 className="text-3xl md:text-4xl font-black text-center mb-4">
             <Skeleton width={400} height={40} />
@@ -42,6 +44,8 @@ const DateTimeScreenSkeleton = () => {
           {/* --- ESQUELETO DE LOS BOTONES DE NAVEGACIÓN --- */}
           <SkeletonButtonGroup />
         </div>
+      </div>
+      <Footer/>
       </div>
     </SkeletonTheme>
   );

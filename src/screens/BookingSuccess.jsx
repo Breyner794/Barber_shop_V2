@@ -1,4 +1,6 @@
 import { useLocation, Link } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 const BookingSuccess = () => {
 
@@ -9,17 +11,23 @@ const BookingSuccess = () => {
   
   if (!booking) {
     return (
-      <div className="bg-black/50 text-white min-h-screen flex flex-col justify-center items-center text-center p-4">
+      <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col justify-center text-center">
+        <Header/>
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
         <h1 className="text-2xl font-bold">No hay información de la reserva.</h1>
-        <Link to="/" className="mt-4 bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
+        <Link to="/" className="mt-8 inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
           Volver al Inicio
         </Link>
+        </div>
+        <Footer/>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col justify-center items-center text-center p-4">
+    <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col justify-center text-center">
+      <Header/>
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
       <div className="max-w-lg bg-black/70 p-8 rounded-xl shadow-2xl">
         <svg
           className="mx-auto h-20 w-20 text-blue-400 mb-4"
@@ -62,6 +70,8 @@ const BookingSuccess = () => {
           Hacer otra reserva
         </Link>
       </div>
+      </div>
+      <Footer/>
     </div>
   );
 };
