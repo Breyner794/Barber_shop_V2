@@ -58,50 +58,134 @@ const CheckReservationPage = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-8 flex flex-col items-center">
-      <div className="w-full max-w-lg">
-        <div className="text-center mb-10">
-          <Link to="/" className="text-blue-400 hover:text-blue-300">&larr; Volver al inicio</Link>
-          <h1 className="text-4xl font-black mt-4">Consulta tu Reserva</h1>
-          <p className="text-gray-400 mt-2">Ingresa tu código de confirmación y tu email o teléfono.</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="bg-gray-800 p-8 rounded-lg space-y-6">
-          <input
-            type="text"
-            name="confirmationCode"
-            placeholder="Código de confirmación"
-            value={formData.confirmationCode}
-            onChange={handleInputChange}
-            required
-            className="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
-          />
-          
-          <div className="space-y-2">
-            <div className="flex gap-4">
-                <label className="flex items-center gap-2"><input type="radio" name="identifierType" value="phone" checked={formData.identifierType === 'phone'} onChange={handleInputChange} /> Teléfono</label>
-                <label className="flex items-center gap-2"><input type="radio" name="identifierType" value="email" checked={formData.identifierType === 'email'} onChange={handleInputChange} /> Email</label>
-            </div>
-            <input
-              type={formData.identifierType === 'phone' ? 'tel' : 'email'}
-              name="clientIdentifier"
-              placeholder={formData.identifierType === 'phone' ? 'Tu número de teléfono' : 'Tu correo electrónico'}
-              value={formData.clientIdentifier}
-              onChange={handleInputChange}
-              required
-              className="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
+    <div
+      id="consultar-reserva"
+      className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black min-h-screen p-4 sm:p-8 flex flex-col"
+    >
+      {/* Header/Nav mejorado */}
+      <div className="w-full mb-8">
+        <Link
+          to="/"
+          className="inline-flex items-center text-white hover:text-blue-300 text-lg font-medium transition-colors duration-200"
+        >
+          <svg
+            className="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
+          </svg>
+          Volver al inicio
+        </Link>
+      </div>
+
+      {/* Contenido principal centrado */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="w-full max-w-lg">
+          <div className="text-center mb-10">
+            <h1 className="text-4xl font-black mt-4">Consulta tu Reserva</h1>
+            <p className="text-gray-400 mt-2">
+              Ingresa tu código de confirmación y tu email o teléfono.
+            </p>
           </div>
 
-          <button type="submit" disabled={isLoading} className="w-full py-3 text-lg font-bold rounded-lg bg-gradient-to-r from-blue-600 to-red-600 text-white hover:scale-105 disabled:bg-gray-600 disabled:scale-100 flex justify-center">
-            {isLoading ? <Spinner /> : 'Buscar Reserva'}
-          </button>
-        </form>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-black/60 p-8 rounded-lg space-y-6"
+          >
+            <input
+              type="text"
+              name="confirmationCode"
+              placeholder="Código de confirmación"
+              value={formData.confirmationCode}
+              onChange={handleInputChange}
+              required
+              className="w-full bg-gray-300/10 border-2 border-gray-600 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
+            />
 
-        {/* --- Sección de Resultados --- */}
-        <div className="mt-8">
-          {error && <p className="text-center text-red-500 bg-red-500/10 p-4 rounded-lg">{error}</p>}
-          {appointment && <AppointmentDetailsCard appointment={appointment} />}
+            <div className="space-y-2">
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="identifierType"
+                    value="phone"
+                    checked={formData.identifierType === "phone"}
+                    onChange={handleInputChange}
+                  />{" "}
+                  Teléfono
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="identifierType"
+                    value="email"
+                    checked={formData.identifierType === "email"}
+                    onChange={handleInputChange}
+                  />{" "}
+                  Email
+                </label>
+              </div>
+              <input
+                type={formData.identifierType === "phone" ? "tel" : "email"}
+                name="clientIdentifier"
+                placeholder={
+                  formData.identifierType === "phone"
+                    ? "Tu número de teléfono"
+                    : "Tu correo electrónico"
+                }
+                value={formData.clientIdentifier}
+                onChange={handleInputChange}
+                required
+                className="w-full bg-gray-300/10 border-2 border-gray-600 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3 text-lg font-bold rounded-lg bg-red-600 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:via-white hover:to-red-500 hover:text-black disabled:bg-gray-600 disabled:hover:bg-gray-600 disabled:hover:text-white hover:scale-105 disabled:scale-100 flex justify-center transition-all duration-300"
+            >
+              {isLoading ? <Spinner /> : "Buscar Reserva"}
+            </button>
+          </form>
+
+          {/* --- Sección de Resultados --- */}
+          <div className="mt-8">
+            {error && (
+              <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-400/30 p-4 rounded-lg">
+                <div className="flex items-center">
+                  <svg
+                    className="w-5 h-5 text-red-400 mr-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <p className="text-red-200 font-medium">
+                    No se pudo encontrar tu reserva. Verifica los datos
+                    ingresados.
+                  </p>
+                </div>
+                <p className="text-red-300/80 text-sm mt-2 ml-8">{error}</p>
+              </div>
+            )}
+            {appointment && (
+              <AppointmentDetailsCard appointment={appointment} />
+            )}
+          </div>
         </div>
       </div>
     </div>

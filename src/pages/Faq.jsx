@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 const Faq = () => {
   const [openIndex, setOpenIndex] = useState(null);
-  const navigate = useNavigate();
 
   const faqs = [
     {
@@ -39,41 +38,20 @@ const Faq = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const handleGoHome = () => {
-    navigate("/");
-  };
-
   return (
-    <div className="min-h-screen bg-white/80">
-      {/* Simple Navigation */}
-      <nav className="bg-black shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
-            {/* Simple Back Button */}
-            <button
-              onClick={handleGoHome}
-              className="flex items-center space-x-2 text-white hover:text-red-500 transition-colors duration-200 group"
-            >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
-              <span className="font-medium">Volver al inicio</span>
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Gradient Line */}
-      <div className="h-1 bg-gradient-to-r from-blue-600 via-white to-red-600"></div>
+    <div className="min-h-screen bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white  flex flex-col">
+      <Header />
 
       {/* Title Section */}
       <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-red-600 mb-6">
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
           Preguntas Frecuentes
         </h1>
         <div className="w-24 h-1 bg-gradient-to-r from-red-500 via-gray-300 to-blue-500 mx-auto mb-6 rounded-full"></div>
-          <p className="text-gray-700 text-xl font-medium leading-relaxed ">
-            Encuentra respuestas a las preguntas más comunes sobre{" "}
-            <span className="font-bold text-red-600">Caballeros del Señor</span>
-          </p>
+        <p className="text-gray-400 text-xl font-medium leading-relaxed ">
+          Encuentra respuestas a las preguntas más comunes sobre{" "}
+          <span className="font-bold text-red-600">Caballeros del Señor</span>
+        </p>
       </div>
 
       {/* FAQ Content */}
@@ -110,7 +88,7 @@ const Faq = () => {
         </div>
 
         {/* Contact Section */}
-        <div className="mt-12 bg-black text-white rounded-lg p-8 text-center">
+        <div className="mt-12 bg-black/50 text-white rounded-lg p-8 text-center">
           <h2 className="text-2xl font-bold text-red-500 mb-4">
             ¿No encontraste lo que buscabas?
           </h2>

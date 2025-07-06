@@ -65,7 +65,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Horarios */}
+          {/* Horarios y FAQ */}
           <div>
             <h4 className="text-lg font-semibold text-blue-400 mb-4 border-b border-gray-700 pb-2">
               Horarios
@@ -85,15 +85,23 @@ const Footer = () => {
                 <span>10:00 - 16:00</span>
               </div>
             </div>
+
+            {/* FAQ Botón mejorado */}
+            <div className="mt-6">
+              <button
+                onClick={handleFAQClick}
+                className="group relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-blue-600/20 to-red-600/20 border border-blue-500/30 hover:border-blue-400 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-transparent to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative flex items-center justify-center px-4 py-3 space-x-2">
+                  <HelpCircle className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
+                  <span className="font-semibold text-sm text-blue-400 group-hover:text-blue-300 transition-colors duration-300 tracking-wide">
+                    FAQ
+                  </span>
+                </div>
+              </button>
+            </div>
           </div>
-          {/* FAQ */}
-          <button
-            onClick={handleFAQClick}
-            className="inline-flex items-center justify-center w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105"
-          >
-            <HelpCircle className="w-4 h-4 mr-2" />
-            Preguntas Frecuentes
-          </button>
         </div>
 
         {/* Copyright */}

@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {Menu,X,Scissors,Calendar,Users,MapPin,Camera,Info,Phone,} from "lucide-react";
+import {
+  Menu,
+  X,
+  Scissors,
+  Calendar,
+  Users,
+  MapPin,
+  Camera,
+  Info,
+  HomeIcon,
+} from "lucide-react";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +44,12 @@ const Header = () => {
       return;
     }
 
+    // Si es una página separada (como consultar-reserva), navegar directamente
+    if (sectionId === "consultar-reserva") {
+      window.location.href = "/consultar-reserva";
+      return;
+    }
+
     // Verificar si estamos en la página principal
     const isHomePage =
       window.location.pathname === "/" || window.location.pathname === "/home";
@@ -56,46 +72,53 @@ const Header = () => {
   // Menú items para navegación móvil
   const mobileMenuItems = [
     {
-      name: "Reservas",
+      name: "Home",
+      icon: HomeIcon,
+      color: "text-cyan-500",
+      href: "home",
+      type: "section", // Es una sección
+    },
+    {
+      name: " Ver reservas",
       icon: Calendar,
       color: "text-blue-500",
-      href: "/reservar",
+      href: "consultar-reserva",
+      type: "page", // Es una página separada
     },
     {
       name: "Nuestros Servicios",
       icon: Scissors,
       color: "text-red-500",
       href: "servicios",
+      type: "section",
     },
     {
       name: "Nuestro Team",
       icon: Users,
       color: "text-green-500",
       href: "team",
+      type: "section",
     },
     {
       name: "Ubicaciones",
       icon: MapPin,
       color: "text-yellow-500",
       href: "contacto",
+      type: "section",
     },
     {
       name: "Galería de Estilos",
       icon: Camera,
       color: "text-purple-500",
       href: "galeria",
-    },
-    {
-      name: "Contacto",
-      icon: Phone,
-      color: "text-cyan-500",
-      href: "contacto",
+      type: "section",
     },
     {
       name: "Sobre Nosotros",
       icon: Info,
       color: "text-cyan-500",
       href: "nosotros",
+      type: "section",
     },
   ];
 
@@ -120,11 +143,12 @@ const Header = () => {
               >
                 HOME
               </button>
-              <button
+              <Link
+                to="/consultar-reserva"
                 className="text-white hover:text-red-500 transition-colors duration-300 tracking-wide text-sm uppercase"
               >
-                 <Link to={'/reservar'}>RESERVAR</Link>
-              </button>
+                RESERVAS
+              </Link>
               <button
                 onClick={() => handleNavigation("servicios")}
                 className="text-white hover:text-blue-500 transition-colors duration-300 tracking-wide text-sm uppercase"
@@ -203,18 +227,38 @@ const Header = () => {
 
           {/* Navegación principal */}
           <nav className="p-6 space-y-8 text-xl font-semibold">
-            {mobileMenuItems.map(({ name, icon: Icon, color, href }) => (
-              <button
-                key={name}
-                onClick={() => handleNavigation(href, true)}
-                className="flex items-center gap-4 hover:text-red-500 transition-colors duration-300 border-b border-gray-800 pb-3 group w-full text-left"
-              >
-                <Icon
-                  className={`w-6 h-6 ${color} group-hover:text-red-500 transition-colors duration-300`}
-                />
-                <span>{name}</span>
-              </button>
-            ))}
+            {mobileMenuItems.map(({ name, icon: Icon, color, href, type }) => {
+              // Si es una página separada, usar Link
+              if (type === "page") {
+                return (
+                  <Link
+                    key={name}
+                    to={`/${href}`}
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-4 hover:text-red-500 transition-colors duration-300 border-b border-gray-800 pb-3 group w-full text-left"
+                  >
+                    <Icon
+                      className={`w-6 h-6 ${color} group-hover:text-red-500 transition-colors duration-300`}
+                    />
+                    <span>{name}</span>
+                  </Link>
+                );
+              }
+
+              // Si es una sección, usar el botón con handleNavigation
+              return (
+                <button
+                  key={name}
+                  onClick={() => handleNavigation(href, true)}
+                  className="flex items-center gap-4 hover:text-red-500 transition-colors duration-300 border-b border-gray-800 pb-3 group w-full text-left"
+                >
+                  <Icon
+                    className={`w-6 h-6 ${color} group-hover:text-red-500 transition-colors duration-300`}
+                  />
+                  <span>{name}</span>
+                </button>
+              );
+            })}
           </nav>
         </div>
       )}
