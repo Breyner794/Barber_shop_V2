@@ -338,6 +338,20 @@ const apiService = {
           throw new Error(userFriendlyMessage);
       }
     },
+
+    changeMyPassword : async ({currentPassword, newPassword}) =>{
+      try{
+
+        const response = await apiClient.patch('/user/change-my-password', {
+          currentPassword,
+          newPassword
+      });
+      return response.data;
+      }catch(error){
+       console.error("Error técnico al actualizar tu contraseña:", error);
+        throw error; 
+      }
+    }
     
   };
 
