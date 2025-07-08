@@ -110,7 +110,7 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
             </div>
             <label htmlFor="photo-upload" className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors">
               <UploadCloud size={20} />
-              {file ? 'Cambiar Foto' : 'Subir Foto'}
+              {selectedFile ? 'Cambiar Foto' : 'Subir Foto'}
               <input
                 id="photo-upload"
                 type="file"
