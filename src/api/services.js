@@ -311,7 +311,34 @@ const apiService = {
           throw new Error(userFriendlyMessage);
       }
     },
-  
+
+    updateMyProfile: async (formData) =>{
+      try{
+        const response = await apiClient.patch('/user/update-my-profile',formData,{
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorizationd': `Bearer ${localStorage.getItem('authToken')}`,
+          }
+        });
+        return response.data;
+      }catch (error){
+        console.error("Error técnico al actualizar tu perfil:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+    
   };
 
 export default apiService;
