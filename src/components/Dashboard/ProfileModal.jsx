@@ -37,12 +37,18 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
       console.log("ProfileModal - Previsualización URL:", fileUrl);
     }
   };
+
+  const handleRemovePhoto = () => {
+    setSelectedFile(null);
+    setprofilePhotoPreview(null);
+    setMessage('');
+    console.log("ProfileModal - Foto eliminada. profilePhotoPreview:", null);
   };
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setMessage('');
-    setUploading(true);
+    setLoading(true);
 
     const formData = new FormData();
     formData.append('name', userName);
@@ -119,6 +125,17 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
                 onChange={handleFileChange}
               />
             </label>
+            {/*Se desahbilita por el momento para mejoras de eliminar la idea es que se elimine tambien en el servidor de cloudinary*/}
+            {/* {profilePhotoPreview && ( // Muestra el botón de eliminar solo si hay una foto
+                    <button
+                        type="button" // Importante: para que no envíe el formulario
+                        onClick={handleRemovePhoto}
+                        className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors"
+                    >
+                        <Trash2 size={20} />
+                        Eliminar
+                    </button>
+                )} */}
           </div>
 
           <div>
