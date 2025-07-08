@@ -7,19 +7,36 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
   const [userName, setUserName] = useState(currentUser.name);
   const [userLastName, setUserLastName] = useState(currentUser.last_name)
   const [userEmail, setUserEmail] = useState(currentUser.email);
-  const [profilePhoto, setProfilePhoto] = useState(currentUser.photo || null);
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [userPhone, setUserPhone] = useState(currentUser?.phone || '');
+  const [profilePhotoPreview, setprofilePhotoPreview] = useState(currentUser.photo || null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  
+  if (!isOpen || !currentUser) return null;
 
-  if (!isOpen) return null;
+   useEffect(() => {
+    if (currentUser) {
+      setUserName(currentUser.name || '');
+      setUserLastName(currentUser.last_name || '');
+      setUserPhone(currentUser.phone || '');
+      
+      setprofilePhotoPreview(currentUser.imageUrl || null);
+      console.log("ProfileModal - currentUser.imageUrl en useEffect:", currentUser.imageUrl);
+    }
+  }, [currentUser]);
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setProfilePhoto(URL.createObjectURL(selectedFile));
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const fileUrl = URL.createObjectURL(file);
+      setprofilePhotoPreview(fileUrl);
+      setMessage('');
+      console.log("ProfileModal - Archivo seleccionado:", file);
+      console.log("ProfileModal - Previsualización URL:", fileUrl);
     }
+  };
   };
 
   const handleUpdateProfile = async (e) => {
@@ -32,6 +49,24 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
     formData.append('last_name', userLastName)
     //formData.append('email', userEmail);
     formData.append('phone', userPhone); 
+
+    if (selectedFile) {
+      formData.append('photo', selectedFile);
+      console.log("ProfileModal - FormData: Adjuntando archivo 'photo'");
+    }else if(profilePhotoPreview === null && currentUser.imageUrl){
+      formData.append('imageUrl', '');
+      console.log("ProfileModal - FormData: Solicitando eliminación de imagen existente");
+    }
+
+    // === CONSOLE.LOG PARA VER EL CONTENIDO DE FormData ===
+    // Nota: FormData no se puede loggear directamente como un objeto normal.
+    // Debes iterar sobre él.
+    console.log("ProfileModal - Contenido de FormData antes de enviar:");
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
+    // ==============================================================
+
     try {
       const data = await apiService.updateMyProfile(formData);
 
@@ -67,8 +102,8 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
         <form onSubmit={handleUpdateProfile} className="space-y-6">
           <div className="flex flex-col items-center gap-4 mb-6">
             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-500 flex items-center justify-center bg-gray-700">
-              {profilePhoto ? (
-                <img src={profilePhoto} alt="Foto de perfil" className="w-full h-full object-cover" />
+              {profilePhotoPreview ? (
+                <img src={profilePhotoPreview} alt="Foto de perfil" className="w-full h-full object-cover" />
               ) : (
                 <UserIcon className="w-16 h-16 text-gray-400" />
               )}
