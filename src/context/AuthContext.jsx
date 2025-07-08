@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
     currentUser,
     login,
     logout,
+    setCurrentUser,
     isAuthenticated: !!currentUser, // Un booleano útil: true si hay usuario, false si no.
     isAuthLoading
   };
