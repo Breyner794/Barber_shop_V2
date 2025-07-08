@@ -16,7 +16,7 @@ const navItems = [
 // El componente ahora recibe props para saber si debe mostrarse o no
 const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
   
-  const {logout, currentUser} = useAuth();
+  const {logout, currentUser, setCurrentUser} = useAuth();
   const navigate = useNavigate();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const activeLinkClasses = "bg-blue-600/80 border-l-4 border-blue-400 text-white font-semibold";
@@ -95,8 +95,8 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
               onClick={handleOpenProfileModal}
               className={`w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors duration-200 ${defaultLinkClasses}`}
             >
-              {currentUser.photo ? (
-                <img src={currentUser.photo} alt="Perfil" className="w-8 h-8 rounded-full object-cover border-2 border-blue-400" />
+              {currentUser.imageUrl ? (
+                <img src={currentUser.imageUrl} alt="Perfil" className="w-8 h-8 rounded-full object-cover border-2 border-blue-400" />
               ) : (
                 <UserIcon className="w-8 h-8 text-gray-400 p-1 bg-gray-700 rounded-full" />
               )}
@@ -123,7 +123,7 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
           isOpen={isProfileModalOpen}
           onClose={handleCloseProfileModal}
           currentUser={currentUser}
-          setCurrentUser={useAuth().setCurrentUser} // Pasa el setter del contexto
+          setCurrentUser={setCurrentUser} // Pasa el setter del contexto
         />
       )}
     </>
