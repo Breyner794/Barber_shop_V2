@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import { X, UploadCloud, Save, UserIcon, Trash2 } from 'lucide-react';
 import apiService from '../../api/services';
+import ChangePasswordModal from './ChangesPassword/ChangePasswordModal';
 
 const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
   const [userName, setUserName] = useState(currentUser.name);
@@ -12,6 +12,7 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false); // Nuevo estado para el modal de cambio de contraseña
   
   if (!isOpen || !currentUser) return null;
 
@@ -196,16 +197,23 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
           </button>
 
           <div className="text-center mt-4">
-            <NavLink
-              to="/dashboard/change-password"
+            <button
+              type="button"
+              onClick={() => {
+                setIsChangePasswordModalOpen(true);
+              }}
               className="text-blue-400 hover:text-blue-300 text-sm font-semibold"
-              onClick={onClose} // Cierra el modal al navegar
             >
               ¿Cambiar contraseña?
-            </NavLink>
+            </button>
           </div>
         </form>
       </div>
+      {/* Renderiza el ChangePasswordModal aquí */}
+      <ChangePasswordModal
+        isOpen={isChangePasswordModalOpen}
+        onClose={() => setIsChangePasswordModalOpen(false)}
+      />
     </div>
   );
 };
