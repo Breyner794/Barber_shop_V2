@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { X, UploadCloud, Save, UserIcon } from 'lucide-react';
+import { X, UploadCloud, Save, UserIcon, Trash2 } from 'lucide-react';
+import apiService from '../../api/services';
 
 const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
   const [userName, setUserName] = useState(currentUser.name);
@@ -29,35 +30,26 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
     const formData = new FormData();
     formData.append('name', userName);
     formData.append('last_name', userLastName)
-    formData.append('email', userEmail);
-    if (file) {
-      formData.append('photo', file);
-    }
-
+    //formData.append('email', userEmail);
+    formData.append('phone', userPhone); 
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/v1/users/updateMe', {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
+      const data = await apiService.updateMyProfile(formData);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage('Perfil actualizado exitosamente.');
-        setCurrentUser(data.data.user);
+      console.log("ProfileModal - Respuesta exitosa del backend:", data);
+      
+        setMessage(data.message || 'Perfil actualizado exitosamente.');
+        setCurrentUser(data.data);
+        setprofilePhotoPreview(data.data.imageUrl || null);
+        // onClose();
+        console.log("ProfileModal - currentUser actualizado en contexto:", data.data);
+        setTimeout(() => {
         onClose();
-      } else {
-        setMessage(data.message || 'Error al actualizar el perfil.');
-      }
+      }, 1000);
     } catch (error) {
       console.error('Error updating profile:', error);
       setMessage('Error de red al actualizar el perfil.');
     } finally {
-      setUploading(false);
+      setLoading(false);
     }
   };
 
@@ -114,6 +106,16 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
               value={userLastName}
               onChange={(e) => setUserLastName(e.target.value)}
               required
+            />
+          </div>
+          <div>
+            <label htmlFor="phone" className="block text-gray-300 text-sm font-bold mb-2">Teléfono</label>
+            <input
+              type="tel" // Tipo 'tel' es semántico para teléfonos
+              id="phone"
+              className="shadow appearance-none border border-gray-700 rounded w-full py-2 px-3 bg-gray-700 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={userPhone}
+              onChange={(e) => setUserPhone(e.target.value)}
             />
           </div>
           <div>
