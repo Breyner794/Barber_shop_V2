@@ -9,15 +9,27 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(()=>{
     const checkLoggedInUser = async() =>{
+      //console.log('AuthContext (useEffect): Iniciando checkLoggedInUser...');
       const token = localStorage.getItem('authToken');
+      //console.log('AuthContext (useEffect): Token en localStorage:', token ? 'Existe' : 'No existe');
       if(!token){
         setIsAuthLoading(false);
+         //console.log('AuthContext (useEffect): No hay token, isAuthLoading = false. Terminando.');
         return;
       }
 
       try{
+        //console.log('AuthContext (useEffect): Token encontrado. Llamando a apiService.fetchMyProfile()...');
         const user = await apiService.fetchMyProfile();
-        setCurrentUser(user);
+         //console.log('AuthContext (useEffect): apiService.fetchMyProfile() completado. Resultado (variable user):', user);
+        if (user) {
+          setCurrentUser(user);
+          //console.log('AuthContext (useEffect): currentUser establecido a:', user);
+        } else {
+          //console.warn('AuthContext (useEffect): fetchMyProfile devolvió un usuario nulo o indefinido.');
+          localStorage.removeItem('authToken'); // Limpiar token si el usuario es nulo a pesar de que la llamada fue "exitosa"
+          setCurrentUser(null);
+        }
       }catch(error){
         // Si hay un error (ej. token expirado), limpiamos todo.
         console.error("Session check failed:", error);
@@ -27,14 +39,28 @@ export const AuthProvider = ({ children }) => {
         setIsAuthLoading(false);
       }
     };
-    checkLoggedInUser(false);
+    checkLoggedInUser();
   },[]);
 
   // Función de Login que usarán los componentes
   const login = async (email, password) => {
-    const user = await apiService.loginUser({ email, password });
-    setCurrentUser(user);
-    return user;
+    //console.log('AuthContext (login): Iniciando login...');
+    setIsAuthLoading(true);
+    try{
+      const user = await apiService.loginUser({ email, password });
+      setCurrentUser(user);
+      //console.log('AuthContext (login): Login exitoso. Usuario establecido:', user);
+      return user;
+    }catch (error) {
+        //console.error('AuthContext (login): Error durante el login:', error);
+        setCurrentUser(null);
+        localStorage.removeItem('authToken'); // Limpiar token en caso de login fallido
+        throw error;
+    } finally {
+        setIsAuthLoading(false);
+        //console.log('AuthContext (login): Finalizado login. isAuthLoading = false.');
+    }
+    
   };
 
   // Función de Logout
