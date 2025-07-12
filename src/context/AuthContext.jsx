@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(null);
       }finally{
         setIsAuthLoading(false);
+        //console.log('AuthContext (useEffect): Finalizado checkLoggedInUser. isAuthLoading = false.');
       }
     };
     checkLoggedInUser();
@@ -65,8 +66,10 @@ export const AuthProvider = ({ children }) => {
 
   // Función de Logout
   const logout = () => {
+     //console.log('AuthContext (logout): Realizando logout...');
     localStorage.removeItem('authToken');
     setCurrentUser(null);
+    //console.log('AuthContext (logout): Sesión cerrada. currentUser = null.');
   };
 
   const value = {
