@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
         }
       }catch(error){
         // Si hay un error (ej. token expirado), limpiamos todo.
+        //console.error("AuthContext (useEffect): Error en fetchMyProfile. Detalles:", error);
         console.error("Session check failed:", error);
         localStorage.removeItem('authToken');
         setCurrentUser(null);
