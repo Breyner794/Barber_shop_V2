@@ -351,7 +351,156 @@ const apiService = {
        console.error("Error técnico al actualizar tu contraseña:", error);
         throw error; 
       }
-    }
+    },
+
+    getAllUsers: async() => {
+      try{
+        const response = await apiClient.get('/user/');
+        return response.data;
+      }catch{
+        console.error("Error técnico al obtener los usuarios:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage); 
+      }
+    },
+
+    createUser: async (userData) => {
+      try{
+        const response = await apiClient.post('/user/create-new-user', userData,{
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorizationd': `Bearer ${localStorage.getItem('authToken')}`,
+          }
+        });
+        return response.data.data;
+      }catch(error){
+        console.error("Error técnico al crear el usuario:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    updateUser : async (userId, userData) => {
+      try{
+        const response = await apiClient.patch(`/user/admin/update/${userId}`, userData,{
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorizationd': `Bearer ${localStorage.getItem('authToken')}`,
+          }
+        });
+        return response.data;
+      }catch (error){
+        console.error("Error técnico al actualizar el usuario en modo admin:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    deleteEasyUser: async (userId) =>{
+      try{
+        const response = await apiClient.delete(`/user/admin/delete/${userId}`);
+        return response.data;
+      }catch (error){
+        console.error("Error técnico no se pudo eliminar el usuario en modo admin:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    /*API EXCLUSIVA PARA SUPERADMIN - HACE FUNCIONES QUE PUEDEN BORRAR DATOS IMPORTANTES.*/
+
+    superUpdateUser : async (userId, userData) => {
+      try{
+        const response = await apiClient.patch(`/user/superadmin/update/${userId}`, userData,{
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorizationd': `Bearer ${localStorage.getItem('authToken')}`,
+          }
+        })
+        return response.data;
+      }catch (error){
+        console.error("Error técnico no se pudo actualizar el usuario en modo SuperAdmin:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    hardDeleteUser : async (userId) => {
+      try{
+        const response = await apiClient.delete(`/user/superadmin/delete/${userId}`);
+        return response.data;
+      }catch (error){
+        console.error("Error técnico no se pudo eliminar el usuario en modo SuperAdmin:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
     
   };
 
