@@ -155,6 +155,28 @@ const apiService = {
         }
     },
 
+    getSiteDashboard: async () => {
+        try{
+            const response = await apiClient.get('/site/site/dashboard');
+            return response.data.data;
+        }catch (error){
+          console.error("Error técnico al obtener las sedes:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+        }
+    },
+
     getBarbersBySite: async (siteId) => {
         try{
             const response = await apiClient.get(`/site/${siteId}/barbers`);
