@@ -551,7 +551,75 @@ const apiService = {
           throw new Error(userFriendlyMessage);
       }
     },
+
+    createSite : async (siteData) => {
+      try{
+
+        const response = await apiClient.post('/site/', siteData);
+        return response.data.data;
+
+      }catch (error){
+         console.error("Error técnico al crear la sede:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    }, 
     
+    deleteSite : async (siteId) => {
+      try{
+        const response = await apiClient.delete(`/site/${siteId}`);
+        return response.data;
+      }catch (error){
+        console.error("Error técnico no se pudo eliminar la sede:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    updateSite : async (siteId, siteData) => {
+      try{
+        const response = await apiClient.put(`/site/${siteId}`, siteData);
+        return response.data.data
+      }catch (error){
+        console.error("Error técnico no se pudo actualizar la sede:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
   };
 
 export default apiService;
