@@ -105,6 +105,34 @@ const apiService = {
         }
     },
 
+    getServicesDashboard : async () => {
+        try{
+            const response = await apiClient.get('/services/dashboard-services');
+            return response.data.data;
+        }catch (error){
+          // 1. Loguear el error técnico completo para nosotros (los devs)
+          console.error("Error técnico al obtener servicios:", error);
+
+          // 2. Crear un mensaje de error amigable y estandarizado para la UI
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            // El servidor respondió con un error
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            // No hubo respuesta (error de red)
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          // 3. Lanzar un NUEVO error que contenga solo el mensaje limpio
+          throw new Error(userFriendlyMessage);
+        }
+    },
+
+
     getAllSite: async () => {
         try{
             const response = await apiClient.get('/site');
