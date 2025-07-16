@@ -620,6 +620,84 @@ const apiService = {
       }
     },
 
+    createService : async (serviceData) => {
+      try{
+
+        const response = await apiClient.post('/services/', serviceData,{
+          headers:{
+            'Content-Type': 'multipart/form-data',
+            'Authorizationd': `Bearer ${localStorage.getItem('authToken')}`,
+          }
+        });
+        return response.data.data;
+
+      }catch (error){
+         console.error("Error técnico al crear la sede:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    updateService : async (serviceId, serviceData) => {
+      try{
+        const response = await apiClient.put(`/services/${serviceId}`, serviceData,{
+          headers:{
+            'Content-Type': 'multipart/form-data',
+            'Authorizationd': `Bearer ${localStorage.getItem('authToken')}`,
+          }
+        });
+        return response.data.data
+      }catch (error){
+        console.error("Error técnico no se pudo actualizar la sede:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    deleteService : async (serviceId) => {
+      try{
+        const response = await apiClient.delete(`/services/${serviceId}`);
+        return response.data;
+      }catch (error){
+        console.error("Error técnico no se pudo eliminar el servicio:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+    
   };
 
 export default apiService;
