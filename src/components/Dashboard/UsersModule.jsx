@@ -343,7 +343,7 @@ const handleLogin = () => {
   // --- Renderizado Condicional del Contenido ---
   if (isLoading) {
     return (
-      <div className="bg-gray-900 min-h-screen flex justify-center items-center">
+      <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex justify-center items-center">
         <LoaderCircle className="w-12 h-12 text-blue-500 animate-spin" />
         <p className="ml-4 text-white text-xl">Cargando usuarios...</p>
       </div>
@@ -352,7 +352,7 @@ const handleLogin = () => {
 
   if (error) {
     return (
-      <div className="bg-gray-900 min-h-screen flex justify-center items-center p-6">
+      <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex justify-center items-center p-6">
         <div className="bg-gray-800 rounded-xl shadow-2xl p-8 md:p-12 max-w-md w-full text-center border border-red-700/30">
           
           {/* Ícono dinámico basado en el tipo de error */}
@@ -417,7 +417,7 @@ const handleLogin = () => {
 
   // --- Estructura del Componente ---
   return (
-    <div className="bg-gray-900 min-h-full p-4 sm:p-6">
+    <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-full p-4 sm:p-6">
       {/* --- CABECERA --- */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
         <h2 className="text-3xl md:text-4xl font-black text-white text-center sm:text-left">
@@ -447,7 +447,7 @@ const handleLogin = () => {
             placeholder="Buscar por nombre o rol..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-gray-800 text-white pl-12 pr-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+            className="w-full bg-gray-800/90 text-white pl-12 pr-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
           />
         </div>
       </div>
@@ -457,7 +457,7 @@ const handleLogin = () => {
         {filteredUsers.map((user) => (
           <div
             key={user._id}
-            className="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:border-amber-500/50 hover:scale-[1.02]"
+            className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:border-amber-500/50 hover:scale-[1.02]"
           >
             {/* --- Cabecera de la Tarjeta --- */}
             <div className="p-5 flex items-center justify-between border-b border-gray-700">
