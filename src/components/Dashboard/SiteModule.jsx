@@ -180,7 +180,7 @@ const SitesModule = () => {
 
   return (
     // Contenedor principal con el fondo oscuro y padding responsivo
-    <div className="bg-gray-900 min-h-full p-4 sm:p-6">
+    <div className="bg-gradient-to-tr from-black to-blue-700/30  min-h-full p-4 sm:p-6">
       {/* Error Message */}
       {error && (
         <div className="mb-6 bg-red-500/10 border border-red-500/20 text-red-300 p-4 rounded-lg flex items-center gap-2">
@@ -199,7 +199,7 @@ const SitesModule = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
         <h2 className="text-3xl md:text-4xl font-black text-white text-center sm:text-left">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">
-            Manage Branches
+            Gestionar Sedes
           </span>
         </h2>
         
@@ -212,13 +212,15 @@ const SitesModule = () => {
                        hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/30 flex items-center justify-center gap-2"
           >
             <Plus className="w-5 h-5" />
-            New Branch
+            Nueva Sede
           </button>
         ) : (
-          <div className="w-full sm:w-auto py-3 px-6 text-base font-bold rounded-lg 
-                         bg-gray-700 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2">
+          <div
+            className="w-full sm:w-auto py-3 px-6 text-base font-bold rounded-lg 
+                         bg-gray-700 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2"
+          >
             <Plus className="w-5 h-5" />
-            New Branch
+            Nueva Sede
           </div>
         )}
       </div>
@@ -227,7 +229,8 @@ const SitesModule = () => {
       {!hasPermission && (
         <div className="mb-6 bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 p-4 rounded-lg flex items-center gap-2">
           <AlertTriangle className="w-5 h-5" />
-          Solo puedes visualizar las sedes. Los permisos de creación, edición y eliminación están restringidos a los que no sean administradores.
+          Solo puedes visualizar las sedes. Los permisos de creación, edición y
+          eliminación están restringidos a los que no sean administradores.
         </div>
       )}
 
@@ -237,7 +240,7 @@ const SitesModule = () => {
           <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by branch name or address..."
+            placeholder="Buscar por nombre de la sede o dirección..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-gray-800 text-white pl-12 pr-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -247,22 +250,30 @@ const SitesModule = () => {
 
       {/* --- GRID DE TARJETAS DE SEDES (RESPONSIVO) --- */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredSites.map(site => (
-          <div key={site._id} className="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:border-indigo-500/50 hover:scale-[1.02]">
-            
+        {filteredSites.map((site) => (
+          <div
+            key={site._id}
+            className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:border-indigo-500/50 hover:scale-[1.02]"
+          >
             {/* --- Cabecera de la Tarjeta --- */}
             <div className="p-5 flex justify-between items-start border-b border-gray-700">
               <div>
                 <p className="font-bold text-xl text-white">{site.name_site}</p>
               </div>
-              <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
-                ${site.isActive 
-                  ? 'bg-green-500/10 text-green-300 border-green-500/20' 
-                  : 'bg-red-500/10 text-red-400 border-red-500/20'
+              <span
+                className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
+                ${
+                  site.isActive
+                    ? "bg-green-500/10 text-green-300 border-green-500/20"
+                    : "bg-red-500/10 text-red-400 border-red-500/20"
                 }`}
               >
-                {site.isActive ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
-                {site.isActive ? 'Active' : 'Inactive'}
+                {site.isActive ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <X className="w-4 h-4" />
+                )}
+                {site.isActive ? "Active" : "Inactive"}
               </span>
             </div>
 
@@ -271,22 +282,24 @@ const SitesModule = () => {
               <div className="flex items-start gap-4">
                 <MapPin className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="text-sm text-gray-400">Address</p>
+                  <p className="text-sm text-gray-400">Dirección</p>
                   <p className="font-medium text-white">{site.address_site}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Phone className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="text-sm text-gray-400">Phone</p>
+                  <p className="text-sm text-gray-400">Número de celular</p>
                   <p className="font-medium text-white">{site.phone_site}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Clock className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="text-sm text-gray-400">Hours</p>
-                  <p className="font-medium text-white">{site.headquarter_time}</p>
+                  <p className="text-sm text-gray-400">Horarios</p>
+                  <p className="font-medium text-white">
+                    {site.headquarter_time}
+                  </p>
                 </div>
               </div>
             </div>
@@ -298,12 +311,12 @@ const SitesModule = () => {
                   <button 
                     className="flex-1 bg-gray-700/50 text-white px-4 py-2 rounded-lg hover:bg-gray-700 flex items-center justify-center gap-2 transition-colors"
                     onClick={() => {
-                      handleEditSite(site)
-                      console.log('Editar sede:', site._id);
+                      handleEditSite(site);
+                      console.log("Editar sede:", site._id);
                     }}
                   >
                     <Edit className="w-4 h-4" />
-                    Edit
+                    Editar
                   </button>
                   <button 
                     className="p-3 text-red-500 bg-gray-700/50 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-50"
@@ -320,7 +333,7 @@ const SitesModule = () => {
               ) : (
                 <div className="flex-1 bg-gray-700/30 text-gray-500 px-4 py-2 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed">
                   <Edit className="w-4 h-4" />
-                  View Only
+                  Solo visualización
                 </div>
               )}
             </div>
@@ -331,15 +344,18 @@ const SitesModule = () => {
       {/* --- Mensaje por si no hay resultados --- */}
       {filteredSites.length === 0 && !isLoading && (
         <div className="text-center py-16 col-span-full">
-          <p className="text-xl font-semibold text-gray-300">No branches found</p>
-          <p className="text-gray-500 mt-2">Try adjusting your search terms.</p>
+          <p className="text-xl font-semibold text-gray-300">
+            No se encontraron sedes
+          </p>
+          <p className="text-gray-500 mt-2"> Intenta ajustar los terminos de tu busqueda..</p>
         </div>
       )}
 
       {/* --- FORMULARIO MODAL --- */}
       <SiteForm 
         isOpen={isFormOpen}
-        onClose={() => {setIsFormOpen(false); 
+        onClose={() => {
+          setIsFormOpen(false);
           setSiteToEdit(null);
         }}
         onSiteCreated={handleSiteCreated}
