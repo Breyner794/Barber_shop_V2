@@ -8,9 +8,9 @@ import { mockData } from '../../data/mockData.js';
 // Pequeña función auxiliar para el saludo
 const getGreeting = () => {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good Morning";
-  if (hour < 18) return "Good Afternoon";
-  return "Good Evening";
+  if (hour < 12) return "Buenos días ☀️";
+  if (hour < 18) return "Buenas tardes 🌇";
+  return "Buenas noches 🌙";
 };
 
 const DashboardOverview = () => {
@@ -19,25 +19,25 @@ const DashboardOverview = () => {
   // Datos para las tarjetas de estadísticas, para no repetir JSX
   const stats = [
     { 
-      title: "Bookings Today", 
+      title: "Reservas de hoy", 
       value: appointments.filter(apt => isToday(parseISO(apt.date))).length,
       icon: Calendar,
       color: "blue"
     },
     { 
-      title: "Active Barbers", 
+      title: "Barberos Activos", 
       value: users.filter(u => u.role === 'barber' && u.isActive).length,
       icon: Users,
       color: "orange"
     },
     { 
-      title: "Active Services", 
+      title: "Servicios activos", 
       value: services.filter(s => s.isActive).length,
       icon: Scissors,
       color: "green"
     },
     { 
-      title: "Active Branches", 
+      title: "Sedes activas", 
       value: sites.filter(s => s.isActive).length,
       icon: MapPin,
       color: "purple"
@@ -50,16 +50,16 @@ const DashboardOverview = () => {
     .slice(0, 5);
 
   return (
-    <div className="bg-gray-900 min-h-full p-4 sm:p-6 space-y-8">
+    <div className="bg-gradient-to-tr from-black to-blue-700/30  min-h-full p-4 sm:p-6 space-y-8">
       
       {/* --- CABECERA DE BIENVENIDA --- */}
       <div>
         <h2 className="text-3xl md:text-4xl font-black text-white">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-            {getGreeting()}, Admin!
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400  to-purple-500">
+            {getGreeting()} Admin!
           </span>
         </h2>
-        <p className="text-gray-400 mt-2">Here's a summary of your business today.</p>
+        <p className="text-gray-400 mt-2">Aquí tienes un resumén diario de tu negocio.</p>
       </div>
 
       {/* --- TARJETAS DE ESTADÍSTICAS (KPIs) --- */}
@@ -74,7 +74,7 @@ const DashboardOverview = () => {
           const currentColors = colorClasses[stat.color];
 
           return (
-            <div key={stat.title} className={`bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6 flex items-center gap-6 transition-colors duration-300 ${currentColors.border}`}>
+            <div key={stat.title} className={`bg-gray-800/50  rounded-2xl p-6 flex items-center gap-6 transition-colors duration-300 ${currentColors.border}`}>
               <div className={`p-4 rounded-lg ${currentColors.bg}`}>
                 <stat.icon className={`w-8 h-8 ${currentColors.text}`} />
               </div>
@@ -93,9 +93,9 @@ const DashboardOverview = () => {
         {/* Columna de Próximas Citas */}
         <div className="lg:col-span-2 bg-gray-800/50 border-2 border-gray-700 rounded-2xl">
           <div className="p-5 flex justify-between items-center border-b border-gray-700">
-            <h3 className="text-xl font-bold text-white">Upcoming Bookings</h3>
+            <h3 className="text-xl font-bold text-white">Proximas reservas</h3>
             <NavLink to="/dashboard/bookings" className="text-sm font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1">
-              View All <ArrowRight className="w-4 h-4" />
+              Ver todo <ArrowRight className="w-4 h-4" />
             </NavLink>
           </div>
           <div className="p-3 space-y-2">
@@ -129,7 +129,7 @@ const DashboardOverview = () => {
                   </div>
                 </div>
               );
-            }) : <p className="text-center py-8 text-gray-500">No upcoming bookings.</p>}
+            }) : <p className="text-center py-8 text-gray-500">No hay proximas reservas.</p>}
           </div>
         </div>
 
@@ -138,7 +138,7 @@ const DashboardOverview = () => {
             <div className="p-4 rounded-lg bg-gray-700/50 mb-4">
                 <BarChart3 className="w-10 h-10 text-purple-400" />
             </div>
-            <h3 className="text-xl font-bold text-white">Analytics</h3>
+            <h3 className="text-xl font-bold text-white">Analíticas</h3>
             <p className="text-gray-400 mt-2 max-w-xs">
                 A chart with weekly booking trends will be displayed here soon.
             </p>
