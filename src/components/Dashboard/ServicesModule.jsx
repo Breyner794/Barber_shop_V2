@@ -118,7 +118,7 @@ const ServicesModule = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-900 min-h-screen flex justify-center items-center">
+      <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex justify-center items-center">
         <LoaderCircle className="w-12 h-12 text-blue-500 animate-spin" />
         <p className="ml-4 text-white text-xl">Cargando Sedes...</p>
       </div>
@@ -127,8 +127,7 @@ const ServicesModule = () => {
 
   return (
     // Contenedor principal con el fondo oscuro y padding responsivo
-    <div className="bg-gray-900 min-h-full p-4 sm:p-6">
-
+    <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-full p-4 sm:p-6">
       {/* Error Message */}
       {error && (
         <div className="mb-6 bg-red-500/10 border border-red-500/20 text-red-300 p-4 rounded-lg flex items-center gap-2">
@@ -147,7 +146,7 @@ const ServicesModule = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
         <h2 className="text-3xl md:text-4xl font-black text-white text-center sm:text-left">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-green-400">
-            Manage Services
+            Gestionar Servicios
           </span>
         </h2>
         {hasPermission ? (
@@ -158,13 +157,13 @@ const ServicesModule = () => {
                      hover:scale-105 hover:shadow-lg hover:shadow-green-500/30 flex items-center justify-center gap-2"
                   >
                     <Plus className="w-5 h-5" />
-                    New Service
+            Nuevo Servicio
                   </button>
                 ) : (
                   <div className="w-full sm:w-auto py-3 px-6 text-base font-bold rounded-lg 
                                  bg-gray-700 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2">
                     <Plus className="w-5 h-5" />
-                    New Service
+            Nuevo Servicio
                   </div>
                 )}
       </div>
@@ -180,8 +179,10 @@ const ServicesModule = () => {
       {/* --- GRID DE TARJETAS DE SERVICIO (RESPONSIVO) --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {services.map((service) => (
-          <div key={service._id} className="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:border-green-500/50 hover:scale-[1.02]">
-            
+          <div
+            key={service._id}
+            className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl shadow-lg overflow-hidden flex flex-col transition-all duration-300 hover:border-green-500/50 hover:scale-[1.02]"
+          >
             {/* --- Imagen de la Tarjeta --- */}
             <div className="relative">
                 <img
@@ -190,10 +191,12 @@ const ServicesModule = () => {
                   className="w-full h-48 object-cover"
                 />
                 {/* --- Badge de Estado sobre la imagen --- */}
-                <span className={`absolute top-4 right-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
-                  ${service.isActive 
-                    ? 'bg-green-500/10 text-green-300 border-green-500/20' 
-                    : 'bg-red-500/10 text-red-400 border-red-500/20'
+              <span
+                className={`absolute top-4 right-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
+                  ${
+                    service.isActive
+                      ? "bg-green-500/10 text-green-300 border-green-500/20"
+                      : "bg-red-500/10 text-red-400 border-red-500/20"
                   }`}
                 >
                   {service.isActive ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
@@ -205,7 +208,9 @@ const ServicesModule = () => {
             <div className="p-5 flex flex-col flex-grow">
               <div className="flex-grow">
                 <h3 className="text-xl font-bold text-white">{service.name}</h3>
-                <p className="text-gray-400 mt-2 text-sm leading-relaxed">{service.description}</p>
+                <p className="text-gray-400 mt-2 text-sm leading-relaxed">
+                  {service.description}
+                </p>
               </div>
 
               {/* --- Detalles (Precio y Duración) --- */}
@@ -213,7 +218,7 @@ const ServicesModule = () => {
                  <div className="flex items-center gap-2 text-gray-300">
                     <Tag className="w-5 h-5 text-green-400" />
                     <p className="text-lg font-semibold text-white">
-                        ${service.price.toLocaleString('es-CO')}
+                    ${service.price.toLocaleString("es-CO")}
                     </p>
                  </div>
                  <div className="flex items-center gap-2 text-gray-300">
@@ -232,11 +237,12 @@ const ServicesModule = () => {
               onClick={() => handleOpenForm(service)}
               >
                   <Edit className="w-4 h-4" />
-                  Edit
+                    Editar
                 </button>
-                <button className="p-3 text-red-500 bg-gray-700/50 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                  <button
+                    className="p-3 text-red-500 bg-gray-700/50 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors"
                 onClick={() => handleDeleteService(service._id)}
-                disabled = {isDeleting === service._id}
+                    disabled={isDeleting === service._id}
                 >
                   {isDeleting === service._id ? (
                     <LoaderCircle className="w-4 h-4 animate-spin" />
@@ -248,7 +254,7 @@ const ServicesModule = () => {
             ):(
               <div className="flex-1 bg-gray-700/30 text-gray-500 px-4 py-2 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed">
               <Edit className="w-4 h-4" />
-              View Only
+                  Solo visualización
               </div>
             )}
             </div>
@@ -259,7 +265,7 @@ const ServicesModule = () => {
 
       {/* --- Mensaje por si no hay resultados --- */}
       {services.length === 0 && !isLoading && (
-        <div className="text-center py-20 col-span-full">
+        <div className="text-center py-16 col-span-full">
           <div className="bg-gray-800/50 border-2 border-dashed border-gray-600 rounded-3xl p-12 max-w-lg mx-auto">
             {/* Icono principal */}
             <div className="mb-6">
@@ -270,13 +276,13 @@ const ServicesModule = () => {
             
             {/* Título y descripción */}
             <h3 className="text-2xl font-bold text-white mb-3">
-              No services available yet
+              No hay servicios disponibles todavía
             </h3>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
               {hasPermission 
-                ? 'Start offering your services by creating your first service. Add details like pricing, duration, and descriptions to attract customers.'
-                : 'No services have been created yet. Contact an administrator to add new services to the catalog.'
+                ? 'Empieza a ofrecer tus servicios creando tu primer servicio. Añade detalles como precio, duración y descripciones para atraer clientes.'
+                : 'Aún no se han creado servicios. Contacta con un administrador para añadir nuevos servicios al catálogo.'
               }
             </p>
 
@@ -288,7 +294,7 @@ const ServicesModule = () => {
                   className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-green-600 text-white rounded-lg hover:scale-105 transition-all duration-300 font-medium shadow-lg hover:shadow-green-500/25"
                 >
                   <Plus className="w-5 h-5" />
-                  Create your first service
+                  Crea tu primer servicio
                 </button>
               ) : null}
             </div>
@@ -303,12 +309,12 @@ const ServicesModule = () => {
             {/* Sugerencias adicionales */}
             {hasPermission && (
               <div className="mt-8 pt-6 border-t border-gray-700/50">
-                <p className="text-sm text-gray-500 mb-4">Popular service ideas:</p>
+                <p className="text-sm text-gray-500 mb-4">Ideas de servicios populares:</p>
                 <div className="flex flex-wrap justify-center gap-2">
-                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Haircut</span>
-                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Beard Trim</span>
-                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Hair Wash</span>
-                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Styling</span>
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Corte de pelo</span>
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Recorte de barba</span>
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Lavado de cabello</span>
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Estilo</span>
                 </div>
               </div>
             )}
