@@ -5,7 +5,6 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import SiteForm from "./siteForm.jsx";
 import Swal from "sweetalert2";
 
-// Renombramos a SitesModule para mantener la consistencia (plural)
 const SitesModule = () => {
   // --- LÓGICA DEL COMPONENTE ---
   // const { sites } = mockData;
@@ -40,7 +39,7 @@ const SitesModule = () => {
     fecthSites()
   }, []);
 
-  const handleSiteCreated = (createdSite) => { // <-- createdSite ya es la sede creada
+  const handleSiteCreated = (createdSite) => { 
     try {
       setSites(prevSites => [...prevSites, createdSite]);
       console.log('Sede creada exitosamente:', createdSite);
@@ -93,14 +92,13 @@ const SitesModule = () => {
   }
 
   const handleEditSite = (site) => {
-    setSiteToEdit(site); // Establece la sede que se va a editar
-    setIsFormOpen(true); // Abre el modal del formulario
+    setSiteToEdit(site); 
+    setIsFormOpen(true); 
   };
 
-  // Función para abrir el formulario en modo creación
   const handleOpenCreateForm = () => {
-    setSiteToEdit(null); // Asegurarse de que no haya una sede en edición
-    setIsFormOpen(true); // Abre el modal del formulario
+    setSiteToEdit(null); 
+    setIsFormOpen(true); 
   };
 
   const handleDeleteSite = async (siteId) => {
@@ -120,7 +118,7 @@ const SitesModule = () => {
       cancelButtonColor: "#6b7280", // Gris para cancelar
       confirmButtonText: "Si, eliminalo!",
       cancelButtonText: "Cancelar",
-      reverseButtons: true, // Pone el botón de confirmar a la derecha
+      reverseButtons: true, 
       customClass: {
         popup: "swal2-dark-mode",
         title: "text-white",
@@ -150,7 +148,6 @@ const SitesModule = () => {
     }
   };
 
-  // Filtrado por nombre o dirección de la sede
   const filteredSites = useMemo(() => {
     if(!Array.isArray(sites)) return [];
 
@@ -179,8 +176,7 @@ const SitesModule = () => {
   }
 
   return (
-    // Contenedor principal con el fondo oscuro y padding responsivo
-    <div className="bg-gray-900 min-h-full p-4 sm:p-6">
+    <div className="bg-gradient-to-tr from-black to-blue-700/30  min-h-full p-4 sm:p-6">
       {/* Error Message */}
       {error && (
         <div className="mb-6 bg-red-500/10 border border-red-500/20 text-red-300 p-4 rounded-lg flex items-center gap-2">
@@ -199,7 +195,7 @@ const SitesModule = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
         <h2 className="text-3xl md:text-4xl font-black text-white text-center sm:text-left">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">
-            Manage Branches
+            Gestionar Sedes
           </span>
         </h2>
         
@@ -212,13 +208,15 @@ const SitesModule = () => {
                        hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/30 flex items-center justify-center gap-2"
           >
             <Plus className="w-5 h-5" />
-            New Branch
+            Nueva Sede
           </button>
         ) : (
-          <div className="w-full sm:w-auto py-3 px-6 text-base font-bold rounded-lg 
-                         bg-gray-700 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2">
+          <div
+            className="w-full sm:w-auto py-3 px-6 text-base font-bold rounded-lg 
+                         bg-gray-700 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2"
+          >
             <Plus className="w-5 h-5" />
-            New Branch
+            Nueva Sede
           </div>
         )}
       </div>
@@ -227,7 +225,8 @@ const SitesModule = () => {
       {!hasPermission && (
         <div className="mb-6 bg-yellow-500/10 border border-yellow-500/20 text-yellow-300 p-4 rounded-lg flex items-center gap-2">
           <AlertTriangle className="w-5 h-5" />
-          Solo puedes visualizar las sedes. Los permisos de creación, edición y eliminación están restringidos a los que no sean administradores.
+          Solo puedes visualizar las sedes. Los permisos de creación, edición y
+          eliminación están restringidos a los que no sean administradores.
         </div>
       )}
 
@@ -237,7 +236,7 @@ const SitesModule = () => {
           <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by branch name or address..."
+            placeholder="Buscar por nombre de la sede o dirección..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-gray-800 text-white pl-12 pr-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -247,22 +246,30 @@ const SitesModule = () => {
 
       {/* --- GRID DE TARJETAS DE SEDES (RESPONSIVO) --- */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredSites.map(site => (
-          <div key={site._id} className="bg-gray-800 border-2 border-gray-700 rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:border-indigo-500/50 hover:scale-[1.02]">
-            
+        {filteredSites.map((site) => (
+          <div
+            key={site._id}
+            className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl shadow-lg flex flex-col transition-all duration-300 hover:border-indigo-500/50 hover:scale-[1.02]"
+          >
             {/* --- Cabecera de la Tarjeta --- */}
             <div className="p-5 flex justify-between items-start border-b border-gray-700">
               <div>
                 <p className="font-bold text-xl text-white">{site.name_site}</p>
               </div>
-              <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
-                ${site.isActive 
-                  ? 'bg-green-500/10 text-green-300 border-green-500/20' 
-                  : 'bg-red-500/10 text-red-400 border-red-500/20'
+              <span
+                className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border
+                ${
+                  site.isActive
+                    ? "bg-green-500/10 text-green-300 border-green-500/20"
+                    : "bg-red-500/10 text-red-400 border-red-500/20"
                 }`}
               >
-                {site.isActive ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
-                {site.isActive ? 'Active' : 'Inactive'}
+                {site.isActive ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <X className="w-4 h-4" />
+                )}
+                {site.isActive ? "Active" : "Inactive"}
               </span>
             </div>
 
@@ -271,22 +278,24 @@ const SitesModule = () => {
               <div className="flex items-start gap-4">
                 <MapPin className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="text-sm text-gray-400">Address</p>
+                  <p className="text-sm text-gray-400">Dirección</p>
                   <p className="font-medium text-white">{site.address_site}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Phone className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="text-sm text-gray-400">Phone</p>
+                  <p className="text-sm text-gray-400">Número de celular</p>
                   <p className="font-medium text-white">{site.phone_site}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Clock className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="text-sm text-gray-400">Hours</p>
-                  <p className="font-medium text-white">{site.headquarter_time}</p>
+                  <p className="text-sm text-gray-400">Horarios</p>
+                  <p className="font-medium text-white">
+                    {site.headquarter_time}
+                  </p>
                 </div>
               </div>
             </div>
@@ -298,12 +307,12 @@ const SitesModule = () => {
                   <button 
                     className="flex-1 bg-gray-700/50 text-white px-4 py-2 rounded-lg hover:bg-gray-700 flex items-center justify-center gap-2 transition-colors"
                     onClick={() => {
-                      handleEditSite(site)
-                      console.log('Editar sede:', site._id);
+                      handleEditSite(site);
+                      console.log("Editar sede:", site._id);
                     }}
                   >
                     <Edit className="w-4 h-4" />
-                    Edit
+                    Editar
                   </button>
                   <button 
                     className="p-3 text-red-500 bg-gray-700/50 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors disabled:opacity-50"
@@ -320,7 +329,7 @@ const SitesModule = () => {
               ) : (
                 <div className="flex-1 bg-gray-700/30 text-gray-500 px-4 py-2 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed">
                   <Edit className="w-4 h-4" />
-                  View Only
+                  Solo visualización
                 </div>
               )}
             </div>
@@ -341,15 +350,15 @@ const SitesModule = () => {
             
             {/* Título y descripción */}
             <h3 className="text-2xl font-bold text-white mb-3">
-              {searchTerm ? 'No branches match your search' : 'No branches yet'}
+              {searchTerm ? 'No hay sucursales que coincidan con tu búsqueda' : 'Aún no hay sucursales'}
             </h3>
             
             <p className="text-gray-400 mb-6 leading-relaxed">
               {searchTerm 
-                ? `We couldn't find any branches matching "${searchTerm}". Try different keywords or check the spelling.`
+                ? `No pudimos encontrar ninguna sucursal que coincida "${searchTerm}". Pruebe diferentes palabras clave o compruebe la ortografía.`
                 : hasPermission 
-                  ? 'Start building your network by creating your first branch location.'
-                  : 'No branches have been created yet. Contact an administrator to add new locations.'
+                  ? 'Comience a construir su red creando su primera sucursal.'
+                  : 'Aún no se han creado sucursales. Contacta con un administrador para agregar nuevas ubicaciones.'
               }
             </p>
 
@@ -361,7 +370,7 @@ const SitesModule = () => {
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
                 >
                   <X className="w-4 h-4" />
-                  Clear search
+                  Borrar búsqueda
                 </button>
               ) : hasPermission ? (
                 <button
@@ -369,7 +378,7 @@ const SitesModule = () => {
                   className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg hover:scale-105 transition-all duration-300 font-medium shadow-lg hover:shadow-purple-500/25"
                 >
                   <Plus className="w-5 h-5" />
-                  Create your first branch
+                  Crea tu primera sucursal
                 </button>
               ) : null}
             </div>
@@ -387,12 +396,13 @@ const SitesModule = () => {
       {/* --- FORMULARIO MODAL --- */}
       <SiteForm 
         isOpen={isFormOpen}
-        onClose={() => {setIsFormOpen(false); 
+        onClose={() => {
+          setIsFormOpen(false);
           setSiteToEdit(null);
         }}
         onSiteCreated={handleSiteCreated}
         currentUser={currentUser}
-        onSiteUpdated={handleSiteUpdated} // <-- NUEVA PROP
+        onSiteUpdated={handleSiteUpdated}
         siteToEdit={siteToEdit}
       />
     </div>
