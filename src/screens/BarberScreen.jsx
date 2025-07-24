@@ -159,16 +159,21 @@ const BarberScreen = () => {
 
             {/* Botón Continuar */}
             <button
-              onClick={handleContinue}
-              disabled={!bookingDetails.service}
-              className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
-               transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden
-               disabled:bg-gray-500 disabled:cursor-not-allowed disabled:hover:shadow-none"
-            >
-              <span className="relative z-10 group-hover:text-black transition-colors duration-500">
-                Continuar
-              </span>
-              {/* Gradiente en hover */}
+                onClick={() => {
+                  if (bookingDetails.barber) {
+                    handleContinue();
+                  }
+                }}
+                disabled={!bookingDetails.barber}
+                className={`relative w-full py-4 px-6 text-lg rounded-lg font-extrabold transition-all duration-300 focus:outline-none
+                ${
+                  bookingDetails.barber
+                    ? "bg-red-600 text-white hover:scale-105 hover:shadow-xl"
+                    : "bg-gray-500 text-gray-300 cursor-not-allowed"
+                }`}
+              >
+                <span>Continuar</span>
+              </button>
               <div
                 className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 via-white to-red-600 
                     opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out
