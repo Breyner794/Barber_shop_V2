@@ -28,14 +28,16 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-      <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-2xl shadow-lg border border-gray-700">
+    <div className="bg-gradient-to-tr from-black to-blue-700 flex items-center justify-center min-h-screen  text-white">
+      <div className="w-full max-w-md p-8 space-y-8 bg-black rounded-2xl shadow-lg border border-gray-700">
         <div className="text-center">
             <div className="inline-block p-3 bg-blue-600/20 rounded-full mb-4 border border-blue-500/30">
                  <Scissors className="w-10 h-10 text-blue-400" />
             </div>
           <h1 className="text-3xl font-black text-white">Welcome Back</h1>
-          <p className="mt-2 text-gray-400">Log in to your BarberPro dashboard</p>
+          <p className="mt-2 text-gray-400">
+            Log in to your BarberPro dashboard
+          </p>
         </div>
         <form className="space-y-6" onSubmit={handleSubmit}>
           {error && (
@@ -74,7 +76,7 @@ const LoginPage = () => {
                          hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30
                          disabled:bg-gray-700 disabled:scale-100 disabled:shadow-none disabled:cursor-wait"
             >
-              {isLoading ? 'Logging in...' : 'Log In'}
+              {isLoading ? "Logging in..." : "Log In"}
             </button>
           </div>
         </form>
