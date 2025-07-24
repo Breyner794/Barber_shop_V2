@@ -5,12 +5,12 @@ import { useAuth } from '../../context/AuthContext';
 import ProfileModal from './ProfileModal';
 
 const navItems = [
-  { to: '/dashboard', icon: BarChart3, label: 'Dashboard' },
-  { to: '/dashboard/bookings', icon: Calendar, label: 'Bookings' },
-  { to: '/dashboard/services', icon: Scissors, label: 'Services' },
-  { to: '/dashboard/sites', icon: MapPin, label: 'Sites' },
-  { to: '/dashboard/users', icon: Users, label: 'Users' },
-  { to: '/dashboard/availability', icon: Clock, label: 'Availability' },
+  { to: '/dashboard', icon: BarChart3, label: 'Panel de control' },
+  { to: '/dashboard/bookings', icon: Calendar, label: 'Reservas' },
+  { to: '/dashboard/services', icon: Scissors, label: 'Servicios' },
+  { to: '/dashboard/sites', icon: MapPin, label: 'Sedes' },
+  { to: '/dashboard/users', icon: Users, label: 'Usuarios' },
+  { to: '/dashboard/availability', icon: Clock, label: 'Disponibilidad' },
 ];
 
 // El componente ahora recibe props para saber si debe mostrarse o no
@@ -52,34 +52,45 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
 
       <div
         className={`
-          bg-slate-900 border-r border-gray-800 text-white w-64 min-h-screen p-4
-          fixed top-0 left-0 z-40
-          transition-transform duration-300 ease-in-out
+          bg-black text-white w-64 
+          fixed top-0 left-0 z-40 h-screen 
           lg:static lg:translate-x-0
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          flex flex-col // Añadimos flexbox para el diseño de la parte inferior
+          transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          flex flex-col 
         `}
       >
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-2 p-6 flex-shrink-0">
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Scissors className="w-8 h-8 text-blue-400" />
             BarberPro
           </h1>
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-2">
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-2"
+          >
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        <nav className="space-y-2 flex-grow"> {/* Añadimos flex-grow para que la navegación ocupe espacio */}
+        <nav className="space-y-2 flex-grow px-4 overflow-y-auto">
+          {" "}
+          {/* Añadimos flex-grow para que la navegación ocupe espacio */}
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/dashboard'}
+              end={item.to === "/dashboard"}
               className={({ isActive }) =>
-                `w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors duration-200 ${isActive ? activeLinkClasses : defaultLinkClasses}`
+                `w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors duration-200 ${
+                  isActive ? activeLinkClasses : defaultLinkClasses
+                }`
               }
-              onClick={() => { if(window.innerWidth < 1024) { setSidebarOpen(false) } }}
+              onClick={() => {
+                if (window.innerWidth < 1024) {
+                  setSidebarOpen(false);
+                }
+              }}
             >
               <item.icon className="w-5 h-5" />
               {item.label}
@@ -88,7 +99,7 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         </nav>
 
         {/* --- Sección del Perfil y Logout en la parte inferior --- */}
-        <div className="mt-auto pt-4 border-t border-gray-700 space-y-2"> {/* mt-auto empuja hacia abajo */}
+        <div className="mt-auto pt-4 border-t border-gray-700 space-y-2 p-4 flex-shrink-0">
           {/* Item de Perfil que abre el modal */}
           {currentUser && (
             <button
@@ -96,12 +107,17 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
               className={`w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors duration-200 ${defaultLinkClasses}`}
             >
               {currentUser.imageUrl ? (
-                <img src={currentUser.imageUrl} alt="Perfil" className="w-8 h-8 rounded-full object-cover border-2 border-blue-400" />
+                <img
+                  src={currentUser.imageUrl}
+                  alt="Perfil"
+                  className="w-8 h-8 rounded-full object-cover border-2 border-blue-400"
+                />
               ) : (
                 <UserIcon className="w-8 h-8 text-gray-400 p-1 bg-gray-700 rounded-full" />
               )}
               <span className="font-semibold">{currentUser.name}</span>
-              <Settings className="w-5 h-5 ml-auto text-gray-500" /> {/* Icono de ajustes */}
+              <Settings className="w-5 h-5 ml-auto text-gray-500" />{" "}
+              {/* Icono de ajustes */}
             </button>
           )}
 
