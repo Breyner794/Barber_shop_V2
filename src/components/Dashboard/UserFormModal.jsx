@@ -83,8 +83,9 @@ const UserFormModal = ({
   useEffect(() => {
     const loadSites = async () => {
       try {
-        const sites = await apiService.getAllSite();
-        setSitesList(sites);
+        const response = await apiService.getAllSite();
+        const data = response.data || [];
+        setSitesList(data);
       } catch (error) {
         console.error("Error loading sites:", error);
       }
