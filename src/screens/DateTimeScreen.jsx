@@ -19,7 +19,7 @@ const DateTimeScreen = () => {
   const [selectedDate, setSelectedDate] = useState(null); // Almacena la fecha ELEGIDA (ej: '2025-06-17')
   const [availableSlots, setAvailableSlots] = useState([]); // Almacena los horarios devueltos por la API
   const [selectedSlot, setSelectedSlot] = useState(null); // Almacena el horario ELEGIDO (ej: {startTime, endTime})
-  const [isPageLoading ,setIsPageLoading] = useState(true) //Para recargar toda la pagina y mostrar el skeleton
+  const [isPageLoading, setIsPageLoading] = useState(true); //Para recargar toda la pagina y mostrar el skeleton
   const [isLoading, setIsLoading] = useState(false); // Para mostrar un indicador de carga Spinner
   const [error, setError] = useState(null); // Para mostrar errores
 
@@ -28,27 +28,27 @@ const DateTimeScreen = () => {
     []
   );
 
-  if (!bookingDetails.service){
-    return(
-      <RedirectNotice 
-      message="Primero debes seleccionar un servicio." 
-      redirectTo="/reservar" 
+  if (!bookingDetails.service) {
+    return (
+      <RedirectNotice
+        message="Primero debes seleccionar un servicio."
+        redirectTo="/reservar"
       />
     );
   }
-  if (!bookingDetails.site){
-    return(
-      <RedirectNotice 
-      message="Ahora debes seleccionar una sede para continuar." 
-      redirectTo="/reservar/sede" 
+  if (!bookingDetails.site) {
+    return (
+      <RedirectNotice
+        message="Ahora debes seleccionar una sede para continuar."
+        redirectTo="/reservar/sede"
       />
     );
   }
-  if (!bookingDetails.barber){
-    return(
-      <RedirectNotice 
-      message="Ahora debes seleccionar un barbero para continuar." 
-      redirectTo="/reservar/barbero" 
+  if (!bookingDetails.barber) {
+    return (
+      <RedirectNotice
+        message="Ahora debes seleccionar un barbero para continuar."
+        redirectTo="/reservar/barbero"
       />
     );
   }
@@ -81,12 +81,11 @@ const DateTimeScreen = () => {
             );
             setAvailableSlots(data);
           } else {
-            
             console.warn(
               "La API no devolvió un arreglo de horarios. Se recibió:",
               data
             );
-            setAvailableSlots([]); 
+            setAvailableSlots([]);
           }
         } catch (err) {
           console.error("Error al cargar los horarios:", err);
