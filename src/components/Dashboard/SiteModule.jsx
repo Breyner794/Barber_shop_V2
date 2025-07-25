@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Plus, Clock, MapPin, Phone, Edit, Trash2, Search, Check, X, LoaderCircle, AlertTriangle} from "lucide-react";
-import { mockData } from "../../data/mockData.js";
 import apiService from "../../api/services.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 import SiteForm from "./siteForm.jsx";
