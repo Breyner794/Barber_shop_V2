@@ -23,6 +23,7 @@ const ConfirmationScreen = () => {
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [validationErrors, setValidationErrors] = useState({});
 
     useEffect(()=>{
       setTimeout(() => {
@@ -66,11 +67,41 @@ const ConfirmationScreen = () => {
     const handleInputChange = (e) => {
     const { name, value } = e.target;
     setClientInfo(prev => ({ ...prev, [name]: value }));
+    if (validationErrors[name]) {
+            setValidationErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors[name];
+                return newErrors;
+            });
+          }
   };
+
+  const validateForm = () => {
+        const errors = {};
+        if (!clientInfo.name.trim()) {
+            errors.name = 'El nombre es obligatorio.';
+        }
+        if (!clientInfo.phone.trim()) {
+            errors.phone = 'El teléfono es obligatorio.';
+        } else if (!/^\d{10}$/.test(clientInfo.phone.trim())) {
+            errors.phone = 'Formato de teléfono no válido (solo números, 10 dígitos).';
+        }
+        if (clientInfo.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientInfo.email.trim())) {
+            errors.email = 'Formato de correo electrónico no válido.';
+        }
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0; // Retorna true si no hay errores
+    };
 
   const handleBack = () => navigate(-1);
 
   const handleConfirm = async () => {
+
+    if (!validateForm()) {
+            setError("Por favor, corrige los errores en el formulario.");
+            return;
+        }
+
     setIsLoading(true);
     setError(null);
     try{
@@ -91,40 +122,54 @@ const ConfirmationScreen = () => {
 
         const response = await apiService.createAppointment(finalBookingData);
         Swal.fire({
-        icon: 'success',
-        title: '<span style="font-size: 24px;">¡Reserva Confirmada!</span>',
-        html: `
-          <div style="text-align: left; margin-top: 20px;">
-            <p style="margin-bottom: 15px;">Gracias, <strong>${response.clientName}</strong>. Tu cita ha sido agendada con éxito.</p>
-            <p style="margin-bottom: 25px;">Usa el siguiente código para consultar tu reserva:</p>
-            
-            <div style="background-color: #1F2937; color: #E5E7EB; padding: 15px; border-radius: 8px; border: 2px dashed #4B5563; text-align: center;">
-              <span style="font-size: 14px; letter-spacing: 1px; display: block; margin-bottom: 5px;">Tu código de confirmación</span>
-              <strong style="font-size: 28px; font-weight: bold; letter-spacing: 4px; color: #60A5FA;">${response.confirmationCode}</strong>
-            </div>
-            
-            <p style="margin-top: 25px; font-size: 14px; color: #9CA3AF;">Recibirás un resumen de tu reserva en tu correo electrónico.</p>
-          </div>
-        `,
-        confirmButtonText: '¡Excelente!',
-        confirmButtonColor: '#2563EB',
-        allowOutsideClick: false, 
-        background: '#111827',
-        color: '#FFFFFF'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          resetBooking();
-          navigate('/reserva-exitosa', { 
-        replace: true, // Para que el usuario no pueda volver a la pantalla de confirmación
-        state: { booking: response } 
-      });
-        }
-      });
+          icon: "success",
+          title: '<span style="font-size: 24px;">¡Reserva Confirmada!</span>',
+          html: `
+    <div style="text-align: left; margin-top: 20px;">
+        <p style="margin-bottom: 15px;">Gracias, <strong>${response.clientName}</strong>. Tu cita ha sido agendada con éxito.</p>
+        <p style="margin-bottom: 25px;">Usa el siguiente código para consultar tu reserva:</p>
+        
+        <div style="background-color: #1F2937; color: #E5E7EB; padding: 15px; border-radius: 8px; border: 2px dashed #4B5563; text-align: center;">
+            <span style="font-size: 14px; letter-spacing: 1px; display: block; margin-bottom: 5px;">Tu código de confirmación</span>
+            <strong style="font-size: 28px; font-weight: bold; letter-spacing: 4px; color: #60A5FA;">${response.confirmationCode}</strong>
+        </div>
+        
+        <div style="
+            background-color: #3F2913; /* Un naranja-marrón oscuro, para un fondo de advertencia más sutil */
+            color: #FFDDAA; /* Tono más cálido y claro para el texto */
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px dashed #F59E0B; /* Borde punteado naranja más claro, como advertencia */
+            margin-top: 25px;
+            font-size: 14px;
+            text-align: center;
+        ">
+            <p style="font-weight: bold; margin-bottom: 5px; font-size: 16px;">¡ATENCIÓN: Cita sujeta a puntualidad!</p>
+            <p style="margin-bottom: 5px;">Si llegas <strong>10 minutos tarde</strong>, tu reserva será marcada como "No Asistió".</p>
+            <p>Por favor, llega a tiempo para no perder tu cita. ¡Gracias!</p>
+        </div>
+    </div>
+`,
+          confirmButtonText: "¡Excelente!",
+          confirmButtonColor: "#2563EB",
+          allowOutsideClick: false,
+          background: "#111827",
+          color: "#FFFFFF",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            resetBooking();
+            navigate("/reserva-exitosa", {
+              replace: true, // Para que el usuario no pueda volver a la pantalla de confirmación
+              state: { booking: response },
+            });
+          }
+        });
 
     }catch (err) {
        // 4. Manejamos cualquier error que la API nos devuelva.
        console.error("Error al confirmar la reserva:", err);
-       setError(err.message);
+            // Mostrar el mensaje de error de la API si existe, de lo contrario un mensaje genérico
+            setError(err.message || "Ocurrió un error al procesar tu reserva. Inténtalo de nuevo.");
     } finally {
       setIsLoading(false);
     }
@@ -174,6 +219,9 @@ return (
                   onChange={handleInputChange}
                   className="w-full bg-white/80 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
                 />
+                {validationErrors.name && (
+                                    <p className="text-red-400 text-sm mt-1">{validationErrors.name}</p>
+                                )}
               </div>
               <div>
                 <label
@@ -190,6 +238,9 @@ return (
                   onChange={handleInputChange}
                   className="w-full bg-white/80 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
                 />
+                {validationErrors.phone && (
+                                    <p className="text-red-400 text-sm mt-1">{validationErrors.phone}</p>
+                                )}
               </div>
               <div>
                 <label
@@ -206,6 +257,9 @@ return (
                   onChange={handleInputChange}
                   className="w-full bg-white/80 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
                 />
+                {validationErrors.email && (
+                                    <p className="text-red-400 text-sm mt-1">{validationErrors.email}</p>
+                                )}
               </div>
             </div>
           </div>
@@ -291,7 +345,7 @@ return (
 
           <button
             onClick={handleConfirm}
-            disabled={!clientInfo.name || !clientInfo.phone || isLoading}
+            disabled={!clientInfo.name || !clientInfo.phone || isLoading || Object.keys(validationErrors).length > 0}
             className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
                transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden
                disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:shadow-none"
