@@ -122,8 +122,8 @@ const ServiceScreen = () => {
           <div className="relative group  mb-8 lg:mb-12">
             <button
               onClick={handleContinue}
-              disabled={!bookingDetails.service}
-              className="w-full py-4 px-6 text-lg rounded-lg  bg-red-600 text-white font-extrabold transition-all duration-500 hover:scale-105 hover:shadow-xl  focus:outline-none"
+              disabled={!bookingDetails.service || services.length === 0}
+              className="w-full py-4 px-6 text-lg rounded-lg  bg-red-600 text-white font-extrabold transition-all duration-500 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed focus:outline-none"
             >
               <span className="relative z-10 group-hover:text-black transition-color duration-500">
                 Continuar
