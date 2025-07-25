@@ -126,10 +126,8 @@ const DateTimeScreen = () => {
     navigate(-1);
   };
 
-  if (isPageLoading){
-    return (
-      <DateTimeScreenSkeleton/>
-    )
+  if (isPageLoading) {
+    return <DateTimeScreenSkeleton />;
   }
 
   return (
@@ -183,7 +181,7 @@ const DateTimeScreen = () => {
           {/* Sección de Selección de Hora */}
           {selectedDate && (
             <div>
-              <p className="font-bold mb-4 text-lg">
+              <p className="font-bold mb-6 text-lg">
                 Horarios disponibles para el{" "}
                 {format(
                   new Date(selectedDate + "T00:00:00"),
@@ -192,6 +190,7 @@ const DateTimeScreen = () => {
                 )}
                 :
               </p>
+
               {isLoading && (
                 <div className="flex flex-col items-center justify-center flex-grow gap-6">
                   <Spinner />
@@ -200,30 +199,149 @@ const DateTimeScreen = () => {
                   </p>
                 </div>
               )}
+
               {error && !isLoading && (
                 <InlineError message={error} onRetry={handleRetry} />
               )}
+
               {!isLoading && !error && availableSlots.length > 0 && (
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
-                  {availableSlots.map((slot) => (
-                    <button
-                      key={slot.startTime}
-                      onClick={() => handleSelectSlot(slot)}
-                      className={`p-3 rounded-lg text-center font-bold transition-all duration-200
-                                ${
-                                  selectedSlot?.startTime === slot.startTime
-                                    ? "bg-blue-200/30 text-white scale-105"
-                                    : "bg-black/50  hover:bg-gray-700"
-                                }`}
-                    >
-                      {slot.startTime}
-                    </button>
-                  ))}
+                <div className="bg-black/50 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+                  <h3 className="text-center font-bold text-white mb-6 text-lg">
+                    Horas disponibles:
+                  </h3>
+
+                  <div className="grid grid-cols-3 gap-6">
+                    {/* MAÑANA */}
+                    <div className="text-center">
+                      <h4 className="font-bold text-white mb-4 text-base border-b border-white/20 pb-2">
+                        MAÑANA
+                      </h4>
+                      <div className="space-y-2">
+                        {availableSlots
+                          .filter((slot) => {
+                            const hour = parseInt(slot.startTime.split(":")[0]);
+                            return hour >= 6 && hour < 12;
+                          })
+                          .map((slot) => (
+                            <button
+                              key={slot.startTime}
+                              onClick={() => handleSelectSlot(slot)}
+                              className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 border
+                              ${
+                                selectedSlot?.startTime === slot.startTime
+                                  ? "bg-blue-500 text-white border-blue-500 shadow-md scale-105"
+                                  : "bg-black/50 text-white border-white/20 hover:bg-black/70 hover:border-white/30"
+                              }`}
+                            >
+                              {slot.startTime}
+                            </button>
+                          ))}
+                        {availableSlots.filter((slot) => {
+                          const hour = parseInt(slot.startTime.split(":")[0]);
+                          return hour >= 6 && hour < 12;
+                        }).length === 0 && (
+                          <p className="text-gray-400 text-sm italic py-4">
+                            Sin horas para reservar
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* TARDE */}
+                    <div className="text-center">
+                      <h4 className="font-bold text-white mb-4 text-base border-b border-white/20 pb-2">
+                        TARDE
+                      </h4>
+                      <div className="space-y-2">
+                        {availableSlots
+                          .filter((slot) => {
+                            const hour = parseInt(slot.startTime.split(":")[0]);
+                            return hour >= 12 && hour < 18;
+                          })
+                          .map((slot) => (
+                            <button
+                              key={slot.startTime}
+                              onClick={() => handleSelectSlot(slot)}
+                              className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 border
+                              ${
+                                selectedSlot?.startTime === slot.startTime
+                                  ? "bg-blue-500 text-white border-blue-500 shadow-md scale-105"
+                                  : "bg-black/50 text-white border-white/20 hover:bg-black/70 hover:border-white/30"
+                              }`}
+                            >
+                              {slot.startTime}
+                            </button>
+                          ))}
+                        {availableSlots.filter((slot) => {
+                          const hour = parseInt(slot.startTime.split(":")[0]);
+                          return hour >= 12 && hour < 18;
+                        }).length === 0 && (
+                          <p className="text-gray-400 text-sm italic py-4">
+                            Sin horas para reservar
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* NOCHE */}
+                    <div className="text-center">
+                      <h4 className="font-bold text-white mb-4 text-base border-b border-white/20 pb-2">
+                        NOCHE
+                      </h4>
+                      <div className="space-y-2">
+                        {availableSlots
+                          .filter((slot) => {
+                            const hour = parseInt(slot.startTime.split(":")[0]);
+                            return hour >= 18 || hour < 6;
+                          })
+                          .map((slot) => (
+                            <button
+                              key={slot.startTime}
+                              onClick={() => handleSelectSlot(slot)}
+                              className={`w-full py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 border
+                              ${
+                                selectedSlot?.startTime === slot.startTime
+                                  ? "bg-blue-500 text-white border-blue-500 shadow-md scale-105"
+                                  : "bg-black/50 text-white border-white/20 hover:bg-black/70 hover:border-white/30"
+                              }`}
+                            >
+                              {slot.startTime}
+                            </button>
+                          ))}
+                        {availableSlots.filter((slot) => {
+                          const hour = parseInt(slot.startTime.split(":")[0]);
+                          return hour >= 18 || hour < 6;
+                        }).length === 0 && (
+                          <p className="text-gray-400 text-sm italic py-4">
+                            Sin horas para reservar
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
+
               {!isLoading && !error && availableSlots.length === 0 && (
-                <div className="text-center bg-gray-800 p-6 rounded-lg">
-                  <p className="font-bold">No hay horarios disponibles</p>
+                <div className="text-center bg-black/50 backdrop-blur-sm p-8 rounded-xl border border-white/10">
+                  <div className="mb-4">
+                    <svg
+                      className="mx-auto h-12 w-12 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <p className="font-bold text-white mb-2">
+                    No hay horarios disponibles
+                  </p>
                   <p className="text-gray-400">
                     Por favor, selecciona otra fecha.
                   </p>
