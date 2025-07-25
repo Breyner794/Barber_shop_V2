@@ -21,7 +21,8 @@ const ServicesModule = () => {
     setError(null);
     console.log("fectServices: Iniciando");
     try{
-      const data  = await apiService.getServicesDashboard();
+      const response  = await apiService.getServicesDashboard();
+      const data = response.data || [];
       setServices(data);
       console.log("data traida de la api es ", data)
     }catch (error){
