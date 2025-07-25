@@ -140,7 +140,7 @@ return (
           {/* Botón Continuar */}
           <button
             onClick={handleContinue}
-            disabled={!bookingDetails.service}
+            disabled={!bookingDetails.site || sites.length === 0}
             className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
                transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden
                disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:shadow-none"
