@@ -81,7 +81,7 @@ const apiService = {
     getAllServices : async () => {
         try{
             const response = await apiClient.get('/services');
-            return response.data.data;
+            return response.data;
         }catch (error){
           // 1. Loguear el error técnico completo para nosotros (los devs)
           console.error("Error técnico al obtener servicios:", error);
@@ -108,7 +108,7 @@ const apiService = {
     getServicesDashboard : async () => {
         try{
             const response = await apiClient.get('/services/dashboard-services');
-            return response.data.data;
+            return response.data;
         }catch (error){
           // 1. Loguear el error técnico completo para nosotros (los devs)
           console.error("Error técnico al obtener servicios:", error);
@@ -132,11 +132,10 @@ const apiService = {
         }
     },
 
-
     getAllSite: async () => {
         try{
             const response = await apiClient.get('/site');
-            return response.data.data;
+            return response.data;
         }catch (error){
           console.error("Error técnico al obtener las sedes:", error);
 
@@ -158,7 +157,7 @@ const apiService = {
     getSiteDashboard: async () => {
         try{
             const response = await apiClient.get('/site/site/dashboard');
-            return response.data.data;
+            return response.data;
         }catch (error){
           console.error("Error técnico al obtener las sedes:", error);
 
