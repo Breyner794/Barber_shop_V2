@@ -259,9 +259,60 @@ const ServicesModule = () => {
 
       {/* --- Mensaje por si no hay resultados --- */}
       {services.length === 0 && !isLoading && (
-        <div className="text-center py-16 col-span-full">
-          <p className="text-xl font-semibold text-gray-300">No services found</p>
-          <p className="text-gray-500 mt-2">Try adjusting your search terms.</p>
+        <div className="text-center py-20 col-span-full">
+          <div className="bg-gray-800/50 border-2 border-dashed border-gray-600 rounded-3xl p-12 max-w-lg mx-auto">
+            {/* Icono principal */}
+            <div className="mb-6">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-teal-500/20 to-green-500/20 rounded-full flex items-center justify-center border border-teal-500/30">
+                <Tag className="w-10 h-10 text-teal-400" />
+              </div>
+            </div>
+            
+            {/* Título y descripción */}
+            <h3 className="text-2xl font-bold text-white mb-3">
+              No services available yet
+            </h3>
+            
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              {hasPermission 
+                ? 'Start offering your services by creating your first service. Add details like pricing, duration, and descriptions to attract customers.'
+                : 'No services have been created yet. Contact an administrator to add new services to the catalog.'
+              }
+            </p>
+
+            {/* Acciones sugeridas */}
+            <div className="space-y-3">
+              {hasPermission ? (
+                <button
+                  onClick={() => handleOpenForm()}
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-green-600 text-white rounded-lg hover:scale-105 transition-all duration-300 font-medium shadow-lg hover:shadow-green-500/25"
+                >
+                  <Plus className="w-5 h-5" />
+                  Create your first service
+                </button>
+              ) : null}
+            </div>
+
+            {/* Elementos decorativos */}
+            <div className="mt-8 flex justify-center gap-4 opacity-30">
+              <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+              <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+            </div>
+
+            {/* Sugerencias adicionales */}
+            {hasPermission && (
+              <div className="mt-8 pt-6 border-t border-gray-700/50">
+                <p className="text-sm text-gray-500 mb-4">Popular service ideas:</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Haircut</span>
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Beard Trim</span>
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Hair Wash</span>
+                  <span className="px-3 py-1 bg-gray-700/30 text-gray-400 rounded-full text-xs">Styling</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
