@@ -1,25 +1,80 @@
-// src/pages/CheckReservationPage.jsx
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import apiService from '../api/services';
 import Spinner from '../components/Spinner';
+import { Clock, CheckCircle, XCircle, AlertCircle, TriangleAlert } from 'lucide-react';
 
-// Un componente para mostrar los detalles de la cita una vez encontrada
+const getStatusStyles = (status) => {
+  const styles = {
+    pendiente: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+    confirmada: "bg-blue-500/10 text-blue-400 border-blue-500/20", 
+    completada: "bg-green-500/10 text-green-400 border-green-500/20",
+    cancelada: "bg-red-500/10 text-red-400 border-red-500/20",
+    "no-asistio": "bg-gray-500/10 text-gray-400 border-gray-500/20",
+  };
+  return styles[status] || styles["no-asistio"];
+};
+
+const getStatusIcon = (status) => {
+  switch (status) {
+    case "pendiente":
+      return <Clock className="w-4 h-4" />;
+    case "confirmada":
+      return <CheckCircle className="w-4 h-4" />;
+    case "completada":
+      return <CheckCircle className="w-4 h-4 text-green-400" />;
+    case "cancelada":
+      return <XCircle className="w-4 h-4" />;
+    case "no-asistio":
+      return <AlertCircle className="w-4 h-4" />;
+    default:
+      return <AlertCircle className="w-4 h-4" />;
+  }
+};
+
 const AppointmentDetailsCard = ({ appointment }) => {
-  // ... (puedes añadir más detalles aquí)
+
+  const statusClasses = getStatusStyles(appointment.status);
+  const statusIcon = getStatusIcon(appointment.status);
+
   return (
-    <div className="bg-gray-800 p-6 rounded-lg mt-8 border-l-4 border-blue-500">
-      <h3 className="text-2xl font-bold mb-4">Detalles de tu Cita</h3>
-      <div className="space-y-3">
-        <p><strong>Estado:</strong> <span className="font-semibold capitalize px-2 py-1 bg-green-600/20 text-green-300 rounded-full">{appointment.status}</span></p>
-        <p><strong>Código:</strong> {appointment.confirmationCode}</p>
-        <p><strong>Fecha:</strong> {new Date(appointment.date).toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p><strong>Hora:</strong> {appointment.startTime} - {appointment.endTime}</p>
-        <p><strong>Barbero:</strong> {appointment.barberId.name} {appointment.barberId.last_name}</p>
-        <p><strong>Sede:</strong> {appointment.siteId.address_site}</p>
-      </div>
-    </div>
+    <div className="bg-gray-900 p-8 rounded-xl shadow-xl border border-gray-700"> {/* Fondo más oscuro, padding, bordes, sombra y borde sutil */}
+      <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-700"> {/* Encabezado con borde inferior */}
+        <h3 className="text-3xl font-extrabold text-blue-400">Detalles de tu Cita Agendada</h3> {/* Título más grande y con color */}
+        <span className={`inline-flex items-center gap-1 px-4 py-1.5 text-sm font-semibold rounded-full border ${statusClasses}`}> {/* Ajustado padding para el badge */}
+          {statusIcon}
+          {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1).replace('-', ' ')}
+        </span>
+      </div>
+
+      <div className="space-y-4 text-gray-300"> {/* Mayor espacio entre líneas y color de texto general */}
+        {/* Usamos flex para alinear etiqueta y valor */}
+        <div className="flex justify-between items-center py-2 border-b border-gray-800 last:border-b-0">
+          <p className="font-bold text-gray-200">Código:</p>
+          <p className="font-mono text-lg text-blue-300">{appointment.confirmationCode}</p>
+        </div>
+
+        <div className="flex justify-between items-center py-2 border-b border-gray-800 last:border-b-0">
+          <p className="font-bold text-gray-200">Fecha:</p>
+          <p>{new Date(appointment.date).toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        </div>
+
+        <div className="flex justify-between items-center py-2 border-b border-gray-800 last:border-b-0">
+          <p className="font-bold text-gray-200">Hora:</p>
+          <p className="text-lg font-semibold text-green-300">{appointment.startTime}</p> {/* Hora con más énfasis */}
+        </div>
+
+        <div className="flex justify-between items-center py-2 border-b border-gray-800 last:border-b-0">
+          <p className="font-bold text-gray-200">Barbero:</p>
+          <p className="text-gray-200">{appointment.barberId.name} {appointment.barberId.last_name}</p> {/* Nombre del barbero más resaltado */}
+        </div>
+
+        <div className="flex justify-between items-center py-2 border-b border-gray-800 last:border-b-0">
+          <p className="font-bold text-gray-200">Sede:</p>
+          <p>{appointment.siteId.address_site}</p>
+        </div>
+      </div>
+    </div>
   );
 };
 
