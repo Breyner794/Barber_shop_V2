@@ -32,12 +32,11 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dailySchedule, setDailySchedule] = useState({
     timeSlots: [],
-    isWorkingDay: false,
-    
+    isWorkingDay: true,
   });
   const [originalSchedule, setOriginalSchedule] = useState({
     timeSlots: [],
-    isWorkingDay: false,
+    isWorkingDay: true,
   });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [newTimeSlot, setNewTimeSlot] = useState({
@@ -51,10 +50,9 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
   useEffect(() => {
     let timer;
     if (error) {
-      
       timer = setTimeout(() => {
-        setError(null); // Limpia el error
-      }, 5000); // 5000 milisegundos = 5 segundos
+        setError(null);
+      }, 5000);
     }
     return () => {
       if (timer) {
@@ -82,10 +80,11 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
           };
           setDailySchedule(scheduleData)
           setOriginalSchedule(scheduleData);
-        }else{
-          const defaultSchedule ={
+        } else {
+          // ✅ CAMBIO PRINCIPAL: Cuando no hay datos, establecer isWorkingDay = true por defecto
+          const defaultSchedule = {
             timeSlots: [],
-            isWorkingDay: false,
+            isWorkingDay: true
           };
           setDailySchedule(defaultSchedule);
           setOriginalSchedule(defaultSchedule);
@@ -93,13 +92,14 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
         setHasUnsavedChanges(false)
       } catch (error) {
         console.error("Error loading daily schedule:", error);
-        const defaultSchedule ={
-            timeSlots: [],
-            isWorkingDay: false,
-          };
-          setDailySchedule(defaultSchedule);
-          setOriginalSchedule(defaultSchedule);
-          setHasUnsavedChanges(false);
+        // ✅ CAMBIO PRINCIPAL: En caso de error, también establecer isWorkingDay = true
+        const defaultSchedule = {
+          timeSlots: [],
+          isWorkingDay: true,
+        };
+        setDailySchedule(defaultSchedule);
+        setOriginalSchedule(defaultSchedule);
+        setHasUnsavedChanges(false);
       } finally {
         setIsLoading(false);
       }
@@ -121,30 +121,31 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
     const result = await Swal.fire({
     title: '¿Estás seguro?',
     text: 'Esta acción eliminará toda la configuración de disponibilidad para este día y no se puede deshacer.',
-    icon: 'warning', // Puedes usar 'warning', 'error', 'info', 'question'
+    icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#DC2626', // Rojo de Tailwind (red-600)
-    cancelButtonColor: '#6B7280', // Gris de Tailwind (gray-500/600)
+    confirmButtonColor: '#DC2626',
+    cancelButtonColor: '#6B7280',
     confirmButtonText: 'Sí, ¡eliminar!',
     cancelButtonText: 'Cancelar',
-    reverseButtons: true, // Para que el botón "Cancelar" esté a la izquierda y "Eliminar" a la derecha
+    reverseButtons: true,
     customClass: {
-      popup: 'swal2-dark-mode', // Clase personalizada para aplicar estilos, si tienes un modo oscuro global
+      popup: 'swal2-dark-mode',
       title: 'text-white',
       htmlContainer: 'text-gray-300',
       confirmButton: 'px-4 py-2 rounded-lg text-sm font-semibold',
       cancelButton: 'px-4 py-2 rounded-lg text-sm font-semibold',
     },
-    background: '#1F2937', // Fondo oscuro (gray-800)
-    color: '#E5E7EB', // Color de texto general (gray-200)
+    background: '#1F2937',
+    color: '#E5E7EB',
   });
     
     if (result.isConfirmed) {
       await apiService.deleteBarberExceptionForDate(selectedBarberId, formattedDate);
       
+      // ✅ CAMBIO: Después de eliminar, volver al estado por defecto con isWorkingDay = true
       const defaultSchedule = {
         timeSlots: [],
-        isWorkingDay: false,
+        isWorkingDay: true,
         reason: "",
       };
       
@@ -172,19 +173,19 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
     } catch (err) {
       console.error("Error al eliminar la excepción", err);
       Swal.fire({
-        title: "¡Error!", // Puedes hacer el título más expresivo
+        title: "¡Error!",
         text: `No se pudo eliminar la disponibilidad del día. Detalles: ${err.message || err}`,
-        icon: "error", // El icono de error rojo por defecto
-        confirmButtonText: "Entendido", // Un texto de botón más amigable
-        confirmButtonColor: "#2563EB", // Un color de botón azul (blue-600 de Tailwind)
+        icon: "error",
+        confirmButtonText: "Entendido",
+        confirmButtonColor: "#2563EB",
         customClass: {
-          popup: "swal2-dark-mode", // Clase personalizada para tu modo oscuro global (si la tienes definida)
-          title: "text-white", // Título blanco para contrastar con el fondo oscuro
-          htmlContainer: "text-gray-300", // Texto del mensaje en gris claro
-          confirmButton: "px-4 py-2 rounded-lg text-sm font-semibold", // Estilos para el botón de confirmar
+          popup: "swal2-dark-mode",
+          title: "text-white",
+          htmlContainer: "text-gray-300",
+          confirmButton: "px-4 py-2 rounded-lg text-sm font-semibold",
         },
-        background: "#1F2937", // Fondo oscuro (gray-800 de Tailwind)
-        color: "#E5E7EB", // Color del texto principal (gray-200 de Tailwind)
+        background: "#1F2937",
+        color: "#E5E7EB",
       });
 
     } finally {
@@ -230,23 +231,22 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
         color: "#E5E7EB",
       });
 
-      //pensar en agregar un pop-poup
     } catch (err) {
       console.error("Error al guardar la excepción", err);
       Swal.fire({
-        title: "¡Error!", // Puedes hacer el título más expresivo
+        title: "¡Error!",
         text: `No se pudo guardar la disponibilidad del día. Detalles: ${err.message || err}`,
-        icon: "error", // El icono de error rojo por defecto
-        confirmButtonText: "Entendido", // Un texto de botón más amigable
-        confirmButtonColor: "#2563EB", // Un color de botón azul (blue-600 de Tailwind)
+        icon: "error",
+        confirmButtonText: "Entendido",
+        confirmButtonColor: "#2563EB",
         customClass: {
-          popup: "swal2-dark-mode", // Clase personalizada para tu modo oscuro global (si la tienes definida)
-          title: "text-white", // Título blanco para contrastar con el fondo oscuro
-          htmlContainer: "text-gray-300", // Texto del mensaje en gris claro
-          confirmButton: "px-4 py-2 rounded-lg text-sm font-semibold", // Estilos para el botón de confirmar
+          popup: "swal2-dark-mode",
+          title: "text-white",
+          htmlContainer: "text-gray-300",
+          confirmButton: "px-4 py-2 rounded-lg text-sm font-semibold",
         },
-        background: "#1F2937", // Fondo oscuro (gray-800 de Tailwind)
-        color: "#E5E7EB", // Color del texto principal (gray-200 de Tailwind)
+        background: "#1F2937",
+        color: "#E5E7EB",
       });
     } finally {
       setIsSaving(false);
@@ -310,10 +310,11 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
       (_, index) => index !== indexToRemove
     );
     
+    // ✅ CAMBIO: Mantener isWorkingDay como está, sin forzarlo a false cuando no hay slots
     const newSchedule = {
       ...dailySchedule,
       timeSlots: updatedSlots,
-      isWorkingDay: updatedSlots.length > 0,
+      // ✅ Removido: isWorkingDay: updatedSlots.length > 0,
     };
     
     setDailySchedule(newSchedule);
@@ -323,45 +324,13 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
   const CalendarView = () => {
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
-    const startDate = startOfWeek(monthStart, { weekStartsOn: 1 }); // Lunes
+    const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
     const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
     const days = eachDayOfInterval({ start: startDate, end: endDate });
     const daysOfWeekShort = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
 
     return (
       <div className="bg-gray-800 border-2 border-gray-700 rounded-2xl p-5 h-full">
-        {/* --- INICIO DEL DEPURADOR VISUAL (puedes borrar este div después) --- */}
-        {/* <div className="bg-gray-700 p-2 mb-4 rounded-lg text-xs text-white font-mono">
-          <h4 className="text-sm font-bold text-cyan-400 mb-2">
-            -- DEBUGGER --
-          </h4>
-          <p>
-            <strong>Barbero ID:</strong> {selectedBarberId || "N/A"}
-          </p>
-          <p>
-            <strong>Fecha Seleccionada:</strong>{" "}
-            {format(selectedDate, "yyyy-MM-dd")}
-          </p>
-          <p className="mt-2">
-            <strong>Horario del Día (dailySchedule state):</strong>
-          </p>
-          <pre className="bg-black/30 p-2 rounded text-white text-[10px]">
-            {JSON.stringify(dailySchedule, null, 2)}
-          </pre>
-          <p className="mt-2">
-            <strong>Nuevo TimeSlot (input state):</strong>
-          </p>
-          <pre className="bg-black/30 p-2 rounded text-white text-[10px]">
-            {JSON.stringify(newTimeSlot, null, 2)}
-          </pre>
-          {error && (
-            <p className="mt-2">
-              <strong>Error Actual:</strong>{" "}
-              <span className="text-red-400 font-bold">{error}</span>
-            </p>
-          )}
-        </div> */}
-        {/* --- FIN DEL DEPURADOR VISUAL --- */}
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() =>
@@ -424,182 +393,219 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
   };
 
   const DailyScheduleView = () => (
-    <div className="bg-gray-800 border-2 border-gray-700 rounded-2xl p-5 h-full flex flex-col">
-      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-4">
-        <div className="mb-4 sm:mb-0">
-          <h3 className="text-lg font-semibold text-white mb-1">
-            Horario para
-          </h3>
-          <p className="text-cyan-400 font-bold text-xl mb-4">
-            {format(selectedDate, "EEEE, d 'de' MMMM", { locale: es })}
-          </p>
-        </div>
-
-        {/* Botones de acción */}
-        <div className="flex gap-2">
-          <button
-            onClick={handleDeleteException}
-            disabled={isSaving}
-            className="flex items-center gap-2 bg-red-600 
-            hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg 
-            transition-colors disabled:bg-gray-500 cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-            Borrar
-          </button>
-
-          <button
-            onClick={handleSaveException}
-            disabled={isSaving || !hasUnsavedChanges}
-            className={`flex items-center gap-2 font-bold py-2 px-4 rounded-lg transition-colors ${
-              hasUnsavedChanges
-                ? "bg-green-600 hover:bg-green-700 text-white cursor-pointer"
-                : "bg-gray-600 text-gray-300 cursor-not-allowed"
-            } disabled:bg-gray-500`}
-          >
-            {isSaving ? (
-              <Clock className="w-5 h-5 animate-spin" />
-            ) : (
-              <Save className="w-5 h-5" />
-            )}
-            {isSaving ? "Guardando..." : "Guardar Día"}
-          </button>
-        </div>
+  <div className="bg-gray-800 border-2 border-gray-700 rounded-2xl p-5 h-full flex flex-col">
+    <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-4">
+      <div className="mb-4 sm:mb-0">
+        <h3 className="text-lg font-semibold text-white mb-1">
+          Horario para
+        </h3>
+        <p className="text-cyan-400 font-bold text-xl mb-4">
+          {format(selectedDate, "EEEE, d 'de' MMMM", { locale: es })}
+        </p>
       </div>
 
-      {/* Mensaje de cambios no guardados */}
-      {hasUnsavedChanges && (
-        <div className="bg-yellow-900/20 border border-yellow-600/50 rounded-lg p-3 mb-4">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-yellow-400" />
-            <p className="text-yellow-300 text-sm">
-              <strong>Cambios temporales:</strong> Los cambios que haces aquí
-              son solo de prueba. Presiona "Guardar Día" para confirmar y guardar
-              este horario.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Switch para marcar como día libre */}
-
-      <div className="flex items-center gap-2 mb-4">
-        <span
-          className={`text-sm font-medium ${
-            dailySchedule.isWorkingDay ? "text-white" : "text-gray-500"
-          }`}
-        >
-          Día Laboral
-        </span>
+      <div className="flex gap-2">
         <button
-          onClick={toggleIsWorkingDay}
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-            dailySchedule.isWorkingDay ? "bg-green-500" : "bg-gray-600"
-          }`}
+          onClick={handleDeleteException}
+          disabled={isSaving}
+          className="flex items-center gap-2 bg-red-600 
+          hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg 
+          transition-colors disabled:bg-gray-500 cursor-pointer"
         >
-          <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-              dailySchedule.isWorkingDay ? "translate-x-6" : "translate-x-1"
-            }`}
-          />
+          <X className="w-5 h-5" />
+          Borrar
+        </button>
+
+        <button
+          onClick={handleSaveException}
+          disabled={isSaving || !hasUnsavedChanges}
+          className={`flex items-center gap-2 font-bold py-2 px-4 rounded-lg transition-colors ${
+            hasUnsavedChanges
+              ? "bg-green-600 hover:bg-green-700 text-white cursor-pointer"
+              : "bg-gray-600 text-gray-300 cursor-not-allowed"
+          } disabled:bg-gray-500`}
+        >
+          {isSaving ? (
+            <Clock className="w-5 h-5 animate-spin" />
+          ) : (
+            <Save className="w-5 h-5" />
+          )}
+          {isSaving ? "Guardando..." : "Guardar Día"}
         </button>
       </div>
+    </div>
 
-      <div className="space-y-3 flex-grow overflow-y-auto pr-2 ">
-        {dailySchedule.isWorkingDay ? (
-          <div className="space-y-4">
-            {dailySchedule.timeSlots.map((slot, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg"
-              >
-                <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-cyan-400" />
-                  <span className="font-medium text-white">
-                    {slot.startTime} - {slot.endTime}
-                  </span>
-                </div>
-                <button
-                  onClick={() => removeTimeSlot(index)}
-                  className="p-1 text-red-500 hover:text-red-400 cursor-pointer"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-            {dailySchedule.timeSlots.length === 0 && (
-              <p className="text-center text-gray-500 py-4">
-                Aún no hay franjas horarias añadidas.
-              </p>
-            )}
-          </div>
-        ) : (
-          <div className="text-center py-10 text-gray-500">
-            <p>Día Libre</p>
-            <p className="text-xs">No hay disponibilidad para este día.</p>
-          </div>
-        )}
+    {/* ✅ CAMBIO: Alerta actualizada para reflejar el nuevo comportamiento */}
+    <div className="bg-blue-900/20 border border-blue-600/50 rounded-lg p-3 mb-4">
+      <div className="flex items-start gap-2">
+        <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+        <div className="text-blue-300 text-sm">
+          <p className="font-semibold mb-1">📌 Importante:</p>
+          <ul className="space-y-1 text-xs">
+            <li>• <strong>Siempre presiona "Guardar Día"</strong> para confirmar cualquier cambio</li>
+            <li>• Switch verde = día laboral (disponible para citas con horarios excepcionales)</li> 
+            <li>• Switch gris = día no laboral (sin citas disponibles)</li>
+            <li>• Por defecto cada día inicia como <strong>día laboral</strong> para mejor UX</li>
+            <li>• Los horarios excepcionales <strong>sobrescriben</strong> tu disponibilidad semanal</li>
+            <li>• Usa "Borrar" solo si quieres volver al horario semanal normal</li>
+          </ul>
+        </div>
       </div>
+    </div>
 
+    {hasUnsavedChanges && (
+      <div className="bg-yellow-900/30 border-2 border-yellow-500/70 rounded-lg p-3 mb-4 animate-pulse">
+        <div className="flex items-start gap-2">
+          <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+          <div className="text-yellow-200 text-sm">
+            <p className="font-bold text-yellow-100 mb-1">⚠️ Cambios Pendientes de Guardar</p>
+            <p className="mb-2">Tus cambios son temporales y no están guardados aún.</p>
+            <div className="bg-yellow-800/30 rounded p-2 text-xs">
+              <strong>👆 Presiona "Guardar Día"</strong> para que los cambios tomen efecto y los clientes puedan ver esta disponibilidad.
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Switch para marcar como día laboral */}
+    <div className="flex items-center gap-2 mb-4">
+      <span
+        className={`text-sm font-medium ${
+          dailySchedule.isWorkingDay ? "text-white" : "text-gray-500"
+        }`}
+      >
+        Día Laboral
+      </span>
+      <button
+        onClick={toggleIsWorkingDay}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+          dailySchedule.isWorkingDay ? "bg-green-500" : "bg-gray-600"
+        }`}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+            dailySchedule.isWorkingDay ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </button>
       {dailySchedule.isWorkingDay && (
-        <div className="mt-4 border-t border-gray-700 pt-4">
-          <h4 className="font-semibold text-white mb-2 text-sm">
-            Añadir una nueva franja horaria para este día:
-          </h4>
+        <span className="text-xs text-green-400 ml-2">
+          Activado - Puedes agregar horarios excepcionales
+        </span>
+      )}
+    </div>
 
-          {error && (
-            <div className="p-2 rounded-md bg-red-500/10 text-red-400 text-sm flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-4 h-4" /> {error}
+    <div className="space-y-3 flex-grow overflow-y-auto pr-2">
+      {dailySchedule.isWorkingDay ? (
+        <div className="space-y-4">
+          {dailySchedule.timeSlots.map((slot, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg"
+            >
+              <div className="flex items-center gap-3">
+                <Clock className="w-5 h-5 text-cyan-400" />
+                <span className="font-medium text-white">
+                  {slot.startTime} - {slot.endTime}
+                </span>
+              </div>
+              <button
+                onClick={() => removeTimeSlot(index)}
+                className="p-1 text-red-500 hover:text-red-400 cursor-pointer"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          {dailySchedule.timeSlots.length === 0 && (
+            <div className="text-center text-gray-500 py-4">
+              <p className="mb-2">Aún no hay franjas horarias añadidas.</p>
+              <p className="text-xs text-gray-400">
+                💡 Agrega horarios abajo para crear disponibilidad excepcional este día
+              </p>
             </div>
           )}
-
-          <div className="flex gap-2 items-end">
-            <div className="flex-1">
-              <label className="block text-xs text-gray-400 mb-1">Inicio:</label>
-              <input
-                type="time"
-                value={newTimeSlot.startTime}
-                onChange={(e) =>
-                  setNewTimeSlot({ ...newTimeSlot, startTime: e.target.value })
-                }
-                className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer"
-              />
+        </div>
+      ) : (
+        <div className="text-center py-10">
+          <div className="bg-gray-900/50 border border-gray-600/30 rounded-lg p-4">
+            <p className="text-gray-400 font-semibold mb-2">🔒 Día No Laboral</p>
+            <p className="text-gray-300 text-sm mb-3">
+              Este día no tendrá disponibilidad para citas.
+            </p>
+            <div className="bg-gray-800/50 rounded p-2 text-xs text-gray-300">
+              <strong>Nota:</strong> Si guardas este estado, este día específico no tendrá citas disponibles, 
+              incluso si tu horario semanal normal indica que sí trabajas este día.
             </div>
-            <div className="flex-1">
-              <label className="block text-xs text-gray-400 mb-1">Fin:</label>
-              <input
-                type="time"
-                value={newTimeSlot.endTime}
-                onChange={(e) =>
-                  setNewTimeSlot({ ...newTimeSlot, endTime: e.target.value })
-                }
-                className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer"
-              />
-            </div>
-            <button
-              onClick={addTimeSlot}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white p-2 rounded-md cursor-pointer"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
           </div>
         </div>
       )}
     </div>
-  );
+
+    {dailySchedule.isWorkingDay && (
+      <div className="mt-4 border-t border-gray-700 pt-4">
+        <h4 className="font-semibold text-white mb-2 text-sm flex items-center gap-2">
+          <Plus className="w-4 h-4 text-cyan-400" />
+          Añadir nueva franja horaria:
+        </h4>
+
+        {error && (
+          <div className="p-2 rounded-md bg-red-500/10 text-red-400 text-sm flex items-center gap-2 mb-2">
+            <AlertTriangle className="w-4 h-4" /> {error}
+          </div>
+        )}
+
+        <div className="flex gap-2 items-end">
+          <div className="flex-1">
+            <label className="block text-xs text-gray-400 mb-1">Inicio:</label>
+            <input
+              type="time"
+              value={newTimeSlot.startTime}
+              onChange={(e) =>
+                setNewTimeSlot({ ...newTimeSlot, startTime: e.target.value })
+              }
+              className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block text-xs text-gray-400 mb-1">Fin:</label>
+            <input
+              type="time"
+              value={newTimeSlot.endTime}
+              onChange={(e) =>
+                setNewTimeSlot({ ...newTimeSlot, endTime: e.target.value })
+              }
+              className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+            />
+          </div>
+          <button
+            onClick={addTimeSlot}
+            className="bg-cyan-600 hover:bg-cyan-700 text-white p-2 rounded-md cursor-pointer transition-colors"
+            title="Agregar franja horaria"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+        </div>
+        
+        <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+          <AlertCircle className="w-3 h-3" />
+          Los horarios que agregues aquí solo se aplicarán a este día específico
+        </p>
+      </div>
+    )}
+  </div>
+);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"> {/* Agrega items-start */}
-  {/* Columna del Calendario */}
-  <div className="flex flex-col">
-    <CalendarView />
-  </div>
-
-  {/* Columna del Horario Diario con Altura Fija y Scroll */}
-  <div className="flex flex-col"> {/* Contenedor para el DailyScheduleView */}
-    <DailyScheduleView className="max-h-[600px] overflow-y-auto" /> {/* Clase para altura máxima y scroll */}
-  </div>
-</div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="flex flex-col">
+        <CalendarView />
+      </div>
+      <div className="flex flex-col">
+        <DailyScheduleView className="max-h-[600px] overflow-y-auto" />
+      </div>
+    </div>
   );
 };
 
