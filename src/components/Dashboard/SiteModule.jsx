@@ -25,7 +25,8 @@ const SitesModule = () => {
     setError(null);
     console.log("fetchSites: Iniciando...");
     try{
-      const data  = await apiService.getSiteDashboard();
+      const response  = await apiService.getSiteDashboard();
+      const data = response.data || [];
       setSites(data);
     }catch (err){
       console.error('No se pudieron obtener las sedes. Inténtalo de nuevo.', err);
