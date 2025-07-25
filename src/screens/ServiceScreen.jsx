@@ -74,55 +74,66 @@ const ServiceScreen = () => {
 
           <ProgressBar currentStep={1} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 lg:mb-12">
-            {services.map((service) => {
-              const isSelected = bookingDetails.service?._id === service._id;
+          {services.length === 0 ? (
+            <div className="text-center py-10 px-6 rounded-lg bg-gray-800/70 backdrop-blur-sm shadow-lg my-12">
+              <p className="text-xl text-white mb-4 font-bold">
+                ¡No hay servicios disponibles en este momento!
+              </p>
+              <p className="text-gray-200">
+                Nuestro equipo está trabajando para añadir nuevas opciones. ¡Vuelve pronto!
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 lg:mb-12">
+              {services.map((service) => {
+                const isSelected = bookingDetails.service?._id === service._id;
 
-              const cardClasses = `
-              relative bg-black/50 border-2 rounded-lg cursor-pointer flex flex-col
-              transition-all duration-300 ease-in-out transform hover:scale-105 overflow-hidden
-              ${
-                isSelected
-                  ? "border-blue-500 ring-2 ring-blue-500/50"
-                  : "border-gray-700 hover:border-blue-600"
-              }
-            `;
+                const cardClasses = `
+                relative bg-black/50 border-2 rounded-lg cursor-pointer flex flex-col
+                transition-all duration-300 ease-in-out transform hover:scale-105 overflow-hidden
+                ${
+                  isSelected
+                    ? "border-blue-500 ring-2 ring-blue-500/50"
+                    : "border-gray-700 hover:border-blue-600"
+                }
+                `;
 
-              return (
-                <div
-                  key={service._id}
-                  className={cardClasses}
-                  onClick={() => setService(service)}
-                >
-                  {/* --- SECCIÓN DE LA IMAGEN --- */}
-                  <img
-                    src={service.image_Url}
-                    alt={service.name}
-                    className="w-full h-48 object-cover" // La imagen ocupa todo el ancho, tiene altura fija y no se deforma
-                  />
+                return (
+                  <div
+                    key={service._id}
+                    className={cardClasses}
+                    onClick={() => setService(service)}
+                  >
+                    {/* --- SECCIÓN DE LA IMAGEN --- */}
+                    <img
+                      src={service.image_Url}
+                      alt={service.name}
+                      className="w-full h-48 object-cover" // La imagen ocupa todo el ancho, tiene altura fija y no se deforma
+                    />
 
-                  {/* --- SECCIÓN DEL TEXTO --- */}
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="flex-grow">
-                      <p className="text-xl font-bold text-white">
-                        {service.name}
-                      </p>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {service.duration} Minutos aprox.
-                      </p>
-                    </div>
-                    <p className="text-2xl font-semibold text-white mt-4 self-end">
-                      {`$${service.price.toLocaleString("es-CO")}`}
-                    </p>
-                  </div>
+                    {/* --- SECCIÓN DEL TEXTO --- */}
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex-grow">
+                        <p className="text-xl font-bold text-white">
+                          {service.name}
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">
+                          {service.duration} Minutos aprox.
+                        </p>
+                      </div>
+                      <p className="text-2xl font-semibold text-white mt-4 self-end">
+                        {`$${service.price.toLocaleString("es-CO")}`}
+                      </p>
+                    </div>
 
-                  {isSelected && (
-                    <CircleCheckBig className="absolute top-4 right-4 h-6 w-6 text-blue-400" />
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    {isSelected && (
+                      <CircleCheckBig className="absolute top-4 right-4 h-6 w-6 text-blue-400" />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Botón Continuar */}
           <div className="relative group  mb-8 lg:mb-12">
