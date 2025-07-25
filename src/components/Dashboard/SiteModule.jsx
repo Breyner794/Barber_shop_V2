@@ -330,9 +330,57 @@ const SitesModule = () => {
       
       {/* --- Mensaje por si no hay resultados --- */}
       {filteredSites.length === 0 && !isLoading && (
-        <div className="text-center py-16 col-span-full">
-          <p className="text-xl font-semibold text-gray-300">No branches found</p>
-          <p className="text-gray-500 mt-2">Try adjusting your search terms.</p>
+        <div className="text-center py-20 col-span-full">
+          <div className="bg-gray-800/50 border-2 border-dashed border-gray-600 rounded-3xl p-12 max-w-lg mx-auto">
+            {/* Icono principal */}
+            <div className="mb-6">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-full flex items-center justify-center border border-purple-500/30">
+                <MapPin className="w-10 h-10 text-purple-400" />
+              </div>
+            </div>
+            
+            {/* Título y descripción */}
+            <h3 className="text-2xl font-bold text-white mb-3">
+              {searchTerm ? 'No branches match your search' : 'No branches yet'}
+            </h3>
+            
+            <p className="text-gray-400 mb-6 leading-relaxed">
+              {searchTerm 
+                ? `We couldn't find any branches matching "${searchTerm}". Try different keywords or check the spelling.`
+                : hasPermission 
+                  ? 'Start building your network by creating your first branch location.'
+                  : 'No branches have been created yet. Contact an administrator to add new locations.'
+              }
+            </p>
+
+            {/* Acciones sugeridas */}
+            <div className="space-y-3">
+              {searchTerm ? (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                  Clear search
+                </button>
+              ) : hasPermission ? (
+                <button
+                  onClick={handleOpenCreateForm}
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg hover:scale-105 transition-all duration-300 font-medium shadow-lg hover:shadow-purple-500/25"
+                >
+                  <Plus className="w-5 h-5" />
+                  Create your first branch
+                </button>
+              ) : null}
+            </div>
+
+            {/* Elementos decorativos */}
+            <div className="mt-8 flex justify-center gap-4 opacity-30">
+              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+            </div>
+          </div>
         </div>
       )}
 
