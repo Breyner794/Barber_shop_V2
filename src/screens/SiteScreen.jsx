@@ -36,8 +36,9 @@ const SiteScreen = () =>{
         setIsLoading(true);
         setError(null)
         try {  
-          const data = await apiService.getAllSite();
-          setSites(data);
+          const response = await apiService.getAllSite(); // Assuming apiService.getAllSite() returns a response object with a data property
+          const data = response.data || [];
+          setSites(data)
         } catch (err) {
           setError(err.message );
         } finally {
