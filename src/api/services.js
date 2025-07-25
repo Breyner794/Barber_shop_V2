@@ -688,7 +688,367 @@ const apiService = {
           throw new Error(userFriendlyMessage);
       }
     },
-    
+
+    getAllAppointments : async () => {
+      try{
+         const response = await apiClient.get('/appointments/');
+         return response.data;
+      }catch (error){
+        console.error("Error técnico al obtener la reserva desde la base de datos:", error);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (error.response) {
+            userFriendlyMessage =
+              error.response.data.message ||
+              `Error del servidor: ${error.response.status}`;
+          } else if (error.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    getAppointmentsByBarber : async (barberId) => {
+      if (!barberId) throw new Error("Se requiere el ID del barbero.");
+      try {
+        // Llama al nuevo endpoint que creaste
+        const response = await apiClient.get(`/appointments/barber/${barberId}`);
+        return response.data;
+      } catch (error) {
+        console.error(
+          `Error al obtener las reservas para el barbero ${barberId}:`,
+          error.response?.data || error.message
+        );
+        throw new Error(
+          error.response?.data?.message ||
+            `No se pudieron cargar las reservas del barbero.`
+        );
+      }
+    },
+
+    updateAppointmentStatus : async (appointmentId, status, notes) => {
+  if (!appointmentId || !status) throw new Error("Se requieren el ID de la reserva y el nuevo estado.");
+  try {
+    const payload = { status, notes };
+    // Usamos PATCH porque solo estamos actualizando una parte del recurso.
+    const response = await apiClient.patch(
+      `/appointments/${appointmentId}/status`,
+      payload
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error(
+      `Error al actualizar la reserva ${appointmentId}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "No se pudo actualizar el estado."
+    );
+  }
+    },
+
+    createCompletedService : async (newServiceComplete) =>{
+      try {
+        const response = await apiClient.post(
+          "/appointments/completed-service",
+          newServiceComplete
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Error técnico al crear el servicio completado:", error);
+         if (error.response) {
+      // El error ya tiene response.data, solo pasarlo
+      throw error;
+    } else if (error.request) {
+      // Solo para errores de conexión crear nuevo error
+      throw new Error("No se pudo conectar al servidor. Inténtalo de nuevo.");
+    } else {
+      throw new Error("Ocurrió un problema inesperado.");
+    }
+      }
+    },
+
+    updateAppointment : async (appointmentId, updateData) => {
+      try{
+
+        const response = await apiClient.patch(
+          `/appointments/updateappointment/${appointmentId}`, 
+          updateData
+        );
+
+        return response.data;
+      }catch (err){
+        console.error("Error técnico al actualizar el registro.:", err);
+
+          let userFriendlyMessage = "Ocurrió un problema inesperado.";
+
+          if (err.response) {
+            userFriendlyMessage =
+              err.response.data.message ||
+              `Error del servidor: ${err.response.status}`;
+          } else if (err.request) {
+            userFriendlyMessage =
+              "No se pudo conectar al servidor. Inténtalo de nuevo.";
+          }
+
+          throw new Error(userFriendlyMessage);
+      }
+    },
+
+    deleteAppointment : async (appointmentId, data) => {
+        try {
+            const response = await apiClient.delete(`/appointments/delete/${appointmentId}`, { data: data });
+            return response.data;
+        } catch (error) {
+            console.error("Error técnico no se pudo eliminar la reserva:", error);
+
+            // Simplemente lanza el error original o un objeto de error más estructurado
+            // para que el componente que llama pueda acceder a error.response
+            if (error.response) {
+                // Si hay una respuesta del servidor, lanza ese error
+                throw error; 
+            } else if (error.request) {
+                // Si no hay respuesta del servidor (problema de red)
+                throw new Error("No se pudo conectar al servidor. Inténtalo de nuevo.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un problema inesperado al eliminar la cita.");
+            }
+        }
+    },
+
+    // --- NUEVAS FUNCIONES PARA LAS APIs DE ANÁLISIS ---
+
+    /**
+     * Obtiene el conteo de reservas diarias en un rango de fechas.
+     * @param {string} startDate - Fecha de inicio en formato 'YYYY-MM-DD'.
+     * @param {string} endDate - Fecha de fin en formato 'YYYY-MM-DD'.
+     * @param {string} [barberId] - Opcional: ID del barbero para filtrar.
+     * @param {string} [status] - Opcional: Estados de citas a incluir, separados por comas (ej. "pendiente,confirmada,completada").
+     * @returns {Promise<Array>} Array de objetos con { date: string, count: number }.
+     */
+    getDailyBookings: async (startDate, endDate, barberId = null, status = null) => { // <-- Añade 'status' aquí
+        try {
+            const params = { startDate, endDate };
+            if (barberId) {
+                params.barberId = barberId;
+            }
+            if (status) { // Añade status a los parámetros si se proporciona
+                params.status = status;
+            }
+            const response = await apiClient.get('/analytics/daily-bookings', {
+                params: params
+            });
+            return response.data.data || response.data;
+        } catch (error) {
+            console.error('Error fetching daily bookings:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch daily bookings');
+        }
+    },
+
+    /**
+     * Obtiene el conteo de reservas por estado (pendiente, confirmada, etc.).
+     * @returns {Promise<Array>} Array de objetos con { status: string, count: number }.
+     */
+    getBookingsByStatus: async () => {
+        try {
+            const response = await apiClient.get('/analytics/bookings-by-status');
+            return response.data.data || response.data;
+        } catch (error) {
+            console.error('Error fetching bookings by status:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch bookings by status');
+        }
+    },
+
+    /**
+     * Obtiene los servicios más populares por conteo de reservas.
+     * @returns {Promise<Array>} Array de objetos con { serviceId: string, serviceName: string, count: number }.
+     */
+    getTopServices: async () => {
+        try {
+            const response = await apiClient.get('/analytics/top-services');
+            return response.data.data || response.data;
+        } catch (error) {
+            console.error('Error fetching top services:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch top services');
+        }
+    },
+
+    /**
+     * Obtiene los barberos con más reservas.
+     * @returns {Promise<Array>} Array de objetos con { barberId: string, barberName: string, count: number }.
+     */
+    getTopBarbers: async () => {
+        try {
+            const response = await apiClient.get('/analytics/top-barbers');
+            return response.data.data || response.data;
+        } catch (error) {
+            console.error('Error fetching top barbers:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch top barbers');
+        }
+    },
+
+    /**
+     * Obtiene la tasa de ocupación para un barbero y un rango de fechas.
+     * @param {string} startDate - Fecha de inicio en formato 'YYYY-MM-DD'.
+     * @param {string} endDate - Fecha de fin en formato 'YYYY-MM-DD'.
+     * @param {string} barberId - ID del barbero.
+     * @param {string} [siteId] - Opcional: ID de la sede.
+     * @returns {Promise<Object>} Objeto con la tasa de ocupación.
+     */
+    getOccupancyRate: async (startDate, endDate, barberId, siteId = null) => { // <-- Modificado para rango de fechas
+        try {
+            const params = { startDate, endDate, barberId }; // <-- Pasa startDate y endDate
+            if (siteId) params.siteId = siteId;
+            const response = await apiClient.get('/analytics/occupancy-rate', { params });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching occupancy rate:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch occupancy rate');
+        }
+    },
+
+    /**
+     * Obtiene una lista de clientes recurrentes.
+     * @param {number} [minBookings] - Opcional: Número mínimo de reservas para ser considerado recurrente.
+     * @returns {Promise<Array>} Array de objetos con { _id: string (phone), clientName: string, totalBookings: number, lastBookingDate: string }.
+     */
+    getRecurringClients: async (minBookings = null) => {
+        try {
+            const params = minBookings ? { minBookings } : {};
+            const response = await apiClient.get('/analytics/recurring-clients', { params });
+            return response.data.data || response.data;
+        } catch (error) {
+            console.error('Error fetching recurring clients:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch recurring clients');
+        }
+    },
+
+    /**
+     * Obtiene la recaudación total de servicios completados en un rango de fechas.
+     * @param {string} startDate - Fecha de inicio en formato 'YYYY-MM-DD'.
+     * @param {string} endDate - Fecha de fin en formato 'YYYY-MM-DD'.
+     * @returns {Promise<Object>} Objeto con totalRevenue.
+     */
+    getRevenueByDateRange: async (startDate, endDate) => {
+        try {
+            const response = await apiClient.get('/analytics/revenue-by-date-range', {
+                params: { startDate, endDate }
+            });
+            return response.data; // Este endpoint devuelve el objeto directamente
+        } catch (error) {
+            console.error('Error fetching revenue by date range:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch revenue by date range');
+        }
+    },
+
+    /**
+     * Obtiene la recaudación agrupada por barbero o por servicio en un rango de fechas.
+     * @param {string} startDate - Fecha de inicio en formato 'YYYY-MM-DD'.
+     * @param {string} endDate - Fecha de fin en formato 'YYYY-MM-DD'.
+     * @param {'barber'|'service'} [groupBy] - Opcional: 'barber' para agrupar por barbero, 'service' para agrupar por servicio.
+     * @returns {Promise<Array|Object>} Array de objetos si se agrupa, o un objeto con totalRevenue si no se agrupa.
+     */
+    getRevenueByBarberOrService: async (startDate, endDate, groupBy = null) => {
+        try {
+            const params = { startDate, endDate };
+            if (groupBy) params.groupBy = groupBy;
+            const response = await apiClient.get('/analytics/revenue-by-barber-or-service', { params });
+            return response.data; // Este endpoint devuelve el objeto directamente (con la propiedad 'data')
+        } catch (error) {
+            console.error('Error fetching revenue by barber or service:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch revenue by barber or service');
+        }
+    },
+
+    /**
+     * Obtiene el estado de los servicios (activos e inactivos).
+     * @returns {Promise<Object>} Objeto con activeServices y inactiveServices.
+     */
+    getServiceStatus: async () => {
+        try {
+            const response = await apiClient.get('/analytics/service-status');
+            return response.data; // Este endpoint devuelve el objeto directamente (con la propiedad 'data')
+        } catch (error) {
+            console.error('Error fetching service status:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch service status');
+        }
+    },
+
+    /**
+     * Obtiene la tasa de cancelación de citas en un rango de fechas.
+     * @param {string} startDate - Fecha de inicio en formato 'YYYY-MM-DD'.
+     * @param {string} endDate - Fecha de fin en formato 'YYYY-MM-DD'.
+     * @returns {Promise<Object>} Objeto con totalAppointments, cancelledAppointments, cancellationRate.
+     */
+    getCancellationRate: async (startDate, endDate) => {
+        try {
+            const response = await apiClient.get('/analytics/cancellation-rate', {
+                params: { startDate, endDate }
+            });
+            return response.data; // Este endpoint devuelve el objeto directamente
+        } catch (error) {
+            console.error('Error fetching cancellation rate:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch cancellation rate');
+        }
+    },
+
+    // --- NUEVA FUNCIÓN EN apiService PARA EL DASHBOARD ---
+    /**
+     * Obtiene las citas próximas para el dashboard, filtrando por barbero si se proporciona.
+     * @param {string} [barberId] - Opcional: ID del barbero para filtrar.
+     * @param {number} [limit] - Opcional: Número máximo de citas a devolver (por defecto 5).
+     * @returns {Promise<Array>} Array de objetos de citas próximas.
+     */
+    getUpcomingAppointmentsForDashboard: async (barberId = null, limit = 5) => {
+        try {
+            const params = { limit };
+            if (barberId) {
+                params.barberId = barberId;
+            }
+            const response = await apiClient.get('/appointments/upcoming-dashboard', { params });
+            // Esta API devuelve { success, message, count, data }
+            return response.data.data; 
+        } catch (error) {
+            console.error('Error fetching upcoming appointments for dashboard:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch upcoming appointments for dashboard');
+        }
+    },
+
+    // --- NUEVAS FUNCIONES PARA LOS CONTADORES DE KPIs ---
+
+    /**
+     * Obtiene el conteo de barberos activos.
+     * @returns {Promise<number>} El número de barberos activos.
+     */
+    getActiveBarbersCount: async () => {
+        try {
+            // Asumiendo que la ruta es /api/users/active-barbers-count
+            const response = await apiClient.get('/user/active-barbers-count');
+            return response.data.count;
+        } catch (error) {
+            console.error('Error fetching active barbers count:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch active barbers count');
+        }
+    },
+
+    /**
+     * Obtiene el conteo de sedes activas.
+     * @returns {Promise<number>} El número de sedes activas.
+     */
+    getActiveBranchesCount: async () => {
+        try {
+            // Asumiendo que la ruta es /api/sites/active-count
+            const response = await apiClient.get('/site/active-count');
+            return response.data.count;
+        } catch (error) {
+            console.error('Error fetching active branches count:', error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || 'Failed to fetch active branches count');
+        }
+    },
   };
 
 export default apiService;
