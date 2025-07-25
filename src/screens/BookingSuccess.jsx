@@ -1,6 +1,7 @@
 import { useLocation, Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { TriangleAlert } from 'lucide-react';
 
 const BookingSuccess = () => {
 
@@ -10,19 +11,40 @@ const BookingSuccess = () => {
 
   
   if (!booking) {
-    return (
-      <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col justify-center text-center">
-        <Header/>
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
-        <h1 className="text-2xl font-bold">No hay información de la reserva.</h1>
-        <Link to="/" className="mt-8 inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
-          Volver al Inicio
-        </Link>
-        </div>
-        <Footer/>
-      </div>
-    );
-  }
+    return (
+      <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col">
+        <Header/>
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+          <div className="max-w-md bg-black/70 p-8 rounded-xl shadow-2xl text-center">
+            <TriangleAlert className="mx-auto h-20 w-20 text-yellow-400 mb-6"/> {/* Icono de advertencia */}
+            <h1 className="text-3xl font-bold text-white mb-4">
+              ¡Vaya! Algo salió mal.
+            </h1>
+            <p className="text-gray-300 mb-6">
+              Parece que no hay información de reserva disponible para mostrar.
+              Esto puede ocurrir si intentaste acceder directamente al enlace sin completar una reserva,
+              o si hubo un problema al procesar tu solicitud.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link 
+                to="/" 
+                className="inline-block bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-sm"
+              >
+                Volver al Inicio
+              </Link>
+              <Link 
+                to="/reservar" 
+                className="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-sm"
+              >
+                Iniciar nueva Reserva
+              </Link>
+            </div>
+          </div>
+        </div>
+        <Footer/>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-tr from-gray-900 via-blue-700 to-black text-white min-h-screen flex flex-col justify-center text-center">
