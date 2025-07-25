@@ -25,8 +25,14 @@ const ServiceScreen = () => {
       setIsLoading(true);
       setError(null);
       try{
-        const data = await apiService.getAllServices();
+        const response = await apiService.getAllServices();
+        const data = response.data || []
         setServices(data);
+        if (bookingDetails.service && data.length > 0) {
+          const preselectedService = data.find(s => s._id === bookingDetails.service._id);
+          if (preselectedService) {
+          }
+        }
       }catch (err){
         setError(err.message);
       }finally {
