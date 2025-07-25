@@ -225,21 +225,17 @@ const apiService = {
             const response = await apiClient.post('/appointments', bookingData);
             return response.data.data
         }catch (error){
-            console.error("Error técnico al crear la reserva:", error);
-
-          let userFriendlyMessage = "Ocurrió un problema inesperado.";
-
-          if (error.response) {
-            userFriendlyMessage =
-              error.response.data.message ||
-              `Error del servidor: ${error.response.status}`;
-          } else if (error.request) {
-            userFriendlyMessage =
-              "No se pudo conectar al servidor. Inténtalo de nuevo.";
-          }
-
-          throw new Error(userFriendlyMessage);
-        }
+            console.error("Error técnico al crear el servicio completado:", error);
+         if (error.response) {
+      // El error ya tiene response.data, solo pasarlo
+      throw error;
+    } else if (error.request) {
+      // Solo para errores de conexión crear nuevo error
+      throw new Error("No se pudo conectar al servidor. Inténtalo de nuevo.");
+    } else {
+      throw new Error("Ocurrió un problema inesperado.");
+    }
+      }
     },
 
     getAppointmentByDetails: async (details) => {
@@ -406,21 +402,17 @@ const apiService = {
       try{
         const response = await apiClient.get('/user/');
         return response.data;
-      }catch{
-        console.error("Error técnico al obtener los usuarios:", error);
-
-          let userFriendlyMessage = "Ocurrió un problema inesperado.";
-
-          if (error.response) {
-            userFriendlyMessage =
-              error.response.data.message ||
-              `Error del servidor: ${error.response.status}`;
-          } else if (error.request) {
-            userFriendlyMessage =
-              "No se pudo conectar al servidor. Inténtalo de nuevo.";
-          }
-
-          throw new Error(userFriendlyMessage); 
+      }catch (error){
+        console.error("Error técnico al crear el servicio completado:", error);
+         if (error.response) {
+      // El error ya tiene response.data, solo pasarlo
+      throw error;
+    } else if (error.request) {
+      // Solo para errores de conexión crear nuevo error
+      throw new Error("No se pudo conectar al servidor. Inténtalo de nuevo.");
+    } else {
+      throw new Error("Ocurrió un problema inesperado.");
+    }
       }
     },
 
