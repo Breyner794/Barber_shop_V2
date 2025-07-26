@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Calendar, Scissors, MapPin, Users, BarChart3, ArrowRight, AlertCircle, LoaderCircle, Shield, Loader2 } from 'lucide-react';
 import { format, parseISO, isToday, isTomorrow, subDays } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
 import { NavLink } from 'react-router-dom';
 
 // Importa tu apiService y tu hook de autenticación
@@ -14,9 +14,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 // Pequeña función auxiliar para el saludo
 const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good Morning";
-    if (hour < 18) return "Good Afternoon";
-    return "Good Evening";
+    if (hour < 12) return "Buen día";
+    if (hour < 18) return "Buenas tardes";
+    return "Buenas noches";
 };
 
 const DashboardOverview = () => {
@@ -187,25 +187,25 @@ const DashboardOverview = () => {
 
                 setStats([
                     {
-                        title: "Bookings Today",
+                        title: "Reservas hoy",
                         value: bookingsTodayCount, // Usar el valor dinámico
                         icon: Calendar,
                         color: "blue"
                     },
                     {
-                        title: "Active Barbers",
+                        title: "Barberos Activos",
                         value: activeBarbersCount,
                         icon: Users,
                         color: "orange"
                     },
                     {
-                        title: "Active Services",
+                        title: "Servicios Activos",
                         value: activeServicesCount,
                         icon: Scissors,
                         color: "green"
                     },
                     {
-                        title: "Active Branches",
+                        title: "Sucursales Activas",
                         value: activeBranchesCount,
                         icon: MapPin,
                         color: "purple"
@@ -318,7 +318,7 @@ const DashboardOverview = () => {
     // Si la autenticación aún está cargando
     if (isAuthLoading) {
       return (
-        <div className="bg-gray-900 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
+        <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
           <div className="text-center">
             <div className="flex justify-center mb-6">
               <div className="relative">
@@ -338,7 +338,7 @@ const DashboardOverview = () => {
     // Si no hay usuario autenticado después de cargar
     if (!currentUser) {
         return (
-          <div className="bg-gray-900 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
+          <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
             <div className="text-center">
               <div className="flex justify-center mb-6">
                 <div className="bg-red-500/20 p-4 rounded-full">
@@ -359,7 +359,7 @@ const DashboardOverview = () => {
     // Si hay un error al cargar los datos del dashboard
     if (error) {
         return (
-            <div className="bg-gray-900 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
+            <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
       <div className="text-center max-w-md">
         <div className="flex justify-center mb-6">
           <div className="bg-red-500/20 p-4 rounded-full">
@@ -377,7 +377,7 @@ const DashboardOverview = () => {
     // Si los datos aún están cargando
     if (loading) {
       return (
-        <div className="bg-gray-900 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
+        <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex items-center justify-center p-4 sm:p-6 font-inter">
           <div className="text-center">
             <div className="flex justify-center mb-6">
               <div className="relative">
@@ -397,7 +397,7 @@ const DashboardOverview = () => {
     }
 
     return (
-        <div className="bg-gray-900 min-h-full p-4 sm:p-6 space-y-8 font-inter">
+        <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-full p-4 sm:p-6 space-y-8 font-inter">
             <style>
                 {`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -413,17 +413,17 @@ const DashboardOverview = () => {
                         {getGreeting()}, {currentUser.name}!
                     </span>
                 </h2>
-                <p className="text-gray-400 mt-2">Here's a summary of your business today.</p>
+                <p className="text-gray-400 mt-2">Aquí tienes un resumen de tu negocio hoy.</p>
             </div>
 
             {/* --- TARJETAS DE ESTADÍSTICAS (KPIs) --- */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat) => {
                     const colorClasses = {
-                        blue: { text: 'text-blue-400', bg: 'bg-blue-500/10', border: 'hover:border-blue-500/50' },
-                        orange: { text: 'text-orange-400', bg: 'bg-orange-500/10', border: 'hover:border-orange-500/50' },
-                        green: { text: 'text-green-400', bg: 'bg-green-500/10', border: 'hover:border-green-500/50' },
-                        purple: { text: 'text-purple-400', bg: 'bg-purple-500/10', border: 'hover:border-purple-500/50' },
+                        blue: { text: 'text-blue-400', bg: 'bg-blue-800/50', border: 'hover:border-blue-500/50' },
+                        orange: { text: 'text-orange-400', bg: 'bg-orange-800/50', border: 'hover:border-orange-500/50' },
+                        green: { text: 'text-green-400', bg: 'bg-green-800/50', border: 'hover:border-green-500/50' },
+                        purple: { text: 'text-purple-400', bg: 'bg-purple-800/50', border: 'hover:border-purple-500/50' },
                     };
                     const currentColors = colorClasses[stat.color];
 
@@ -446,26 +446,24 @@ const DashboardOverview = () => {
                 {/* Columna de Próximas Citas */}
                 <div className="lg:col-span-2 bg-gray-800/50 border-2 border-gray-700 rounded-2xl">
                     <div className="p-5 flex justify-between items-center border-b border-gray-700">
-                        <h3 className="text-xl font-bold text-white">Upcoming Bookings</h3>
+                        <h3 className="text-xl font-bold text-white">Próximas reservas</h3>
                         <NavLink to="/dashboard/bookings" className="text-sm font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                            View All <ArrowRight className="w-4 h-4" />
+                            Ver todo <ArrowRight className="w-4 h-4" />
                         </NavLink>
                     </div>
                     <div className="p-3 space-y-2">
                         {upcomingAppointments.length > 0 ? upcomingAppointments.map(appointment => {
-                            // Asegurarse de que date sea un objeto Date válido para date-fns
+                            
                             const date = parseISO(appointment.date);
                             let dayLabel;
                             if (isToday(date)) {
-                                dayLabel = 'Today';
+                                dayLabel = 'Hoy';
                             } else if (isTomorrow(date)) {
-                                dayLabel = 'Tomorrow';
+                                dayLabel = 'Mañana';
                             } else {
-                                dayLabel = format(date, 'EEEE, MMM d', { locale: enUS });
+                                dayLabel = format(date, 'EEEE, MMM d', { locale: es });
                             }
 
-                            // Asegurarse de que barberId y serviceId estén poblados
-                            // Los datos poblados vienen como objetos, no como IDs
                             const barberName = appointment.barberId ? `${appointment.barberId.name || ''} ${appointment.barberId.last_name || ''}`.trim() : 'N/A';
                             const serviceName = appointment.serviceId ? appointment.serviceId.name : 'N/A';
 
@@ -473,13 +471,13 @@ const DashboardOverview = () => {
                                 <div key={appointment._id} className="p-4 rounded-lg flex items-center justify-between transition-colors hover:bg-gray-700/50">
                                     <div className="flex items-center gap-4">
                                         <div className="text-center w-12 flex-shrink-0">
-                                            <p className="text-xs text-gray-400">{format(date, 'MMM', { locale: enUS })}</p>
+                                            <p className="text-xs text-gray-400">{format(date, 'MMM', { locale: es })}</p>
                                             <p className="text-2xl font-bold text-white">{format(date, 'd')}</p>
                                         </div>
                                         <div className="w-px h-10 bg-gray-700"></div>
                                         <div>
                                             <p className="font-semibold text-white">{appointment.clientName}</p>
-                                            <p className="text-sm text-gray-400">{serviceName} with {barberName}</p>
+                                            <p className="text-sm text-gray-400">{serviceName} con <strong className='text-sm text-blue-400'>{barberName}</strong></p>
                                         </div>
                                     </div>
                                     <div className="text-right">
@@ -488,13 +486,13 @@ const DashboardOverview = () => {
                                     </div>
                                 </div>
                             );
-                        }) : <p className="text-center py-8 text-gray-500">No upcoming bookings.</p>}
+                        }) : <p className="text-center py-8 text-gray-500">No hay reservas próximas.</p>}
                     </div>
                 </div>
 
                 {/* Columna de Gráfico de Reservas Diarias */}
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-5 flex flex-col">
-                    <h3 className="text-xl font-bold text-white mb-4">Bookings Last 7 Days</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Reservas de los últimos 7 días</h3>
                     <div className="flex-grow h-64"> {/* Altura fija para el gráfico */}
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
@@ -512,7 +510,7 @@ const DashboardOverview = () => {
                                     labelStyle={{ color: '#ffffff' }}
                                     itemStyle={{ color: '#ffffff' }}
                                 />
-                                <Bar dataKey="count" fill="#8884d8" name="Bookings" radius={[10, 10, 0, 0]} />
+                                <Bar dataKey="count" fill="#8884d8" name="Reservas" radius={[10, 10, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
@@ -524,11 +522,11 @@ const DashboardOverview = () => {
             {/* Recaudación Total (Solo Admin/SuperAdmin) */}
             {isAdminOrSuperAdmin && (
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Total Revenue</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Ingresos totales</h3>
                     {/* Controles de fecha para admins */}
                     <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="revenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Start Date:</label>
+                            <label htmlFor="revenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
                             <input
                                 type="date"
                                 id="revenueStartDate"
@@ -538,7 +536,7 @@ const DashboardOverview = () => {
                             />
                         </div>
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="revenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">End Date:</label>
+                            <label htmlFor="revenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
                             <input
                                 type="date"
                                 id="revenueEndDate"
@@ -554,7 +552,7 @@ const DashboardOverview = () => {
                                 ${revenueLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
                             `}
                         >
-                            {revenueLoading ? 'Loading...' : 'Apply Filter'}
+                            {revenueLoading ? 'Cargando...' : 'Aplicar filtro'}
                         </button>
                     </div>
                     {/* Visualización del total de revenue */}
@@ -562,14 +560,14 @@ const DashboardOverview = () => {
                         <>
                             <p className="text-4xl font-bold text-green-400">${totalRevenue.totalRevenue.toFixed(2)}</p>
                             <p className="text-gray-400 mt-2 text-sm">
-                                For the period: {totalRevenue.startDate} to {totalRevenue.endDate}
+                                Para el periodo: <strong className='text-sm text-blue-400'>{totalRevenue.startDate}</strong> hasta <strong className='text-sm text-blue-400'>{totalRevenue.endDate}</strong>
                             </p>
                         </>
                     ) : (
                         revenueLoading ? (
-                            <p className="text-gray-400 text-lg">Loading revenue...</p>
+                            <p className="text-gray-400 text-lg">Cargando ingresos...</p>
                         ) : (
-                            <p className="text-gray-400 text-lg">No revenue data for this period.</p>
+                            <p className="text-gray-400 text-lg">No hay datos de ingresos para este período.</p>
                         )
                     )}
                 </div>
@@ -578,11 +576,11 @@ const DashboardOverview = () => {
             {/* Recaudación por Barbero (Admin/SuperAdmin ven todos, Barbero ve solo el suyo) */}
             {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Revenue by Barber</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Ingresos por Barber</h3>
                     {/* Controles de fecha para admins */}
                     <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="barberRevenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Start Date:</label>
+                            <label htmlFor="barberRevenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
                             <input
                                 type="date"
                                 id="barberRevenueStartDate"
@@ -592,7 +590,7 @@ const DashboardOverview = () => {
                             />
                         </div>
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="barberRevenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">End Date:</label>
+                            <label htmlFor="barberRevenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
                             <input
                                 type="date"
                                 id="barberRevenueEndDate"
@@ -608,7 +606,7 @@ const DashboardOverview = () => {
                                 ${barberRevenueLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
                             `}
                         >
-                            {barberRevenueLoading ? 'Loading...' : 'Apply Filter'}
+                            {barberRevenueLoading ? 'Cargando...' : 'Aplicar filtro'}
                         </button>
                     </div>
                     {/* Visualización del revenue por barbero */}
@@ -623,9 +621,9 @@ const DashboardOverview = () => {
                         </div>
                     ) : (
                         barberRevenueLoading ? (
-                            <p className="text-gray-400 text-lg">Loading revenue by barber...</p>
+                            <p className="text-gray-400 text-lg">Cargando ingresos por barbero...</p>
                         ) : (
-                            <p className="text-gray-400 text-lg">No revenue data for this period.</p>
+                            <p className="text-gray-400 text-lg">No hay datos de ingresos para este período.</p>
                         )
                     )}
                 </div>
@@ -634,11 +632,11 @@ const DashboardOverview = () => {
             {/* Recaudación por Servicio (Solo Admin/SuperAdmin) */}
             {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Revenue by Service</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Ingresos por servicio</h3>
                     {/* Controles de fecha para admins */}
                     <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="serviceRevenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Start Date:</label>
+                            <label htmlFor="serviceRevenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
                             <input
                                 type="date"
                                 id="serviceRevenueStartDate"
@@ -648,7 +646,7 @@ const DashboardOverview = () => {
                             />
                         </div>
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="serviceRevenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">End Date:</label>
+                            <label htmlFor="serviceRevenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
                             <input
                                 type="date"
                                 id="serviceRevenueEndDate"
@@ -664,7 +662,7 @@ const DashboardOverview = () => {
                                 ${serviceRevenueLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
                             `}
                         >
-                            {serviceRevenueLoading ? 'Loading...' : 'Apply Filter'}
+                            {serviceRevenueLoading ? 'Cargando...' : 'Aplicar filtro'}
                         </button>
                     </div>
                     {/* Visualización del revenue por servicio */}
@@ -679,9 +677,9 @@ const DashboardOverview = () => {
                         </div>
                     ) : (
                         serviceRevenueLoading ? (
-                            <p className="text-gray-400 text-lg">Loading revenue by service...</p>
+                            <p className="text-gray-400 text-lg">Cargando ingresos por servicio...</p>
                         ) : (
-                            <p className="text-gray-400 text-lg">No revenue data for this period.</p>
+                            <p className="text-gray-400 text-lg">No hay datos de ingresos para este período.</p>
                         )
                     )}
                 </div>
@@ -690,11 +688,11 @@ const DashboardOverview = () => {
             {/* Tasa de Ocupación (Admin/SuperAdmin ven todos, Barbero ve solo el suyo) */}
             {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Occupancy Rate</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Tasa de ocupación</h3>
                     {/* Controles de fecha y barbero para admins */}
                     <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="occupancyStartDate" className="block text-sm font-medium text-gray-400 mb-1">Start Date:</label>
+                            <label htmlFor="occupancyStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
                             <input
                                 type="date"
                                 id="occupancyStartDate"
@@ -704,7 +702,7 @@ const DashboardOverview = () => {
                             />
                         </div>
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="occupancyEndDate" className="block text-sm font-medium text-gray-400 mb-1">End Date:</label>
+                            <label htmlFor="occupancyEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
                             <input
                                 type="date"
                                 id="occupancyEndDate"
@@ -714,14 +712,14 @@ const DashboardOverview = () => {
                             />
                         </div>
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="occupancyBarberSelect" className="block text-sm font-medium text-gray-400 mb-1">Barber:</label>
+                            <label htmlFor="occupancyBarberSelect" className="block text-sm font-medium text-gray-400 mb-1">Barbero:</label>
                             <select
                                 id="occupancyBarberSelect"
                                 className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={selectedOccupancyBarberId}
                                 onChange={(e) => setSelectedOccupancyBarberId(e.target.value)}
                             >
-                                <option value="">Select a Barber</option>
+                                <option value="">Seleccionar barbero</option>
                                 {allBarbers.map(barber => (
                                     <option key={barber._id} value={barber._id}>
                                         {barber.name} {barber.last_name}
@@ -736,7 +734,7 @@ const DashboardOverview = () => {
                                 ${occupancyLoading || !selectedOccupancyBarberId ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
                             `}
                         >
-                            {occupancyLoading ? 'Loading...' : 'Apply Filter'}
+                            {occupancyLoading ? 'Cargando...' : 'Aplicar filtro'}
                         </button>
                     </div>
                     {/* Visualización de la tasa de ocupación */}
@@ -744,17 +742,17 @@ const DashboardOverview = () => {
                         <>
                             <p className="text-4xl font-bold text-blue-400">{occupancyRate.occupancyRate}</p>
                             <p className="text-gray-400 mt-2 text-sm">
-                                Booked: {occupancyRate.bookedMinutes} min / Available: {occupancyRate.totalAvailableMinutes} min
+                                Reservado: {occupancyRate.bookedMinutes} min / Disponible: {occupancyRate.totalAvailableMinutes} min
                             </p>
                             <p className="text-gray-500 text-xs mt-1">
-                                For the period: {occupancyRate.startDate} to {occupancyRate.endDate} (Barber: {allBarbers.find(b => b._id === occupancyRate.barberId)?.name || 'N/A'})
+                                Para el periodo: <strong className='text-sm text-blue-400'>{occupancyRate.startDate}</strong> hasta <strong className='text-sm text-blue-400'>{occupancyRate.endDate}</strong> (Barbero: <strong className='text-sm text-blue-400'>{allBarbers.find(b => b._id === occupancyRate.barberId)?.name || 'N/A'}</strong>)
                             </p>
                         </>
                     ) : (
                         occupancyLoading ? (
-                            <p className="text-gray-400 text-lg">Loading occupancy rate...</p>
+                            <p className="text-gray-400 text-lg">Cargando tasa de ocupación...</p>
                         ) : (
-                            <p className="text-gray-400 text-lg">No occupancy data for this period or barber.</p>
+                            <p className="text-gray-400 text-lg">No hay datos de ocupación para este periodo ni para la peluquería.</p>
                         )
                     )}
                 </div>
@@ -763,9 +761,9 @@ const DashboardOverview = () => {
             {/* Estado de Servicios (Solo Admin/SuperAdmin) */}
             {isAdminOrSuperAdmin && serviceStatus && (
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Service Status</h3>
-                    <p className="text-lg text-green-400">Active Services: {serviceStatus.activeCount}</p>
-                    <p className="text-lg text-red-400">Inactive Services: {serviceStatus.inactiveCount}</p>
+                    <h3 className="text-xl font-bold text-white mb-4">Estado de los servicios</h3>
+                    <p className="text-lg text-green-400">Servicios Activos: {serviceStatus.activeCount}</p>
+                    <p className="text-lg text-red-400">Servicios inactivos: {serviceStatus.inactiveCount}</p>
                     {/* Puedes añadir una lista de servicios aquí si lo deseas */}
                 </div>
             )}
@@ -773,11 +771,11 @@ const DashboardOverview = () => {
             {/* Tasa de Cancelación (Solo Admin/SuperAdmin) */}
             {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Cancellation Rate</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Tasa de cancelación</h3>
                     {/* Controles de fecha para admins */}
                     <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="cancellationStartDate" className="block text-sm font-medium text-gray-400 mb-1">Start Date:</label>
+                            <label htmlFor="cancellationStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
                             <input
                                 type="date"
                                 id="cancellationStartDate"
@@ -787,7 +785,7 @@ const DashboardOverview = () => {
                             />
                         </div>
                         <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="cancellationEndDate" className="block text-sm font-medium text-gray-400 mb-1">End Date:</label>
+                            <label htmlFor="cancellationEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
                             <input
                                 type="date"
                                 id="cancellationEndDate"
@@ -803,7 +801,7 @@ const DashboardOverview = () => {
                                 ${cancellationLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
                             `}
                         >
-                            {cancellationLoading ? 'Loading...' : 'Apply Filter'}
+                            {cancellationLoading ? 'Cargando...' : 'Aplicar filtro'}
                         </button>
                     </div>
                     {/* Visualización de la tasa de cancelación */}
@@ -811,17 +809,17 @@ const DashboardOverview = () => {
                         <>
                             <p className="text-4xl font-bold text-red-400">{cancellationRate.cancellationRate}</p>
                             <p className="text-gray-400 mt-2 text-sm">
-                                Cancelled: {cancellationRate.cancelledAppointments} / Total: {cancellationRate.totalAppointments}
+                                Canceladas: {cancellationRate.cancelledAppointments} / Total: {cancellationRate.totalAppointments}
                             </p>
                             <p className="text-gray-500 text-xs mt-1">
-                                For the period: {cancellationRate.startDate} to {cancellationRate.endDate}
+                                Para el periodo: <strong className='text-sm text-blue-400'>{cancellationRate.startDate}</strong> hasta <strong className='text-sm text-blue-400'>{cancellationRate.endDate}</strong>
                             </p>
                         </>
                     ) : (
                         cancellationLoading ? (
-                            <p className="text-gray-400 text-lg">Loading cancellation rate...</p>
+                            <p className="text-gray-400 text-lg">Cargando tasa de cancelación...</p>
                         ) : (
-                            <p className="text-gray-400 text-lg">No cancellation data for this period.</p>
+                            <p className="text-gray-400 text-lg">No hay datos de cancelación para este período.</p>
                         )
                     )}
                 </div>
@@ -830,12 +828,12 @@ const DashboardOverview = () => {
             {/* Clientes Recurrentes (Solo Admin/SuperAdmin) */}
             {isAdminOrSuperAdmin && recurringClients.length > 0 && (
                 <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Recurring Clients</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Clientes recurrentes</h3>
                     <div className="space-y-2">
                         {recurringClients.map(client => (
                             <div key={client._id} className="flex justify-between items-center text-gray-300">
                                 <span>{client.clientName} ({client._id})</span> {/* _id es el número de teléfono */}
-                                <span className="font-semibold text-white">Bookings: {client.totalBookings}</span>
+                                <span className="font-semibold text-white">Reservas: {client.totalBookings}</span>
                             </div>
                         ))}
                     </div>
