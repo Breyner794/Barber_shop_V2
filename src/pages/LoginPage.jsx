@@ -34,9 +34,9 @@ const LoginPage = () => {
             <div className="inline-block p-3 bg-blue-600/20 rounded-full mb-4 border border-blue-500/30">
                  <Scissors className="w-10 h-10 text-blue-400" />
             </div>
-          <h1 className="text-3xl font-black text-white">Welcome Back</h1>
+          <h1 className="text-3xl font-black text-white">Bienvenido de nuevo</h1>
           <p className="mt-2 text-gray-400">
-            Log in to your BarberPro dashboard
+            Inicie sesión en su panel de control de BarberPro
           </p>
         </div>
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -49,7 +49,7 @@ const LoginPage = () => {
             <Mail className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Correo Electronico"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -60,7 +60,7 @@ const LoginPage = () => {
             <Lock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Contraseña"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
