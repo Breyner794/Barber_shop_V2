@@ -228,7 +228,7 @@ const BookingsModule = () => {
 
     try {
       await apiService.updateAppointmentStatus(bookingId, newStatus);
-      console.log(`Reserva ${bookingId} actualizada a ${newStatus} con éxito.`);
+      //console.log(`Reserva ${bookingId} actualizada a ${newStatus} con éxito.`);
 
       Swal.fire({
         icon: 'success',
@@ -245,10 +245,10 @@ const BookingsModule = () => {
       })
 
       await fetchInitialData(); 
-      console.log("Datos recargados después de cambiar el estado.");
+      //console.log("Datos recargados después de cambiar el estado.");
 
     } catch (error) {
-      console.error("Error al actualizar el estado en la API:", error);
+    console.error("Error al actualizar el estado en la API:", error);
      setBookings(originalBookings); 
      Swal.fire({
       icon: 'error',
@@ -593,8 +593,7 @@ const onRetry = () => {
           }}
           onSaveSuccess={() => {
             setIsBookingFormOpen(false);
-            setEditingBooking(null)
-            console.log("BookingForm guardado exitosamente. Recargando datos...");
+            setEditingBooking(null);
             fetchInitialData();
           }}
           barbers={barbersList}
@@ -772,7 +771,7 @@ const BookingCard = ({
         onDeleteOrCancel(booking.id, response.data);
       }
     } catch (error) {
-      console.error("Error al procesar la cita:", error);
+      //console.error("Error al procesar la cita:", error);
       Swal.fire(
         "Error",
         error.response?.data?.message || "Hubo un error al procesar la cita.",
