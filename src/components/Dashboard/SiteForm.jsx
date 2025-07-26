@@ -306,6 +306,7 @@ const SiteForm = ({ isOpen, onClose, onSiteCreated, currentUser, onSiteUpdated, 
                     className="sr-only"
                     checked={formData.isActive}
                     onChange={handleInputChange}
+                    disabled={isLoading || !hasPermission}
                   />
                   <div
                     className={`block w-14 h-8 rounded-full ${
