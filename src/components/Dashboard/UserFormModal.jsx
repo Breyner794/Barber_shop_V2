@@ -467,31 +467,40 @@ const UserFormModal = ({
           )}
 
           {/* Checkbox de activo */}
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="isActive"
-              name="isActive"
-              checked={formData.isActive}
-              onChange={handleChange}
-              // Tailwind classes para el checkbox
-              className={`h-4 w-4 border-gray-600 rounded 
-                            ${
-                              isEditingSelf
-                                ? "text-gray-400 cursor-not-allowed"
-                                : "text-amber-600 focus:ring-amber-500 cursor-pointer"
-                            }
-                `}
-              // Deshabilitar el checkbox si el usuario está editando su propia cuenta
-              disabled={isEditingSelf}
-            />
-            <label
-              htmlFor="isActive"
-              className="ml-2 block text-sm text-gray-300"
-            >
-              Está activo
-            </label>
-          </div>
+          <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                 Estado del Usuario
+              </label>
+              <label
+                htmlFor="isActive"
+                className="flex items-center cursor-pointer"
+              >
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    name="isActive"
+                    className="sr-only"
+                    checked={formData.isActive}
+                    onChange={handleChange}
+                    disabled={isEditingSelf}
+                  />
+                  <div
+                    className={`block w-14 h-8 rounded-full ${
+                      formData.isActive ? "bg-amber-600" : "bg-gray-600"
+                    }`}
+                  ></div>
+                  <div
+                    className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${
+                      formData.isActive ? "transform translate-x-6" : ""
+                    }`}
+                  ></div>
+                </div>
+                <div className="ml-3 text-white font-medium">
+                  {formData.isActive ? "Activo" : "Inactivo"}
+                </div>
+              </label>
+            </div>
 
           {/* Mensaje de advertencia para evitar la auto-desactivación (Estilo Tailwind) */}
           {isEditingSelf && (
