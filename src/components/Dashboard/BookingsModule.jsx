@@ -254,7 +254,14 @@ const BookingsModule = () => {
       icon: 'error',
       title: 'Error al actualizar',
       text: 'No se pudo actualizar el estado de la reserva. Inténtalo de nuevo.',
-      confirmButtonText: 'Ok'
+      confirmButtonText: 'Ok',
+      customClass: {
+              popup: "swal2-dark-mode",
+              title: "text-white",
+              htmlContainer: "text-gray-300",
+            },
+        background: "#1F2937",
+        color: "#E5E7EB",
     });
     }
   };
