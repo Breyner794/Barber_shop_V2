@@ -355,7 +355,7 @@ const onRetry = () => {
 
   if (loading && bookings.length === 0) {
     return (
-      <div className="bg-gray-900 min-h-screen flex justify-center items-center">
+      <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex justify-center items-center">
         <LoaderCircle className="w-12 h-12 text-blue-500 animate-spin" />
         <p className="ml-4 text-white text-xl">Cargando reservas...</p>
       </div>
@@ -363,7 +363,7 @@ const onRetry = () => {
   }
   if (error)
     return (
-      <div className="bg-gray-900 min-h-screen flex justify-center items-center p-6">
+      <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen flex justify-center items-center p-6">
       <div className="bg-gray-800 rounded-xl shadow-2xl p-8 md:p-12 max-w-md w-full text-center border border-red-700/30">
         
         {/* Ícono de error */}
@@ -404,7 +404,7 @@ const onRetry = () => {
     );
 
   return (
-    <div className="bg-gray-900 min-h-screen p-4 sm:p-6 text-white">
+    <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen p-4 sm:p-6 text-white">
       {showNotification && (
         <NotificationToast
           message="¡Ha llegado una nueva reserva!"
@@ -778,7 +778,7 @@ const BookingCard = ({
 
   return (
     <div
-      className={`bg-gray-800 border-2 ${
+      className={`bg-gray-800/50 border-2 ${
         isHistory ? "border-gray-700/50" : "border-gray-700"
       } rounded-2xl shadow-lg transition-all duration-300 hover:border-blue-500/50 hover:scale-[1.02] flex flex-col`}
     >
