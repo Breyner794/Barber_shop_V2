@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext'; // Asumimos que AuthContext estará en esta ruta
 import { useNavigate } from 'react-router-dom';
-import { Scissors, Mail, Lock, LogIn, AlertTriangle } from 'lucide-react';
+import { Scissors, Mail, Lock, LogIn, AlertTriangle, LoaderCircle } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -71,12 +71,17 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
-                         bg-gradient-to-r from-blue-500 to-blue-600 text-white
-                         hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30
-                         disabled:bg-gray-700 disabled:scale-100 disabled:shadow-none disabled:cursor-wait"
+              className="w-full gap-2 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
+                    bg-gradient-to-r from-blue-500 to-blue-600 text-white
+                    hover:scale-105 flex justify-center items-center hover:shadow-lg            hover:shadow-blue-500/30
+                    disabled:bg-gray-700 disabled:scale-100 disabled:shadow-none disabled:cursor-wait"
             >
-              {isLoading ? "Logging in..." : "Log In"}
+              {isLoading ? (
+                <LoaderCircle className="animate-spin" />
+              ):(
+                <LogIn />
+              )}
+              {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
           </div>
         </form>
