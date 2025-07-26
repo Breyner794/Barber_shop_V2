@@ -75,10 +75,6 @@ const DateTimeScreen = () => {
           );
 
           if (Array.isArray(data)) {
-            console.log(
-              "Datos recibidos y es un arreglo. Actualizando estado:",
-              data
-            );
             setAvailableSlots(data);
           } else {
             console.warn(

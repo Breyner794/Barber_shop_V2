@@ -42,7 +42,6 @@ const SitesModule = () => {
   const handleSiteCreated = (createdSite) => { 
     try {
       setSites(prevSites => [...prevSites, createdSite]);
-      console.log('Sede creada exitosamente:', createdSite);
       Swal.fire({
                   icon: "success",
                   title: "¡Usuario actualizado (Admin)!",
@@ -69,7 +68,6 @@ const SitesModule = () => {
       setSites(prevSites =>
         prevSites.map(site => (site._id === updatedSite._id ? updatedSite : site))
       );
-      console.log('Sede actualizada exitosamente:', updatedSite);
       Swal.fire({
                   icon: "success",
                   title: "¡Usuario actualizado (Admin)!",
@@ -137,8 +135,6 @@ const SitesModule = () => {
         setSites((prevSites) =>
           prevSites.filter((site) => site._id !== siteId)
         );
-
-        console.log("Sede eliminada exitosamente");
       } catch (error) {
         console.error("Error al eliminar la sede:", error);
         setError(error.message || "Error al eliminar la sede");
@@ -308,7 +304,6 @@ const SitesModule = () => {
                     className="flex-1 bg-gray-700/50 text-white px-4 py-2 rounded-lg hover:bg-gray-700 flex items-center justify-center gap-2 transition-colors"
                     onClick={() => {
                       handleEditSite(site);
-                      console.log("Editar sede:", site._id);
                     }}
                   >
                     <Edit className="w-4 h-4" />

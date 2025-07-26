@@ -46,7 +46,6 @@ const BarberScreen = () => {
       try {
         const siteId = bookingDetails.site._id;
         const data = await apiService.getBarbersBySite(siteId);
-        console.log("Barberos recibidos:", data);
         setBarbers(data);
       } catch (err) {
         setError(err.message);

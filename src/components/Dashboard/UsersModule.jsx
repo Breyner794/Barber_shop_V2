@@ -131,7 +131,6 @@ const UsersModule = () => {
 
 const handleLogin = () => {
     window.location.href = "/login"
-    console.log("Ir a login");
   };
 
   const Avatar = ({ src, alt, size = 14 }) => {

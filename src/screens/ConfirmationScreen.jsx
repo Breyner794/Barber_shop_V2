@@ -118,7 +118,6 @@ const ConfirmationScreen = () => {
         clientEmail: clientInfo.email,
       };
 
-      console.log("Enviando datos de la reserva a la API:", finalBookingData);
 
         const response = await apiService.createAppointment(finalBookingData);
         Swal.fire({

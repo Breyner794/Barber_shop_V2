@@ -23,7 +23,6 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
       setUserPhone(currentUser.phone || '');
       
       setprofilePhotoPreview(currentUser.imageUrl || null);
-      console.log("ProfileModal - currentUser.imageUrl en useEffect:", currentUser.imageUrl);
     }
   }, [currentUser]);
 
@@ -34,8 +33,6 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
       const fileUrl = URL.createObjectURL(file);
       setprofilePhotoPreview(fileUrl);
       setMessage('');
-      console.log("ProfileModal - Archivo seleccionado:", file);
-      console.log("ProfileModal - Previsualización URL:", fileUrl);
     }
   };
 
@@ -43,7 +40,6 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
     setSelectedFile(null);
     setprofilePhotoPreview(null);
     setMessage('');
-    console.log("ProfileModal - Foto eliminada. profilePhotoPreview:", null);
   };
 
   const handleUpdateProfile = async (e) => {
@@ -59,31 +55,26 @@ const ProfileModal = ({ isOpen, onClose, currentUser, setCurrentUser }) => {
 
     if (selectedFile) {
       formData.append('photo', selectedFile);
-      console.log("ProfileModal - FormData: Adjuntando archivo 'photo'");
     }else if(profilePhotoPreview === null && currentUser.imageUrl){
       formData.append('imageUrl', '');
-      console.log("ProfileModal - FormData: Solicitando eliminación de imagen existente");
     }
 
     // === CONSOLE.LOG PARA VER EL CONTENIDO DE FormData ===
     // Nota: FormData no se puede loggear directamente como un objeto normal.
     // Debes iterar sobre él.
-    console.log("ProfileModal - Contenido de FormData antes de enviar:");
-    for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-    }
+    // console.log("ProfileModal - Contenido de FormData antes de enviar:");
+    // for (let [key, value] of formData.entries()) {
+    //     console.log(`${key}:`, value);
+    // }
     // ==============================================================
 
     try {
       const data = await apiService.updateMyProfile(formData);
 
-      console.log("ProfileModal - Respuesta exitosa del backend:", data);
       
         setMessage(data.message || 'Perfil actualizado exitosamente.');
         setCurrentUser(data.data);
         setprofilePhotoPreview(data.data.imageUrl || null);
-        // onClose();
-        console.log("ProfileModal - currentUser actualizado en contexto:", data.data);
         setTimeout(() => {
         onClose();
       }, 1000);

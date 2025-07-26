@@ -24,7 +24,7 @@ const ServicesModule = () => {
       const response  = await apiService.getServicesDashboard();
       const data = response.data || [];
       setServices(data);
-      console.log("data traida de la api es ", data)
+      //console.log("data traida de la api es ", data)
     }catch (error){
       console.error('No se pudieron obtener los servicios. Inténtalo de nuevo.', error);
       setError('No se pudieron obtener los servicios. Inténtalo de nuevo.')
@@ -105,7 +105,7 @@ const ServicesModule = () => {
 
         fetchServices();
 
-        console.log("Servicio eliminado exitosamente");
+        //console.log("Servicio eliminado exitosamente");
       } catch (error) {
         console.error("Error al eliminar el servicio:", error);
         setError(error.message || "Error al eliminar el servicio");

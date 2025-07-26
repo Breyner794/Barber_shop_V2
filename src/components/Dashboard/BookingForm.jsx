@@ -188,18 +188,18 @@ const BookingForm = ({
           );
           setAvailableSlots(responseData || []);
           // --- DEBUG 13: Slots recibidos ---
-        console.log("DEBUG 13: Slots recibidos:", responseData);
+        // console.log("DEBUG 13: Slots recibidos:", responseData);
 
           const isSelectedTimeValidAndAvailable = (responseData || []).some(
             (slot) => slot.startTime === selectedTime
           );
 
           // --- DEBUG 14: Validación de selectedTime después de fetch ---
-        console.log(
-          "DEBUG 14: isSelectedTimeValidAndAvailable:",
-          responseData
-        );
-        console.log("  selectedTime actual:", selectedTime);
+        // console.log(
+        //   "DEBUG 14: isSelectedTimeValidAndAvailable:",
+        //   responseData
+        // );
+        // console.log("  selectedTime actual:", selectedTime);
 
           // if (!isSelectedTimeValidAndAvailable && responseData.length > 0) {
           //   setSelectedTime(responseData[0].startTime);

@@ -153,7 +153,6 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
       setOriginalSchedule(defaultSchedule);
       setHasUnsavedChanges(false);
       
-      console.log("Excepción eliminada!");
       await Swal.fire({
         icon: "success",
         title: "Se elimino correctamente la disponibilidad del día",
@@ -207,7 +206,6 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
         dailySchedule.isWorkingDay
       );
 
-      console.log("Excepcion Guardada!");
 
       setOriginalSchedule({
         timeSlots: dailySchedule.timeSlots,

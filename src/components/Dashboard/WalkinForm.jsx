@@ -164,8 +164,6 @@ const WalkinForm = ({ onClose, onSaveSuccess, barbers, services, sites }) => {
 
     setIsLoading(true);
 
-    console.log("Datos que se envían:", formData);
-
     try {
       const response = await apiService.createCompletedService(formData);
 
@@ -184,7 +182,6 @@ const WalkinForm = ({ onClose, onSaveSuccess, barbers, services, sites }) => {
       });
 
       onSaveSuccess(response.data);
-      console.log("Información enviada exitosamente:", response);
       onClose();
 
     } catch (apiError) {
