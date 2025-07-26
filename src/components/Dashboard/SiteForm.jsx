@@ -290,20 +290,39 @@ const SiteForm = ({ isOpen, onClose, onSiteCreated, currentUser, onSiteUpdated, 
           </div>
 
           {/* Estado activo */}
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              name="isActive"
-              id="isActive"
-              checked={formData.isActive}
-              onChange={handleInputChange}
-              className="w-5 h-5 text-indigo-600 bg-gray-700 border-gray-600 rounded focus:ring-indigo-500"
-              disabled={isLoading || !hasPermission}
-            />
-            <label htmlFor="isActive" className="text-sm font-medium text-gray-300">
-              Sede activa
-            </label>
-          </div>
+          <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Estado de la sede
+              </label>
+              <label
+                htmlFor="isActive"
+                className="flex items-center cursor-pointer"
+              >
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    name="isActive"
+                    className="sr-only"
+                    checked={formData.isActive}
+                    onChange={handleInputChange}
+                  />
+                  <div
+                    className={`block w-14 h-8 rounded-full ${
+                      formData.isActive ? "bg-gradient-to-r from-purple-500 to-indigo-600" : "bg-gray-600"
+                    }`}
+                  ></div>
+                  <div
+                    className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${
+                      formData.isActive ? "transform translate-x-6" : ""
+                    }`}
+                  ></div>
+                </div>
+                <div className="ml-3 text-white font-medium">
+                  {formData.isActive ? "Activo" : "Inactivo"}
+                </div>
+              </label>
+            </div>
 
           {/* Botones */}
           <div className="flex gap-3 pt-4">
