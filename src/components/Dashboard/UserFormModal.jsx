@@ -293,8 +293,6 @@ const UserFormModal = ({
       return;
     }
 
-    console.log("Informacion que se iba a enviar era la siguiente: ", formData);
-
     setIsSaving(true);
     onSave(finalFormData).finally(() => {
       setIsSaving(false);
