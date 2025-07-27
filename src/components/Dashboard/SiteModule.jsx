@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Plus, Clock, MapPin, Phone, Edit, Trash2, Search, Check, X, LoaderCircle, AlertTriangle} from "lucide-react";
 import apiService from "../../api/services.js";
 import { useAuth } from "../../context/AuthContext.jsx";
-import SiteForm from "./siteForm.jsx";
+import SiteForm from "./SiteForm.jsx";
 import Swal from "sweetalert2";
 
 const SitesModule = () => {
