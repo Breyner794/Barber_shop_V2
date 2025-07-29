@@ -323,6 +323,7 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                     <label className="block text-xs text-gray-400 mb-1 font-medium">
                       Inicio:
                     </label>
+                    <div className="h-[42px] relative">
                     <input
                       type="time"
                       value={newTimeSlot.startTime}
@@ -332,28 +333,33 @@ const WeeklyTemplateView = ({ initialSchedule, onSave, isSaving }) => {
                           startTime: e.target.value,
                         })
                       }
-                      className="w-full bg-gray-900 text-white p-2.5 border border-gray-600 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                      className="absolute inset-0 w-full bg-gray-900 text-white px-2.5 py-2 border border-gray-600 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all appearance-none text-sm"
                     />
+                    </div>
                   </div>
                   <div className="flex-1">
                     <label className="block text-xs text-gray-400 mb-1 font-medium">
                       Fin:
                     </label>
+                    <div className="h-[42px] relative">
                     <input
                       type="time"
                       value={newTimeSlot.endTime}
                       onChange={(e) =>
                         setNewTimeSlot({ ...newTimeSlot, endTime: e.target.value })
                       }
-                      className="w-full bg-gray-900 text-white p-2.5 border border-gray-600 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                      className="absolute inset-0 w-full bg-gray-900 text-white px-2.5 py-2 border border-gray-600 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all appearance-none text-sm"
                     />
+                    </div>
                   </div>
+                  <div className="h-[42px]">
                   <button
                     onClick={handleAddTimeSlot}
                     className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-lg sm:w-auto w-full justify-center flex cursor-pointer transition-all hover:scale-105 shadow-lg hover:shadow-blue-500/25"
                   >
                     <Plus className="w-5 h-5" />
                   </button>
+                  </div>
                 </div>
               </div>
               
