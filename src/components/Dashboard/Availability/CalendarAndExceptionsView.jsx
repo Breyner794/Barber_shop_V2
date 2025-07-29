@@ -554,37 +554,49 @@ const CalendarAndExceptionsView = ({ selectedBarberId }) => {
           </div>
         )}
 
-        <div className="flex gap-2 items-end">
-          <div className="flex-1">
-            <label className="block text-xs text-gray-400 mb-1">Inicio:</label>
-            <input
-              type="time"
-              value={newTimeSlot.startTime}
-              onChange={(e) =>
-                setNewTimeSlot({ ...newTimeSlot, startTime: e.target.value })
-              }
-              className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-            />
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
+            <div className="flex-1">
+              <label className="block text-xs text-gray-400 mb-1 font-medium">
+                Inicio:
+              </label>
+              <div className="h-[42px] relative">
+                <input
+                  type="time"
+                  value={newTimeSlot.startTime}
+                  onChange={(e) =>
+                    setNewTimeSlot({
+                      ...newTimeSlot,
+                      startTime: e.target.value,
+                    })
+                  }
+                  className="absolute inset-0 w-full bg-gray-900 text-white px-2.5 py-2 border border-gray-600 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all appearance-none text-sm"
+                />
+              </div>
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-gray-400 mb-1 font-medium">
+                Fin:
+              </label>
+              <div className="h-[42px] relative">
+                <input
+                  type="time"
+                  value={newTimeSlot.endTime}
+                  onChange={(e) =>
+                    setNewTimeSlot({ ...newTimeSlot, endTime: e.target.value })
+                  }
+                  className="absolute inset-0 w-full bg-gray-900 text-white px-2.5 py-2 border border-gray-600 rounded-lg cursor-pointer focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all appearance-none text-sm"
+                />
+              </div>
+            </div>
+            <div className="h-[42px]">
+              <button
+                onClick={addTimeSlot}
+                className="h-full bg-blue-600 hover:bg-blue-700 text-white px-3 rounded-lg sm:w-auto w-full justify-center flex items-center cursor-pointer transition-all hover:scale-105 shadow-lg hover:shadow-blue-500/25"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-          <div className="flex-1">
-            <label className="block text-xs text-gray-400 mb-1">Fin:</label>
-            <input
-              type="time"
-              value={newTimeSlot.endTime}
-              onChange={(e) =>
-                setNewTimeSlot({ ...newTimeSlot, endTime: e.target.value })
-              }
-              className="w-full bg-gray-900 text-white p-2 border border-gray-600 rounded-md cursor-pointer focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-            />
-          </div>
-          <button
-            onClick={addTimeSlot}
-            className="bg-cyan-600 hover:bg-cyan-700 text-white p-2 rounded-md cursor-pointer transition-colors"
-            title="Agregar franja horaria"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
-        </div>
         
         <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
           <AlertCircle className="w-3 h-3" />
