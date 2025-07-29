@@ -56,9 +56,20 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
           fixed top-0 left-0 z-40 h-screen 
           lg:static lg:translate-x-0
           transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          ${
+            isSidebarOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          }
           flex flex-col 
         `}
+        style={{
+          // Altura optimizada para iOS - usa viewport height real
+          height: "100vh",
+          height: "100dvh", // Dynamic viewport height para móviles
+          // Safe area para iOS
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
       >
         <div className="flex items-center justify-between mb-2 p-6 flex-shrink-0">
           <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -73,7 +84,7 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
           </button>
         </div>
 
-        <nav className="space-y-2 flex-grow px-4 overflow-y-auto">
+        <nav className="space-y-2 flex-grow px-4 overflow-y-auto overscroll-contain">
           {" "}
           {/* Añadimos flex-grow para que la navegación ocupe espacio */}
           {navItems.map((item) => (
@@ -99,7 +110,12 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
         </nav>
 
         {/* --- Sección del Perfil y Logout en la parte inferior --- */}
-        <div className="mt-auto pt-4 border-t border-gray-700 space-y-2 p-4 flex-shrink-0">
+        <div
+          className="mt-auto pt-4 border-t border-gray-700 space-y-2 p-4 flex-shrink-0"
+          style={{
+            marginBottom: "env(safe-area-inset-bottom, 0px)",
+          }}
+        >
           {/* Item de Perfil que abre el modal */}
           {currentUser && (
             <button
@@ -125,7 +141,13 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }) => {
           <button
             onClick={handleLogout}
             className="w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors duration-200
-                       bg-red-700 hover:bg-red-800 text-white font-bold border-l-4 border-red-500" // Estilos destacados
+                       bg-red-700 hover:bg-red-800 text-white font-bold border-l-4 border-red-500
+                       touch-manipulation" // Estilos destacados
+            style={{
+              // Asegura que sea clickeable en iOS
+              minHeight: "44px", // Tamaño mínimo recomendado para iOS
+              WebkitTapHighlightColor: "transparent", // Elimina el highlight azul en iOS
+            }}
           >
             <LogOut className="w-5 h-5" />
             Cerrar Sesión
