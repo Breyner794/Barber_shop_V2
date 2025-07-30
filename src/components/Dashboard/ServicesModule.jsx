@@ -102,7 +102,19 @@ const ServicesModule = () => {
       setIsDeleting(serviceId);
       try {
         await apiService.deleteService(serviceId);
-
+        Swal.fire({
+          icon: "success",
+          title: "¡Usuario eliminado temporalmente!",
+          text: "El usuario ha sido marcado como inactivo.",
+          confirmButtonColor: "#38A169",
+          customClass: {
+            popup: "swal2-dark-mode",
+            title: "text-white",
+            htmlContainer: "text-gray-300",
+          },
+          background: "#1F2937",
+          color: "#E5E7EB",
+        });
         fetchServices();
 
         //console.log("Servicio eliminado exitosamente");
