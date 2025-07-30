@@ -256,8 +256,8 @@ const handleLogin = () => {
     }
 
     const confirmMessage = hardDelete
-      ? `¿Estás seguro de que deseas eliminar el usuario de forma permanente "${user.name_barber} ${user.last_name_barber}"? Esta acción no se puede deshacer.`
-      : `¿Estás seguro que deseas eliminar el usuario "${user.name_barber} ${user.last_name_barber}"? Esta acción marcará al usuario como inactivo.`;
+      ? `¿Estás seguro de que deseas eliminar el usuario de forma permanente "${user.name} ${user.last_name}"? Esta acción no se puede deshacer.`
+      : `¿Estás seguro que deseas eliminar el usuario "${user.name} ${user.last_name}"? Esta acción marcará al usuario como inactivo.`;
 
     const confirmResult = await Swal.fire({
       title: "Confirmar eliminación",
