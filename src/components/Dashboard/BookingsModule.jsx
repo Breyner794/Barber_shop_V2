@@ -175,7 +175,7 @@ const BookingsModule = () => {
         const userResponse = response[2];
         const allUsers = userResponse.data || [];
 
-        const barberUsers = allUsers.filter((user) => user.role === "barbero");
+        const barberUsers = allUsers.filter((user) => user.role === "barbero" && user.isActive === true);
 
         const formattedBarbers = barberUsers.map((barber) => ({
           id: barber._id,
