@@ -424,11 +424,29 @@ const WalkinForm = ({ onClose, onSaveSuccess, barbers, services, sites }) => {
                 value={formData.startTime}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
-                className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all ${
-                  errors.startTime && touched.startTime
-                    ? 'border-red-500 focus:ring-2 focus:ring-red-500'
-                    : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
-                } focus:border-transparent`}
+                className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all
+                    /* Fixes para iOS/Safari - mismos que date input */
+                    max-w-full
+                    min-w-0
+                    box-border
+                    [-webkit-appearance:none]
+                    [&::-webkit-date-and-time-value]:text-left
+                    [&::-webkit-datetime-edit]:flex
+                    [&::-webkit-datetime-edit]:items-center
+                    [&::-webkit-datetime-edit]:justify-start
+                    [&::-webkit-datetime-edit-fields-wrapper]:flex
+                    [&::-webkit-datetime-edit-fields-wrapper]:items-center
+                    [&::-webkit-datetime-edit-text]:px-0.5
+                    ${errors.startTime && touched.startTime
+                                ? 'border-red-500 focus:ring-2 focus:ring-red-500'
+                                : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+                              } focus:border-transparent`}
+                style={{
+                  WebkitAppearance: 'none',
+                  maxWidth: '100%',
+                  minWidth: '0',
+                  boxSizing: 'border-box'
+                }}
               />
               <p className="text-xs text-gray-500 mt-1">
                 Se estableció automáticamente la hora actual, puedes modificarla si es necesario
