@@ -48,3 +48,74 @@ body {
 .spinner {
   animation: spin 1s linear infinite;
 }
+
+.datetime-input-ios-fix {
+  /* Controles de tamaño básicos */
+  @apply max-w-full min-w-0 box-border;
+  
+  /* Remover apariencia nativa de WebKit */
+  @apply [-webkit-appearance:none];
+  
+  /* Alineación del valor de fecha/hora */
+  @apply [&::-webkit-date-and-time-value]:text-left;
+  
+  /* Layout del editor de fecha/hora */
+  @apply [&::-webkit-datetime-edit]:flex;
+  @apply [&::-webkit-datetime-edit]:items-center;
+  @apply [&::-webkit-datetime-edit]:justify-start;
+  
+  /* Layout del wrapper de campos */
+  @apply [&::-webkit-datetime-edit-fields-wrapper]:flex;
+  @apply [&::-webkit-datetime-edit-fields-wrapper]:items-center;
+  
+  /* Espaciado del texto separador */
+  @apply [&::-webkit-datetime-edit-text]:px-0.5;
+  
+  /* Fallbacks CSS puros por si Tailwind no aplica */
+  -webkit-appearance: none !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Variante para inputs en contenedores con altura fija */
+.datetime-input-ios-fix-contained {
+  @apply datetime-input-ios-fix;
+  @apply absolute inset-0;
+}
+
+/* Estilos base comunes para tus inputs */
+.datetime-input-base {
+  @apply w-full text-white rounded-lg border transition-all;
+  @apply border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+/* Variantes de color de fondo */
+.datetime-input-dark {
+  @apply bg-gray-700;
+}
+
+.datetime-input-darker {
+  @apply bg-gray-900;
+}
+
+/* Estados de error */
+.datetime-input-error {
+  @apply border-red-500 focus:ring-2 focus:ring-red-500;
+}
+
+/* Estados disabled */
+.datetime-input-disabled {
+  @apply disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Clase combinada completa para usar directamente */
+.datetime-input-complete {
+  @apply datetime-input-ios-fix datetime-input-base datetime-input-dark datetime-input-disabled;
+  @apply p-3;
+}
+
+.datetime-input-complete-small {
+  @apply datetime-input-ios-fix datetime-input-base datetime-input-darker datetime-input-disabled;
+  @apply px-2.5 py-2 text-sm;
+}
