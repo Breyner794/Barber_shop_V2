@@ -584,7 +584,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="barberRevenueStartDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customBarberRevenueStartDate}
                                 onChange={(e) => setCustomBarberRevenueStartDate(e.target.value)}
                             />
@@ -594,7 +594,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="barberRevenueEndDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customBarberRevenueEndDate}
                                 onChange={(e) => setCustomBarberRevenueEndDate(e.target.value)}
                             />
@@ -640,7 +640,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="serviceRevenueStartDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customServiceRevenueStartDate}
                                 onChange={(e) => setCustomServiceRevenueStartDate(e.target.value)}
                             />
@@ -650,7 +650,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="serviceRevenueEndDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customServiceRevenueEndDate}
                                 onChange={(e) => setCustomServiceRevenueEndDate(e.target.value)}
                             />
@@ -696,7 +696,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="occupancyStartDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customOccupancyStartDate}
                                 onChange={(e) => setCustomOccupancyStartDate(e.target.value)}
                             />
@@ -706,7 +706,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="occupancyEndDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customOccupancyEndDate}
                                 onChange={(e) => setCustomOccupancyEndDate(e.target.value)}
                             />
@@ -779,7 +779,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="cancellationStartDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customCancellationStartDate}
                                 onChange={(e) => setCustomCancellationStartDate(e.target.value)}
                             />
@@ -789,7 +789,7 @@ const DashboardOverview = () => {
                             <input
                                 type="date"
                                 id="cancellationEndDate"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="datetime-input-complete"
                                 value={customCancellationEndDate}
                                 onChange={(e) => setCustomCancellationEndDate(e.target.value)}
                             />
