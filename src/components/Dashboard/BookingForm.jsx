@@ -840,11 +840,32 @@ const validateForm = () => {
                   onChange={handleDateChange}
                   min={minDateForInput}
                   disabled={!formData.barberId}
-                  className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                    fieldErrors.selectedDate
-                      ? "border-red-500 focus:ring-2 focus:ring-red-500"
-                      : "border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  }`}
+                  className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all disabled:opacity-50 disabled:cursor-not-allowed
+                    /* Estilos seguros para todos los navegadores */
+                    max-w-full
+                    min-w-0
+                    box-border
+                    /* Fixes específicos para iOS/Safari únicamente */
+                    supports-[(-webkit-appearance:none)]:[-webkit-appearance:none]
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-date-and-time-value]:text-left
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:flex
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:items-center
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:justify-start
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-fields-wrapper]:flex
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-fields-wrapper]:items-center
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-text]:px-0.5
+                    ${
+                      fieldErrors.selectedDate
+                        ? "border-red-500 focus:ring-2 focus:ring-red-500"
+                        : "border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    }`}
+                  style={{
+                    /* Fallback CSS para mayor compatibilidad */
+                    WebkitAppearance: "none",
+                    maxWidth: "100%",
+                    minWidth: "0",
+                    boxSizing: "border-box",
+                  }}
                 />
                 {fieldErrors.selectedDate && (
                   <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
@@ -871,7 +892,7 @@ const validateForm = () => {
                   </div>
                 )}
                 <select
-                value={selectedTime}
+                  value={selectedTime}
                   onChange={handleTimeChange}
                   disabled={
                     !selectedDate ||
