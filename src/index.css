@@ -1,7 +1,7 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
+/* Importación de Tailwind */
 @import "tailwindcss";
+
+/* Estilos base globales */
 body {
   background-color: rgb(218, 207, 207);
   color: white
@@ -49,73 +49,149 @@ body {
   animation: spin 1s linear infinite;
 }
 
+/* --- Clases DateTime iOS Fix - CSS PURO --- */
+
+/* Clase base con todos los fixes para iOS */
 .datetime-input-ios-fix {
   /* Controles de tamaño básicos */
-  @apply max-w-full min-w-0 box-border;
-  
-  /* Remover apariencia nativa de WebKit */
-  @apply [-webkit-appearance:none];
-  
-  /* Alineación del valor de fecha/hora */
-  @apply [&::-webkit-date-and-time-value]:text-left;
-  
-  /* Layout del editor de fecha/hora */
-  @apply [&::-webkit-datetime-edit]:flex;
-  @apply [&::-webkit-datetime-edit]:items-center;
-  @apply [&::-webkit-datetime-edit]:justify-start;
-  
-  /* Layout del wrapper de campos */
-  @apply [&::-webkit-datetime-edit-fields-wrapper]:flex;
-  @apply [&::-webkit-datetime-edit-fields-wrapper]:items-center;
-  
-  /* Espaciado del texto separador */
-  @apply [&::-webkit-datetime-edit-text]:px-0.5;
-  
-  /* Fallbacks CSS puros por si Tailwind no aplica */
-  -webkit-appearance: none !important;
   max-width: 100% !important;
   min-width: 0 !important;
   box-sizing: border-box !important;
+  
+  /* Remover apariencia nativa de WebKit */
+  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
-/* Variante para inputs en contenedores con altura fija */
-.datetime-input-ios-fix-contained {
-  @apply datetime-input-ios-fix;
-  @apply absolute inset-0;
+/* Pseudo-selectores específicos para WebKit */
+.datetime-input-ios-fix::-webkit-date-and-time-value {
+  text-align: left;
 }
 
-/* Estilos base comunes para tus inputs */
-.datetime-input-base {
-  @apply w-full text-white rounded-lg border transition-all;
-  @apply border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+.datetime-input-ios-fix::-webkit-datetime-edit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-/* Variantes de color de fondo */
-.datetime-input-dark {
-  @apply bg-gray-700;
+.datetime-input-ios-fix::-webkit-datetime-edit-fields-wrapper {
+  display: flex;
+  align-items: center;
 }
 
-.datetime-input-darker {
-  @apply bg-gray-900;
+.datetime-input-ios-fix::-webkit-datetime-edit-text {
+  padding-left: 0.125rem;
+  padding-right: 0.125rem;
+}
+
+/* Clase completa para usar directamente */
+.datetime-input-complete {
+  /* Fixes para iOS */
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  
+  /* Estilos visuales */
+  width: 100%;
+  background-color: rgb(55 65 81); /* bg-gray-700 */
+  color: white;
+  padding: 0.75rem; /* p-3 */
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid rgb(75 85 99); /* border-gray-600 */
+  transition: all 0.15s ease-in-out;
+}
+
+.datetime-input-complete:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgb(59 130 246); /* focus:ring-2 focus:ring-blue-500 */
+}
+
+.datetime-input-complete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Pseudo-selectores para la clase completa */
+.datetime-input-complete::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.datetime-input-complete::-webkit-datetime-edit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.datetime-input-complete::-webkit-datetime-edit-fields-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.datetime-input-complete::-webkit-datetime-edit-text {
+  padding-left: 0.125rem;
+  padding-right: 0.125rem;
+}
+
+/* Clase pequeña para inputs en contenedores */
+.datetime-input-complete-small {
+  /* Fixes para iOS */
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  
+  /* Estilos visuales */
+  width: 100%;
+  background-color: rgb(17 24 39); /* bg-gray-900 */
+  color: white;
+  padding: 0.5rem 0.625rem; /* px-2.5 py-2 */
+  border-radius: 0.5rem;
+  border: 1px solid rgb(75 85 99);
+  transition: all 0.15s ease-in-out;
+  font-size: 0.875rem; /* text-sm */
+}
+
+.datetime-input-complete-small:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgb(59 130 246);
+}
+
+.datetime-input-complete-small:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Pseudo-selectores para la clase pequeña */
+.datetime-input-complete-small::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.datetime-input-complete-small::-webkit-datetime-edit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.datetime-input-complete-small::-webkit-datetime-edit-fields-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.datetime-input-complete-small::-webkit-datetime-edit-text {
+  padding-left: 0.125rem;
+  padding-right: 0.125rem;
 }
 
 /* Estados de error */
 .datetime-input-error {
-  @apply border-red-500 focus:ring-2 focus:ring-red-500;
+  border-color: rgb(239 68 68) !important; /* border-red-500 */
 }
 
-/* Estados disabled */
-.datetime-input-disabled {
-  @apply disabled:opacity-50 disabled:cursor-not-allowed;
-}
-
-/* Clase combinada completa para usar directamente */
-.datetime-input-complete {
-  @apply datetime-input-ios-fix datetime-input-base datetime-input-dark datetime-input-disabled;
-  @apply p-3;
-}
-
-.datetime-input-complete-small {
-  @apply datetime-input-ios-fix datetime-input-base datetime-input-darker datetime-input-disabled;
-  @apply px-2.5 py-2 text-sm;
+.datetime-input-error:focus {
+  box-shadow: 0 0 0 2px rgb(239 68 68) !important; /* focus:ring-red-500 */
 }
