@@ -278,9 +278,6 @@ const UserFormModal = ({
       // Si el usuario tenía una imagen (user.imageUrl) pero la eliminó (imagePreview === null)
       // Enviamos el campo 'imageUrl' como cadena vacía para indicarle al backend que la elimine.
       finalFormData.append("imageUrl", "");
-      console.log(
-        "Formulario Enviado: Solicitando eliminación de imagen existente (imageUrl: '')"
-      );
     }
 
     if (formData.role === "barbero" && !formData.site_barber) {
