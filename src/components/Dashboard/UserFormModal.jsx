@@ -174,12 +174,20 @@ const UserFormModal = ({
     setSelectedFile(file); // Guarda el archivo
     setImagePreview(fileUrl); // Crea la URL local para previsualizar
     setUploadError(null);
+
+    if (!isCreating) {
+    setHasChanges(true);
+  }
   };
 
   // 7. Manejador para eliminar la imagen
   const handleRemoveImage = () => {
     setSelectedFile(null); // Deselecciona el archivo local
     setImagePreview(null); // Elimina la previsualización
+
+    if (!isCreating) {
+    setHasChanges(true);
+  }
   };
 
   // 8. Manejador de envío del formulario
