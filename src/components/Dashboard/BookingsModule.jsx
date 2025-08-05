@@ -784,6 +784,61 @@ const BookingCard = ({
     }
   };
 
+  const generateWhatsAppMessage = (booking) => {
+    // Formatear la fecha si existe
+    const formatDate = (date) => {
+      if (!date) return "";
+      return new Date(date).toLocaleDateString("es-ES", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
+
+    const messages = {
+      
+      statusBased: (() => {
+        switch (booking.status) {
+          case "pendiente":
+            return `Hola ${booking.clientName}! 👋
+
+Te contacto para confirmar tu cita. ¿Podrías confirmarme si sigues disponible?
+
+¡Espero tu respuesta! 😁` ;
+
+          case "confirmada":
+            return `Hola ${booking.clientName}! ✅
+
+Tu cita está confirmada para el ${formatDate(booking.appointmentDate)}.
+
+Si tienes alguna pregunta, no dudes en escribirme.`;
+
+          case "completada":
+            return `Hola ${booking.clientName}! 
+
+Gracias por visitarnos. Espero que hayas tenido una excelente experiencia.
+
+¿Te gustaría programar tu próxima cita? 😊`;
+
+          default:
+            return `Hola ${booking.clientName}, espero que estés bien. Te contacto desde Caballeros del señor 💈.`;
+        }
+      })(),
+    };
+
+    return messages.statusBased; // Puedes cambiar por cualquier otro mensaje
+  };
+
+  // Función para crear la URL de WhatsApp
+const createWhatsAppURL = (phone, message) => {
+  const cleanPhone = phone.replace(/\D/g, "");
+  const encodedMessage = encodeURIComponent(message);
+  return `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+};
+
   return (
     <div
       className={`bg-gray-800/50 border-2 ${
@@ -806,7 +861,10 @@ const BookingCard = ({
                 <span className="sm:hidden">Llamar</span>
               </a>
               <a
-                href={`https://wa.me/${booking.clientPhone.replace(/\D/g, "")}`}
+                href={createWhatsAppURL(
+                  booking.clientPhone,
+                  generateWhatsAppMessage(booking)
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-3 py-2 text-green-400 hover:text-green-300 hover:bg-green-400/10 rounded-lg transition-all text-sm min-h-[44px]"
