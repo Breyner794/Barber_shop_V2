@@ -25,7 +25,9 @@ import {
   Footprints,
   AlertTriangle, 
   RefreshCw, 
-  Home
+  Home,
+  Phone, 
+  MessageCircle
 } from "lucide-react"; // Added Mail, Hash, Walk icons
 import apiService from "../../api/services.js";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -793,7 +795,27 @@ const BookingCard = ({
           <p className="font-bold text-lg text-white truncate">
             {booking.clientName}
           </p>
-          <p className="text-sm text-gray-400">{booking.clientPhone}</p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
+            <span className="text-sm text-gray-400">{booking.clientPhone}</span>
+            <div className="flex items-center gap-2">
+              <a
+                href={`tel:${booking.clientPhone}`}
+                className="flex items-center gap-2 px-3 py-2 text-blue-400 hover:text-blue-300 hover:bg-blue-400/10 rounded-lg transition-all text-sm min-h-[44px]"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="sm:hidden">Llamar</span>
+              </a>
+              <a
+                href={`https://wa.me/${booking.clientPhone.replace(/\D/g, "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-2 text-green-400 hover:text-green-300 hover:bg-green-400/10 rounded-lg transition-all text-sm min-h-[44px]"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span className="sm:hidden">WhatsApp</span>
+              </a>
+            </div>
+          </div>
         </div>
         <div
           className={`relative inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium capitalize border ${getStatusStyles(
