@@ -139,96 +139,64 @@ const BookingForm = ({
   }, [isBarberUser, isEditing, currentUser, formData.siteId, formData.barberId]);
 
   // Efecto para cargar los slots disponibles
-  useEffect(() => {
+useEffect(() => {
+  let shouldFetchSlots = false;
+  
+  if (!isEditing) {
+    shouldFetchSlots = Boolean(formData.barberId && selectedDate);
+  } else {
+    shouldFetchSlots = Boolean(formData.barberId && selectedDate);
+  }
 
-    // --- DEBUG 10: Entrando al useEffect de carga de slots ---
-    // console.log("DEBUG 10: Entrando al useEffect de carga de slots.");
-    // console.log("  Dependencias:");
-    // console.log("    formData.barberId:", formData.barberId);
-    // console.log("    selectedDate:", selectedDate);
-    // console.log("    isEditing:", isEditing);
-    // console.log("    booking?.startTime (en dependencias):", booking?.startTime);
-    // console.log("    originalBookingRef.current:", originalBookingRef.current);
-
-    let shouldFetchSlots = false;
-    if (!isEditing) {
-      // Para creación, siempre que haya barbero y fecha
-      shouldFetchSlots = Boolean(formData.barberId && selectedDate);
-    } else {
-      // Para edición, solo si el barbero o la fecha seleccionados son DIFERENTES a los originales
-      // (lo que implica un reagendamiento intencional)
-      if (originalBookingRef.current) {
-        const hasBarberChanged = formData.barberId.toString() !== originalBookingRef.current.barberId.toString();
-        const hasDateChanged = (selectedDate === originalBookingRef.current.date || selectedDate !== originalBookingRef.current.date); // !== no mostraba los demas slots porque si era igual osea devolveria un true si son el mismo tipo pero no iguales
-        shouldFetchSlots = hasBarberChanged || hasDateChanged;
-        // --- DEBUG 11: Detalles de cambio para shouldFetchSlots en edición ---
-        // console.log("DEBUG 11: Lógica de shouldFetchSlots en edición:");
-        // console.log("  hasBarberChanged:", hasBarberChanged);
-        // console.log("  hasDateChanged:", hasDateChanged);
-        // console.log("  shouldFetchSlots (calculado):", shouldFetchSlots);
-
-      } else {
+  const fetchSlots = async () => {
+    if (shouldFetchSlots) {
+      setIsLoadingSlots(true);
+      setError(null);
+      
+      try {
+        const responseData = await apiService.getAvailableSlotsForBooking(
+          formData.barberId,
+          selectedDate
+        );
+        
+        // IMPORTANTE: Incluir el horario actual de la reserva si está en la misma fecha
+        let slotsToShow = responseData || [];
+        
+        if (isEditing && 
+            selectedDate === originalBookingRef.current?.date && 
+            booking?.startTime) {
           
-          shouldFetchSlots = false; // Prevents initial fetch in edit if no changes
-      }
-    }
-
-    const fetchSlots = async () => {
-       // --- DEBUG 12: Iniciando fetch de slots ---
-      // console.log(
-      //   `DEBUG 12: Iniciando fetch de slots para Barbero: ${formData.barberId}, Fecha: ${selectedDate}`
-      // );
-      if (shouldFetchSlots) {
-        setIsLoadingSlots(true);
-        setError(null);
-        try {
-          const responseData = await apiService.getAvailableSlotsForBooking(
-            formData.barberId,
-            selectedDate
+          // Verificar si el horario actual ya está en la lista
+          const currentSlotExists = slotsToShow.some(
+            slot => slot.startTime === booking.startTime
           );
-          setAvailableSlots(responseData || []);
-          // --- DEBUG 13: Slots recibidos ---
-        // console.log("DEBUG 13: Slots recibidos:", responseData);
-
-          const isSelectedTimeValidAndAvailable = (responseData || []).some(
-            (slot) => slot.startTime === selectedTime
-          );
-
-          // --- DEBUG 14: Validación de selectedTime después de fetch ---
-        // console.log(
-        //   "DEBUG 14: isSelectedTimeValidAndAvailable:",
-        //   responseData
-        // );
-        // console.log("  selectedTime actual:", selectedTime);
-
-          // if (!isSelectedTimeValidAndAvailable && responseData.length > 0) {
-          //   setSelectedTime(responseData[0].startTime);
-          //   console.log("DEBUG 14: selectedTime actualizado a primer slot:", responseData[0].startTime);
-          // } else if (!isSelectedTimeValidAndAvailable && responseData.length === 0) {
-          //   setSelectedTime("");
-          //   // console.log("DEBUG 14: selectedTime vaciado (no hay slots).");
-          // } REVISAR LOGICA NO FUNCIONA PARA CUANDO SE VAYA A EDITAR ALGO.
-         
-        } catch (apiError) {
-          // console.error("DEBUG ERROR: Error al cargar los horarios disponibles:", apiError);
-          // console.error("Error al cargar los horarios disponibles:", apiError);
-          setError(
-            "No se pudieron cargar los horarios para esta fecha y barbero."
-          );
-          setAvailableSlots([]);
-          setSelectedTime(""); // Limpiar selectedTime si hay error
-        } finally {
-          setIsLoadingSlots(false);
-          //console.log("DEBUG 15: Carga de slots finalizada. isLoadingSlots:", false);
+          
+          // Si no está en la lista, agregarlo (para que aparezca como opción)
+          if (!currentSlotExists) {
+            slotsToShow.unshift({
+              startTime: booking.startTime,
+              endTime: booking.endTime,
+              isCurrentBooking: true // Flag para identificarlo en el UI
+            });
+          }
         }
-      } else {
+        
+        setAvailableSlots(slotsToShow);
+        
+      } catch (apiError) {
+        console.error("Error al cargar horarios:", apiError);
+        setError("No se pudieron cargar los horarios disponibles.");
         setAvailableSlots([]);
+      } finally {
+        setIsLoadingSlots(false);
       }
-    };
+    } else {
+      setAvailableSlots([]);
+    }
+  };
 
-    fetchSlots();
-   
-  }, [formData.barberId, selectedDate, isEditing, booking?.startTime, originalBookingRef.current]);
+  fetchSlots();
+}, [formData.barberId, selectedDate, isEditing, booking?.startTime]);
 
   const validateField = (name, value) => {
   const errors = { ...fieldErrors };
@@ -307,25 +275,22 @@ const BookingForm = ({
 };
 
 // Función para validar fecha y hora
+// Mejorar la función validateDateTime para ser más específica:
 const validateDateTime = () => {
   const errors = { ...fieldErrors };
   
-  // Validar fecha
-  if (!selectedDate) {
-    errors.selectedDate = 'Debes seleccionar una fecha';
-  } else {
+  // Solo validar fecha si hay una fecha seleccionada
+  if (selectedDate) {
     const selectedDateObj = new Date(selectedDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const todayString = new Date().toISOString().split("T")[0];
     
-    if (selectedDateObj < today) {
-      errors.selectedDate = 'No puedes seleccionar una fecha pasada'; //REVISARRRRRRRR
+    if (selectedDateObj < todayString) {
+      errors.selectedDate = 'No puedes seleccionar una fecha pasada';
     } else {
-      // Validar que no sea más de 6 meses en el futuro
-      const sixMonthsLater = new Date();
-      sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 3);
+      const threeMonthsLater = new Date();
+      threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
       
-      if (selectedDateObj > sixMonthsLater) {
+      if (selectedDateObj > threeMonthsLater) {
         errors.selectedDate = 'No puedes programar reservas con más de 3 meses de anticipación';
       } else {
         delete errors.selectedDate;
@@ -333,20 +298,19 @@ const validateDateTime = () => {
     }
   }
 
-  // Validar hora
-  if (!selectedTime) {
-    if (selectedDate) {
+  // Solo validar hora si hay fecha Y hay slots disponibles O está en edición
+  if (selectedDate && (availableSlots.length > 0 || isEditing)) {
+    if (!selectedTime) {
       errors.selectedTime = 'Debes seleccionar una hora';
-    }
-  } else {
-    // Validar que la hora seleccionada esté disponible
-    const isTimeAvailable = availableSlots.some(slot => slot.startTime === selectedTime);
-    const isOriginalTime = isEditing && booking?.startTime === selectedTime;
-    
-    if (!isTimeAvailable && !isOriginalTime) {
-      errors.selectedTime = 'La hora seleccionada ya no está disponible';
     } else {
-      delete errors.selectedTime;
+      const isTimeAvailable = availableSlots.some(slot => slot.startTime === selectedTime);
+      const isOriginalTime = isEditing && booking?.startTime === selectedTime;
+      
+      if (!isTimeAvailable && !isOriginalTime) {
+        errors.selectedTime = 'La hora seleccionada ya no está disponible';
+      } else {
+        delete errors.selectedTime;
+      }
     }
   }
 
@@ -382,42 +346,51 @@ const validateDateTime = () => {
 };
 
   const handleDateChange = (e) => {
-  setSelectedDate(e.target.value);
-  setSelectedTime("");
+  const newDate = e.target.value;
   
-  // Limpiar errores de hora cuando cambia la fecha
-  const errors = { ...fieldErrors };
-  delete errors.selectedTime;
-  setFieldErrors(errors);
+  // Actualizar estados inmediatamente
+  setSelectedDate(newDate);
+  setSelectedTime('');
   
+  // Limpiar errores de fecha y hora INMEDIATAMENTE
+  setFieldErrors(prev => {
+    const errors = { ...prev };
+    delete errors.selectedDate;
+    delete errors.selectedTime;
+    return errors;
+  });
+
   if (error) {
     setError(null);
   }
-
-  // Validar fecha después de un breve delay
-  setTimeout(() => {
-    validateDateTime();
-  }, 100);
 };
 
   const handleTimeChange = (e) => {
-  setSelectedTime(e.target.value);
+  const newTime = e.target.value;
   
+  // Actualizar estado inmediatamente
+  setSelectedTime(newTime);
+  
+  // Limpiar errores de hora INMEDIATAMENTE
+  setFieldErrors(prev => {
+    const errors = { ...prev };
+    delete errors.selectedTime;
+    return errors;
+  });
+  
+  // Limpiar error general
   if (error) {
     setError(null);
   }
 
-  // Validar hora después de un breve delay
-  setTimeout(() => {
-    validateDateTime();
-  }, 100);
+  // NO usar setTimeout para validación
 };
 
+// Modificar validateForm para manejar mejor los casos edge:
 const validateForm = () => {
   let hasErrors = false;
-  const errors = {};
 
-  // Validar todos los campos
+  // Validar todos los campos básicos
   const fieldsToValidate = ['clientName', 'clientPhone', 'barberId', 'serviceId', 'siteId', 'notes'];
   
   fieldsToValidate.forEach(field => {
@@ -427,36 +400,45 @@ const validateForm = () => {
     }
   });
 
-  // Validar fecha y hora
-  if (!validateDateTime()) {
+  // Validación específica para fecha y hora
+  if (!selectedDate) {
+    setFieldErrors(prev => ({ ...prev, selectedDate: 'Debes seleccionar una fecha' }));
     hasErrors = true;
+  } else {
+    // Si hay fecha, validar que sea válida
+    if (!validateDateTime()) {
+      hasErrors = true;
+    }
+    
+    // Si no está cargando y no hay slots disponibles, es un error
+    if (!isLoadingSlots && availableSlots.length === 0 && !isEditing) {
+      setFieldErrors(prev => ({ 
+        ...prev, 
+        selectedDate: 'No hay horarios disponibles para esta fecha. Selecciona otra fecha.' 
+      }));
+      hasErrors = true;
+    }
+    
+    // Si hay slots pero no se seleccionó hora
+    if (availableSlots.length > 0 && !selectedTime) {
+      setFieldErrors(prev => ({ ...prev, selectedTime: 'Debes seleccionar una hora' }));
+      hasErrors = true;
+    }
   }
 
-  // Validaciones especiales para edición vs creación
-  if (!isEditing) {
-    if (!selectedDate || !selectedTime) {
-      setError("Por favor, selecciona una fecha y hora para la reserva.");
-      return false;
-    }
-  } else {
+  // Para edición, validaciones especiales
+  if (isEditing) {
     const hasRescheduleIntent =
       formData.barberId.toString() !== originalBookingRef.current?.barberId.toString() ||
       selectedDate !== originalBookingRef.current?.date;
 
     if (hasRescheduleIntent && (!selectedDate || !selectedTime)) {
       setError("Por favor, selecciona una nueva fecha y hora para el reagendamiento.");
-      return false;
+      hasErrors = true;
     }
   }
 
-  // Validar que hay al menos un horario disponible si se requiere
-  if (selectedDate && selectedTime && availableSlots.length === 0 && !isEditing && !isLoading) {
-    setError("No hay horarios disponibles para la fecha seleccionada. Por favor, elige otra fecha.");
-    return false;
-  }
-
   if (hasErrors) {
-    // Mostrar el primer error encontrado
     const firstError = Object.values(fieldErrors)[0];
     if (firstError) {
       setError(firstError);
@@ -556,6 +538,26 @@ const validateForm = () => {
   };
 
   const minDateForInput = new Date().toISOString().split("T")[0];
+
+  const createLocalDate = (dateString) => {
+  if (!dateString) return null;
+  
+  const [year, month, day] = dateString.split('-').map(Number);
+
+  return new Date(year, month - 1, day);
+};
+
+const formatLocalDate = (dateString) => {
+  if (!dateString) return '';
+  
+  const localDate = createLocalDate(dateString);
+  
+  return localDate.toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+};
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 p-4">
@@ -829,34 +831,42 @@ const validateForm = () => {
                   Fecha *
                 </label>
                 {isEditing && (
-                  <div className="flex items-center gap-1.5 p-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded-md text-xs mb-2">
-                    <AlertTriangle size={14} />
-                    <span>Cambiar fecha requerirá elegir nueva hora.</span>
+                  <div className="flex items-center gap-1.5 p-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-md text-xs mb-2">
+                    <Info size={14} />
+                    <span>
+                      Fecha actual: <strong>{new Date(booking?.date).toLocaleDateString('es-ES')}</strong>.
+                      {selectedDate !== originalBookingRef.current?.date
+                        ? " Al cambiar fecha, deberás elegir nueva hora."
+                        : " Puedes cambiar la fecha para reagendar."
+                      }
+                    </span>
                   </div>
                 )}
+
                 <input
                   type="date"
                   value={selectedDate}
                   onChange={handleDateChange}
                   min={minDateForInput}
                   disabled={!formData.barberId}
-                  className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all disabled:opacity-50 disabled:cursor-not-allowed
-                    /* Estilos seguros para todos los navegadores */
-                    max-w-full
-                    min-w-0
-                    box-border
-                    /* Fixes específicos para iOS/Safari únicamente */
-                    supports-[(-webkit-appearance:none)]:[-webkit-appearance:none]
-                    supports-[(-webkit-appearance:none)]:[&::-webkit-date-and-time-value]:text-left
-                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:flex
-                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:items-center
-                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:justify-start
-                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-fields-wrapper]:flex
-                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-fields-wrapper]:items-center
-                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-text]:px-0.5
-                    ${
-                      fieldErrors.selectedDate
-                        ? "border-red-500 focus:ring-2 focus:ring-red-500"
+                  className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all disabled:opacity-50 disabled:cursor-not-allowed 
+                    /* Estilos seguros para todos los navegadores */ 
+                    max-w-full 
+                    min-w-0 
+                    box-border 
+                    /* Fixes específicos para iOS/Safari únicamente */ 
+                    supports-[(-webkit-appearance:none)]:[-webkit-appearance:none] 
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-date-and-time-value]:text-left 
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:flex 
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:items-center 
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit]:justify-start 
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-fields-wrapper]:flex 
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-fields-wrapper]:items-center 
+                    supports-[(-webkit-appearance:none)]:[&::-webkit-datetime-edit-text]:px-0.5 
+                    ${fieldErrors.selectedDate
+                      ? "border-red-500 focus:ring-2 focus:ring-red-500"
+                      : selectedDate && isEditing && selectedDate !== originalBookingRef.current?.date
+                        ? "border-yellow-500 focus:ring-2 focus:ring-yellow-500" 
                         : "border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     }`}
                   style={{
@@ -867,17 +877,61 @@ const validateForm = () => {
                     boxSizing: "border-box",
                   }}
                 />
+
+                {/* Error de validación */}
                 {fieldErrors.selectedDate && (
-                  <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
+                  <div className="flex items-center gap-1.5 p-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-md text-xs mt-1">
                     <AlertTriangle size={12} />
                     {fieldErrors.selectedDate}
-                  </p>
+                  </div>
                 )}
+
+                {/* NUEVO: Indicador de cambio de fecha en edición */}
+                {isEditing &&
+                  selectedDate &&
+                  originalBookingRef.current?.date &&
+                  selectedDate !== originalBookingRef.current.date &&
+                  !fieldErrors.selectedDate && (
+                    <div className="flex items-center gap-1.5 p-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded-md text-xs mt-1">
+                      <Calendar size={12} />
+                      <span>
+                        📅 Cambiando de {formatLocalDate(originalBookingRef.current.date)} a {formatLocalDate(selectedDate)}
+                        {isLoadingSlots && " - Cargando horarios..."}
+                      </span>
+                    </div>
+                  )}
+
+                {/* Mensaje cuando no se ha seleccionado barbero */}
                 {!formData.barberId && !fieldErrors.selectedDate && (
-                  <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                    <AlertCircle size={12} />
-                    Selecciona un barbero primero
-                  </p>
+                  <div className="flex items-center gap-1.5 p-2 bg-gray-500/10 border border-gray-500/20 text-gray-400 rounded-md text-xs mt-1">
+                    <User size={12} />
+                    <span>
+                      {currentUser?.role === "barbero"
+                        ? "Configurando tu información de barbero..."
+                        : "Selecciona un barbero primero"
+                      }
+                    </span>
+                  </div>
+                )}
+
+                {/* NUEVO: Feedback positivo cuando mantiene la fecha original */}
+                {isEditing &&
+                  selectedDate &&
+                  originalBookingRef.current?.date &&
+                  selectedDate === originalBookingRef.current.date &&
+                  !fieldErrors.selectedDate && (
+                    <div className="flex items-center gap-1.5 p-2 bg-green-500/10 border border-green-500/20 text-green-400 rounded-md text-xs mt-1">
+                      <CheckCircle size={12} />
+                      <span>Manteniendo la fecha original. Puedes cambiar solo la hora si es necesario.</span>
+                    </div>
+                  )}
+
+                {/* MEJORADO: Mensaje para creación cuando no hay barbero */}
+                {!isEditing && selectedDate && !formData.barberId && (
+                  <div className="flex items-center gap-1.5 p-2 bg-orange-500/10 border border-orange-500/20 text-orange-400 rounded-md text-xs mt-1">
+                    <Clock size={12} />
+                    <span>Fecha seleccionada. Los horarios se mostrarán al seleccionar un barbero.</span>
+                  </div>
                 )}
               </div>
 
@@ -886,9 +940,15 @@ const validateForm = () => {
                   Hora *
                 </label>
                 {isEditing && (
-                  <div className="flex items-center gap-1.5 p-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 rounded-md text-xs mb-2">
-                    <AlertTriangle size={14} />
-                    <span>Solo verás slots si cambias fecha/barbero.</span>
+                  <div className="flex items-center gap-1.5 p-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-md text-xs mb-2">
+                    <Info size={14} />
+                    <span>
+                      {selectedDate === originalBookingRef.current?.date ? (
+                        <>Horario actual: <strong>{booking?.startTime}</strong>. Puedes cambiar a otro horario disponible.</>
+                      ) : (
+                        <>Selecciona un nuevo horario para la fecha <strong>{new Date(selectedDate).toLocaleDateString('es-ES')}</strong>.</>
+                      )}
+                    </span>
                   </div>
                 )}
                 <select
@@ -897,39 +957,43 @@ const validateForm = () => {
                   disabled={
                     !selectedDate ||
                     isLoadingSlots ||
-                    (availableSlots.length === 0 &&
-                      (!isEditing || selectedTime !== booking?.startTime))
+                    (!isEditing && availableSlots.length === 0)
                   }
-                  className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                    fieldErrors.selectedTime
+                  className={`w-full bg-gray-700 text-white p-3 rounded-lg border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${fieldErrors.selectedTime
                       ? "border-red-500 focus:ring-2 focus:ring-red-500"
                       : "border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  }`}
+                    }`}
                 >
                   <option value="">
                     {isLoadingSlots
                       ? "Cargando horarios..."
-                      : "-- Seleccionar Hora --"}
+                      : "-- Elige un horario --"}
                   </option>
                   {isEditing &&
                     booking?.startTime &&
-                    selectedTime === booking?.startTime &&
-                    !availableSlots.some(
-                      (slot) => slot.startTime === booking?.startTime
-                    ) && (
+                    selectedDate === originalBookingRef.current?.date && (
                       <option
                         value={booking.startTime}
-                        disabled
-                        className="text-gray-500"
+                        className="font-bold bg-blue-900"
+                        style={{ backgroundColor: '#1e3a8a' }}
                       >
-                        {booking.startTime} (Original - No disponible)
+                        {booking.startTime} - {booking.endTime} ⭐ (Horario actual)
                       </option>
                     )}
-                  {availableSlots.map((slot) => (
-                    <option key={slot.startTime} value={slot.startTime}>
-                      {slot.startTime} - {slot.endTime}
-                    </option>
-                  ))}
+
+                  {/* Mostrar horarios disponibles */}
+                  {availableSlots
+                    .filter(slot => {
+                      if (isEditing && selectedDate === originalBookingRef.current?.date) {
+                        return slot.startTime !== booking?.startTime;
+                      }
+                      return true;
+                    })
+                    .map((slot) => (
+                      <option key={slot.startTime} value={slot.startTime}>
+                        {slot.startTime} - {slot.endTime}
+                      </option>
+                    ))}
                 </select>
                 {fieldErrors.selectedTime && (
                   <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
@@ -941,13 +1005,23 @@ const validateForm = () => {
                   !isLoadingSlots &&
                   availableSlots.length === 0 &&
                   !fieldErrors.selectedTime && (
-                    <div className="flex items-center gap-1.5 p-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-md text-xs mt-1">
-                      <AlertTriangle size={12} />
-                      <span>
-                        No hay horarios disponibles para esta fecha. Prueba con
-                        otra fecha.
-                      </span>
-                    </div>
+                    <>
+                      {!isEditing ? (
+                        // Mensaje para creación
+                        <div className="flex items-center gap-1.5 p-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-md text-xs mt-1">
+                          <AlertTriangle size={12} />
+                          <span>No hay horarios disponibles para esta fecha. Prueba con otra fecha.</span>
+                        </div>
+                      ) : (
+                        // Mensaje para edición cuando no hay horarios en nueva fecha
+                        selectedDate !== originalBookingRef.current?.date && (
+                          <div className="flex items-center gap-1.5 p-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-md text-xs mt-1">
+                            <Info size={12} />
+                            <span>No hay horarios disponibles para esta nueva fecha. Prueba con otra fecha.</span>
+                          </div>
+                        )
+                      )}
+                    </>
                   )}
               </div>
             </div>
