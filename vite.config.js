@@ -29,6 +29,10 @@ export default defineConfig({
     host: '0.0.0.0',
     port: parseInt(process.env.PORT) || 8080,
     strictPort: true,
+    cors: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   },
   
   // ✅ Build optimizations
