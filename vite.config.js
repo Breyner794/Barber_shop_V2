@@ -27,7 +27,7 @@ export default defineConfig({
   // ✅ Configuración para preview/producción
   preview: {
     host: '0.0.0.0',
-    port: parseInt(process.env.PORT) || 8080,
+    port: parseInt(process.env.PORT) || 3000,
     strictPort: true,
     cors: true,
     headers: {
