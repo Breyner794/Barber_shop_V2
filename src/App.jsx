@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import Barber404Page from './pages/Not_Fount'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Dashboard/>
           </ProtectedRoute>
           }/>
+          <Route path='/*' element={<Barber404Page/>}></Route>
       </Routes>
     </BrowserRouter>
     </BookingProvider>
