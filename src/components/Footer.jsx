@@ -20,7 +20,7 @@ const Footer = () => {
               Caballeros del Señor
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed mb-4">
-              Comprometidos con la excelencia y el servicio desde 2010. Nuestra
+              Comprometidos con la excelencia y el servicio desde 2019. Nuestra
               misión es brindar calidad y confianza en cada proyecto.
             </p>
           </div>
@@ -33,7 +33,7 @@ const Footer = () => {
             <div className="space-y-3 text-sm text-gray-300">
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-red-500 flex-shrink-0" />
-                <span>+57 312 456 5678</span>
+                <span>+57 317 4731877</span>
               </div>
             </div>
             {/* Redes sociales responsivas */}
@@ -51,15 +51,15 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-red-500 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="font-medium text-white">Sede Principal</p>
-                  <p>Calle 123 #45-67, Cali</p>
+                  <p className="font-medium text-white">Sede Compartir</p>
+                  <p>Cl. 102d # 23-5, Cali, Valle del Cauca</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-red-500 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="font-medium text-white">Sede Norte</p>
-                  <p>Carrera 89 #12-34, Cali</p>
+                  <p className="font-medium text-white">Sede Valle Grande</p>
+                  <p>Cl. 80 # 23 85, Cali, Valle del Cauca</p>
                 </div>
               </div>
             </div>
@@ -73,16 +73,20 @@ const Footer = () => {
             <div className="space-y-2 text-sm text-gray-300 mb-6">
               <div className="flex items-center space-x-3">
                 <Clock className="w-4 h-4 text-red-500 flex-shrink-0" />
-                <span className="font-medium text-white">Lun - Vie:</span>
-                <span>9:00 - 20:00</span>
+                <span className="font-medium text-white">Lun - Jue:</span>
+                <span>10:00 - 20:00</span>
               </div>
               <div className="flex items-center space-x-3 ml-7">
-                <span className="font-medium text-white">Sábado:</span>
-                <span>8:00 - 18:00</span>
+                <span className="font-medium text-white">Viernes:</span>
+                <span>9:30 - 20:00</span>
               </div>
               <div className="flex items-center space-x-3 ml-7">
-                <span className="font-medium text-white">Festivos:</span>
-                <span>10:00 - 16:00</span>
+                <span className="font-medium text-white">Sabados:</span>
+                <span>8:00 - 20:30</span>
+              </div>
+              <div className="flex items-center space-x-3 ml-7">
+                <span className="font-medium text-white">Domingos o Festivos:</span>
+                <span>Alternativos.</span>
               </div>
             </div>
 
@@ -93,7 +97,7 @@ const Footer = () => {
                 className="group relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-blue-600/20 to-red-600/20 border border-blue-500/30 hover:border-blue-400 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-transparent to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative flex items-center justify-center px-4 py-3 space-x-2">
+                <div className="relative flex items-center justify-center px-4 py-3 space-x-2 cursor-pointer">
                   <HelpCircle className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
                   <span className="font-semibold text-sm text-blue-400 group-hover:text-blue-300 transition-colors duration-300 tracking-wide">
                     FAQ

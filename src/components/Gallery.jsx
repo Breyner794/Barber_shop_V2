@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
 const Gallery = () => {
+
+  const redirectToInstragram = (URL) =>{
+    window.location.href = URL
+  }
   // Array de imágenes galeria
   const galleryImages = [
     {
@@ -191,7 +195,9 @@ const Gallery = () => {
               Reserva tu cita y deja que nuestros expertos recreen el estilo
               perfecto para ti
             </p>
-            <button className="bg-gradient-to-r from-blue-600 via-white to-red-500 text-black font-bold py-4 px-8 rounded-lg hover:scale-105 transition-transform duration-300 shadow-lg">
+            <button
+            onClick={() => redirectToInstragram ('https://www.instagram.com/caba.llerosdelsenor?igsh=ZnpxMWJwcHVuY3Nu')} 
+            className="bg-gradient-to-r from-blue-600 via-white to-red-500 text-black font-bold py-4 px-8 rounded-lg hover:scale-105 transition-transform duration-300 shadow-lg cursor-pointer">
               Ver Más Trabajos
             </button>
           </div>
