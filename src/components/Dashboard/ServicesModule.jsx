@@ -104,8 +104,8 @@ const ServicesModule = () => {
         await apiService.deleteService(serviceId);
         Swal.fire({
           icon: "success",
-          title: "¡Usuario eliminado temporalmente!",
-          text: "El usuario ha sido marcado como inactivo.",
+          title: "¡Servicio eliminado permanentemente.!",
+          text: "El servicio ha sido eliminado exitosamente.",
           confirmButtonColor: "#38A169",
           customClass: {
             popup: "swal2-dark-mode",
@@ -212,7 +212,7 @@ const ServicesModule = () => {
                   }`}
                 >
                   {service.isActive ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
-                  {service.isActive ? 'Active' : 'Inactive'}
+                  {service.isActive ? 'Activo' : 'Inactivo'}
                 </span>
             </div>
             

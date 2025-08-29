@@ -139,7 +139,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
         {/* Cabecera del Formulario */}
         <div className="p-5 border-b border-gray-700 flex justify-between items-center">
           <h3 className="text-2xl font-bold text-white">
-            {serviceToEdit ? "Edit Service" : "Create New Service"}
+            {serviceToEdit ? "Servicio de edición" : "Crear nuevo servicio"}
           </h3>
           <button
             onClick={onClose}
@@ -160,14 +160,14 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <FormInput
-              label="Service Name"
+              label="Nombre del servicio"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="e.g., Classic Haircut"
+              placeholder="ej., corte de pelo clásico"
             />
             <FormInput
-              label="Price ($)"
+              label="Precio COP ($)"
               name="price"
               type="number"
               value={formData.price}
@@ -178,7 +178,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <FormInput
-              label="Duration (minutes)"
+              label="Duracion (minutos)"
               name="duration"
               type="number"
               value={formData.duration}
@@ -189,7 +189,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
             {/* Toggle para el estado Activo/Inactivo */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Service Status
+                Estado del servicio
               </label>
               <label
                 htmlFor="isActive"
@@ -216,7 +216,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
                   ></div>
                 </div>
                 <div className="ml-3 text-white font-medium">
-                  {formData.isActive ? "Active" : "Inactive"}
+                  {formData.isActive ? "Activo" : "Inactivo"}
                 </div>
               </label>
             </div>
@@ -227,7 +227,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
               htmlFor="description"
               className="block text-sm font-medium text-gray-300 mb-1"
             >
-              Description
+              Descripción
             </label>
             <textarea
               id="description"
@@ -235,7 +235,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
               rows="3"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Briefly describe the service..."
+              placeholder="Describa brevemente el servicio..."
               className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition"
             ></textarea>
           </div>
@@ -243,7 +243,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
           {/* Sección de subida de imagen */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Service Image
+              Imagen de servicio
             </label>
             <div className="mt-2 flex items-center gap-4">
               {/* Vista previa de la imagen */}
@@ -261,7 +261,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
                 className="relative cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 flex items-center gap-2"
               >
                 <UploadCloud className="w-5 h-5" />
-                <span>Choose Image</span>
+                <span>Elija una imagen</span>
                 <input
                   id="file-upload"
                   name="file-upload"
@@ -282,7 +282,7 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
               disabled={isSaving}
               className="py-2 px-5 text-base font-bold rounded-lg bg-gray-600 hover:bg-gray-500 text-white transition-colors disabled:opacity-50"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="submit"
@@ -293,10 +293,10 @@ const ServiceForm = ({ serviceToEdit, onClose, onSave, currentUser }) => {
                 <LoaderCircle className="w-5 h-5 animate-spin" />
               ) : null}
               {isSaving
-                ? "Saving..."
+                ? "Guardando..."
                 : serviceToEdit
-                ? "Save Changes"
-                : "Create Service"}
+                ? "Guardar cambios"
+                : "Crear servicio"}
             </button>
           </div>
         </form>
