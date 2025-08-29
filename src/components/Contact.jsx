@@ -6,25 +6,25 @@ const Contact = () => {
   const sedes = [
     {
       name: "Sede valle grande",
-      address: "Yaroslavska 8, Kyiv",
-      phone: "+57 304 608 4567",
-      hours: "10:00-20:00",
-      mapUrl: "https://maps.google.com/?q=Yaroslavska+8,+Kyiv,+Ukraine",
+      address: "Cl. 80 # 23 85, Cali, Valle del Cauca",
+      phone: "+57 317 4731877",
+      hours: "L - J: 10:00 - 20:00 / Viernes: 9:30 - 20:00 / Sabados: 8:00 - 8:30 / Domingos o Festivos: ALTERNATIVOS",
+      mapUrl: "https://maps.app.goo.gl/E6vj78N3rf8oPhH58",
       embedUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.1234!2d30.5234!3d50.4501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTDCsDI3JzAwLjQiTiAzMMKwMzEnMjQuMyJF!5e0!3m2!1sen!2s!4v1620000000000!5m2!1sen!2s",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1408.0754917644338!2d-76.473395168218!3d3.437621196358487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30a771583cf1b7%3A0x9ddcd860cd895f7!2sCl.%2080%20%23%2023%2085%2C%20Cali%2C%20Valle%20del%20Cauca!5e0!3m2!1ses!2sco!4v1756423654824!5m2!1ses!2sco",
       gradientFrom: "from-blue-600",
       gradientTo: "to-blue-800",
       hoverShadow: "hover:shadow-blue-500/25",
     },
     {
       name: "Sede Compartir",
-      address: "Calle 118 #24-43, Compartir, Cali",
-      phone: "+57 301 234 5678",
-      hours: "09:00-19:00",
+      address: "Cl. 102d # 23-5, Cali, Valle del Cauca",
+      phone: "+57 317 4731877",
+      hours: "L - J: 10:00 - 20:00 / Viernes: 9:30 - 20:00 / Sabados: 8:00 - 8:30 / Domingos o Festivos: ALTERNATIVOS",
       mapUrl:
-        "https://maps.google.com/?q=Calle+118+24-43,+Compartir,+Cali,+Colombia",
+        "https://maps.app.goo.gl/FUYzNEw8K1CUbuHe9",
       embedUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3982.1234!2d-76.5321!3d3.4516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwMjcnMDUuOCJOIDc2wrAzMSc1NS42Ilc!5e0!3m2!1sen!2s!4v1620000000000!5m2!1sen!2s",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248.9166177883158!2d-76.46482950669638!3d3.431254666767679!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e30a764e3c1c56f%3A0xbb1abc77e632028e!2sCl.%20102d%20%23%2023-5%2C%20Cali%2C%20Valle%20del%20Cauca!5e0!3m2!1ses!2sco!4v1756424250188!5m2!1ses!2sco",
       gradientFrom: "from-red-600",
       gradientTo: "to-red-800",
       hoverShadow: "hover:shadow-red-500/25",

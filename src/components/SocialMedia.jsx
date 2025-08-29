@@ -6,10 +6,9 @@ const SocialMedia = ({
   size = "medium", // "small", "medium", "large"
   className = "",
   socialLinks = [
-    { href: "#", src: "/facebook.png", alt: "Facebook", name: "facebook" },
-    { href: "#", src: "/instagram.png", alt: "Instagram", name: "instagram" },
-    { href: "#", src: "/whatsapp.png", alt: "WhatsApp", name: "whatsapp" },
-    { href: "#", src: "/tik-tok.png", alt: "TikTok", name: "tiktok" },
+    { href: "https://www.instagram.com/caba.llerosdelsenor?igsh=ZnpxMWJwcHVuY3Nu", src: "/instagram.png", alt: "Instagram", name: "instagram" },
+    { href: "https://api.whatsapp.com/message/BEEQXCFDAPO5H1?autoload=1&app_absent=0", src: "/whatsapp.png", alt: "WhatsApp", name: "whatsapp" },
+    { href: "https://www.tiktok.com/@castillojunior190?_t=ZS-8zGEeztC8EX&_r=1", src: "/tik-tok.png", alt: "TikTok", name: "tiktok" },
   ],
 }) => {
   // Configuraciones de estilo según el tema

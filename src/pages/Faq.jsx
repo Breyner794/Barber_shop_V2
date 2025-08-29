@@ -10,22 +10,17 @@ const Faq = () => {
     {
       question: "¿Cuáles son nuestros horarios de atención?",
       answer:
-        "Atendemos de lunes a viernes de 9:00 a 20:00, sábados de 8:00 a 18:00 y domingos de 10:00 a 16:00.",
-    },
-    {
-      question: "¿Dónde están ubicadas nuestras sedes?",
-      answer:
-        "Contamos con dos sedes: Sede Compartir en Av. Compartir #12-34 y Sede Llano Grande en Cra. 56 #78-90.",
+        "Atendemos de lunes a jueves de 10:00 a 20:00, viernes de 9:30 a 20:00, sábados de 08:00 a 20:30 y domingo o festivos: Alternativos",
     },
     {
       question: "¿Cómo puedo contactarlos?",
       answer:
-        "Puedes contactarnos al +57 312 456 5678 o visitando cualquiera de nuestras sedes durante nuestros horarios de atención.",
+        "Puedes contactarnos al +57 317 4731877 o visitando cualquiera de nuestras sedes durante nuestros horarios de atención.",
     },
     {
       question: "¿Qué servicios ofrecen?",
       answer:
-        "Ofrecemos consultoría especializada, soporte técnico 24/7 y capacitación empresarial.",
+        "En nuestra barbería no solo nos especializamos en cortes de cabello para caballeros, sino que también ofrecemos servicios para ellas, como corte de puntas, diseño de cejas con henna y tratamientos de mascarillas capilares.",
     },
     {
       question: "¿Atienden sin tener citas?",
@@ -96,10 +91,10 @@ const Faq = () => {
             Contáctanos directamente y te ayudaremos con cualquier duda
           </p>
           <a
-            href="tel:+573124565678"
+            href="tel:+573174731877"
             className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
           >
-            Llamar ahora: +57 312 456 5678
+            Llamar ahora: +57 317 4731877
           </a>
         </div>
       </div>

@@ -132,12 +132,11 @@ function Barbershop() {
                   NUESTRA MISIÓN
                 </h3>
                 <p className="text-gray-300 text-lg leading-relaxed">
-                  En Caballeros del Señor, nos dedicamos a brindar servicios de
-                  barbería de la más alta calidad, combinando técnicas
-                  tradicionales con tendencias modernas. Nuestro compromiso es
-                  hacer que cada cliente se sienta único, elegante y seguro de
-                  sí mismo, ofreciendo una experiencia personalizada que refleje
-                  su estilo y personalidad.
+                  Transformar cada visita en una experiencia de conexión,
+                  confianza y excelencia. En Caballeros del Señor, buscamos ser
+                  más que una barbería: un espacio donde cada cliente reciba un
+                  servicio impecable y un trato genuino que eleve su
+                  bienestar y estilo.
                 </p>
               </div>
 
@@ -148,25 +147,26 @@ function Barbershop() {
                   NUESTRA VISIÓN
                 </h3>
                 <p className="text-gray-300 text-lg leading-relaxed">
-                  Ser reconocidos como la barbería líder en excelencia y
-                  innovación, donde el arte del cuidado masculino se eleva a su
-                  máxima expresión. Aspiramos a ser el referente en estilo y
-                  elegancia, creando un espacio donde tradición y modernidad se
-                  encuentran para ofrecer la mejor experiencia de barbería en
-                  cada visita.
+                  Ser la barbería de referencia en el oriente de Cali,
+                  reconocida por nuestra excelencia en servicio y la innovación
+                  de nuestra marca. Para lograrlo, expandiremos nuestra
+                  presencia a 4 ubicaciones estratégicas, consolidando nuestra
+                  marca a través de la venta de productos de cuidado personal y
+                  una plataforma digital que fortalezca la conexión con
+                  nuestros clientes.
                 </p>
               </div>
 
               {/* Valores adicionales */}
               <div className="grid sm:grid-cols-3 gap-6 mt-12">
-                <div className="text-center p-4 bg-white/6 rounded-lg backdrop-blur-sm">
+                {/* <div className="text-center p-4 bg-white/6 rounded-lg backdrop-blur-sm">
                   <div className="text-3xl font-bold text-blue-500 mb-2">
                     10+
                   </div>
                   <div className="text-gray-400 text-sm">
                     Años de Experiencia
                   </div>
-                </div>
+                </div> */}
                 <div className="text-center p-4 bg-white/6 rounded-lg backdrop-blur-sm">
                   <div className="text-3xl font-bold text-red-500 mb-2">
                     100%
