@@ -792,9 +792,7 @@ const BookingCard = ({
         weekday: "long",
         year: "numeric",
         month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
+        day: "numeric"
       });
     };
 
@@ -812,7 +810,7 @@ Te contacto para confirmar tu cita. ¿Podrías confirmarme si sigues disponible?
           case "confirmada":
             return `Hola ${booking.clientName}! ✅
 
-Tu cita está confirmada para el ${formatDate(booking.appointmentDate)}.
+Tu cita está confirmada para el ${formatDate(booking.date)} a las ${booking.startTime}.
 
 Si tienes alguna pregunta, no dudes en escribirme.`;
 
@@ -829,7 +827,7 @@ Gracias por visitarnos. Espero que hayas tenido una excelente experiencia.
       })(),
     };
 
-    return messages.statusBased; // Puedes cambiar por cualquier otro mensaje
+    return messages.statusBased;
   };
 
   // Función para crear la URL de WhatsApp
