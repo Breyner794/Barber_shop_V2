@@ -416,7 +416,7 @@ const onRetry = () => {
     <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen p-4 sm:p-6 text-white">
       {showNotification && (
         <NotificationToast
-          message="¡Ha llegado una nueva reserva!"
+          message={notificationMessage} 
           onClose={() => setShowNotification(false)}
         />
       )}
