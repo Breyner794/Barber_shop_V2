@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBooking } from "../context/BookingContext";
-import { CircleUserRound, CircleCheckBig } from "lucide-react";
+import { CircleUserRound, CircleCheckBig, User } from "lucide-react";
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import SkeletonScreenBarber from "../components/Skeleton/BarbersScreenSkeleton";
@@ -9,6 +9,28 @@ import RedirectNotice from "../components/RedirectNotice";
 import ErrorComponent from "../components/ErrorComponent";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+
+const Avatar = ({ src, alt, size = 14 }) => {
+    const [imageError, setImageError] = useState(false);
+    
+    if (!src || imageError) {
+    return (
+      <div className={`h-${size} w-${size} rounded-full bg-gray-700 border-2 border-gray-600 flex items-center justify-center`}>
+        <User className={`w-${size - 6} h-${size - 6} text-gray-400`} />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      className={`h-${size} w-${size} rounded-full object-cover border-2 border-gray-600`}
+      src={src}
+      alt={alt || ""}
+      onError={() => setImageError(true)}
+    />
+  );
+  
+  };
 
 const BarberScreen = () => {
   const [barbers, setBarbers] = useState([]);
@@ -114,10 +136,10 @@ const BarberScreen = () => {
                   className={cardClasses}
                   onClick={() => setBarber(barber)}
                 >
-                  <img
+                  <Avatar
                     src={barber.imageUrl}
                     alt={barber.name}
-                    className="h-16 w-16 rounded-full object-cover border-2 border-gray-600"
+                    size={16}
                   />
                   <div className="flex-grow">
                     <p className=" text-xl font-bold text-white">
