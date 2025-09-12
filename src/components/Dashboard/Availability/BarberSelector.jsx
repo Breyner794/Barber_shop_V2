@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import useOnClickOutside from '../../../hook/useOnClickOutside';
+import Avatar from '../../../utils/Avatar';
 
 const BarberSelector = ({ barbers, selectedBarber, onSelect, currentUser, isPrivileged }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,10 +35,10 @@ const BarberSelector = ({ barbers, selectedBarber, onSelect, currentUser, isPriv
         className="w-full mt-1 p-3 bg-gray-800/50 border-2 border-gray-700 rounded-xl flex items-center justify-between text-left disabled:opacity-70 disabled:cursor-not-allowed hover:border-blue-500/50 transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-4">
-          <img
+          <Avatar
             src={displayUser?.imageUrl}
             alt={displayUser?.name}
-            className="w-12 h-12 rounded-full object-cover border-2 border-gray-600"
+            size={12}
           />
           <div>
             <p className="font-bold text-lg text-white">{displayUser?.name} {displayUser?.last_name}</p>
@@ -75,7 +76,7 @@ const BarberSelector = ({ barbers, selectedBarber, onSelect, currentUser, isPriv
                   onClick={() => handleSelect(barber)}
                   className={`w-full text-left p-3 flex items-center cursor-pointer gap-3 transition-colors ${selectedBarber?._id === barber._id ? 'bg-blue-600/50' : 'hover:bg-gray-700/50'}`}
                 >
-                  <img src={barber.imageUrl} alt={barber.name} className="w-8 h-8 rounded-full object-cover" />
+                  <Avatar src={barber.imageUrl} alt={barber.name} size={12}/>
                   <span>{barber.name} {barber.last_name}</span>
                 </button>
               ))
