@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext'; // Asumimos que AuthContext estará en esta ruta
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Scissors, Mail, Lock, LogIn, AlertTriangle, LoaderCircle } from 'lucide-react';
 
 const LoginPage = () => {
@@ -73,7 +73,7 @@ const LoginPage = () => {
               disabled={isLoading}
               className="w-full gap-2 py-3 px-6 text-lg font-bold rounded-lg transition-all duration-300 transform 
                     bg-gradient-to-r from-blue-500 to-blue-600 text-white
-                    hover:scale-105 flex justify-center items-center hover:shadow-lg            hover:shadow-blue-500/30
+                    hover:scale-105 flex justify-center items-center hover:shadow-lg hover:shadow-blue-500/30
                     disabled:bg-gray-700 disabled:scale-100 disabled:shadow-none disabled:cursor-wait"
             >
               {isLoading ? (
@@ -84,6 +84,17 @@ const LoginPage = () => {
               {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
           </div>
+
+          {/* Enlace para recuperar contraseña */}
+          <div className="text-center">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200 underline"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
+
         </form>
       </div>
     </div>
