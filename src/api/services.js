@@ -1049,6 +1049,56 @@ const apiService = {
             throw new Error(error.response?.data?.message || 'Failed to fetch active branches count');
         }
     },
+
+    /**
+     * Solicita el restablecimiento de contraseña enviando un email con enlace de recuperación.
+     * @param {string} email - El email del usuario que solicita restablecer la contraseña.
+     * @returns {Promise<Object>} Respuesta del servidor con el estado de la solicitud.
+     * @throws {Error} Error si la solicitud falla o hay problemas de conexión.
+     * 
+     * @example
+     * try {
+     *   const result = await apiService.forgotPassword('usuario@email.com');
+     *   console.log(result.message); // "Email de recuperación enviado"
+     * } catch (error) {
+     *   console.error('Error:', error.message);
+     * }
+     */
+    forgotPassword: async (email) => {
+      try {
+        const response = await apiClient.post('/auth/forgot-password', { email });
+        return response.data;
+      } catch (error) {
+        console.error("Error técnico al solicitar el restablecimiento de contraseña:", error);
+        throw new Error("Ocurrió un problema inesperado.");
+      }
+    },
+
+    /**
+     * Restablece la contraseña del usuario utilizando el token de recuperación.
+     * @param {string} token - Token de recuperación enviado por email (extraído de la URL).
+     * @param {string} password - Nueva contraseña del usuario (mínimo 6 caracteres).
+     * @returns {Promise<Object>} Respuesta del servidor confirmando el cambio de contraseña.
+     * @throws {Error} Error si el token es inválido, expirado o hay problemas de conexión.
+     * 
+     * @example
+     * try {
+     *   const result = await apiService.resetPassword('abc123token', 'nuevaContraseña123');
+     *   console.log(result.message); // "Contraseña actualizada exitosamente"
+     * } catch (error) {
+     *   console.error('Error:', error.message); // "Token inválido o expirado"
+     * }
+     */
+    resetPassword: async (token, password) => {
+      try {
+        const response = await apiClient.patch(`/auth/reset-password/${token}`, { password });
+        return response.data;
+      } catch (error) {
+        console.error("Error técnico al restablecer la contraseña:", error);
+        throw new Error("Ocurrió un problema inesperado.");
+      }
+    },
+
   };
 
 export default apiService;
