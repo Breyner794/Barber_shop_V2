@@ -86,14 +86,14 @@ const LoginPage = () => {
           </div>
 
           {/* Enlace para recuperar contraseña */}
-          <div className="text-center">
+          {/* <div className="text-center">
             <Link
               to="/forgot-password"
               className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200 underline"
             >
               ¿Olvidaste tu contraseña?
             </Link>
-          </div>
+          </div> */}
 
         </form>
       </div>
