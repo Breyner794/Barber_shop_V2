@@ -1,33 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { format, parseISO } from "date-fns";
-import { es } from "date-fns/locale";
 import {
   Plus,
   Search,
-  Edit,
-  Trash2,
   ChevronDown,
   Bell,
   History,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  User,
-  Scissors,
-  Calendar,
-  Info,
-  Clock,
   LoaderCircle,
-  Lock,
   ClipboardCheck,
-  Mail,
-  Hash,
-  Footprints,
   AlertTriangle, 
   RefreshCw, 
   Home,
-  Phone, 
-  MessageCircle
 } from "lucide-react"; // Added Mail, Hash, Walk icons
 import apiService from "../../api/services.js";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -65,6 +47,10 @@ const BookingsModule = () => {
   const [isBookingFormOpen, setIsBookingFormOpen] = useState(false);
   const [isWalkinFormOpen, setIsWalkinFormOpen] = useState(false);
   const [editingBooking, setEditingBooking] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageHistory, setCurrentPageHistory] = useState(1);
+  const bookingsPerPage = 6;
+  const bookingsPerPageHistory = 6;
 
   const [filters, setFilters] = useState({
     status: currentUser.role === "barbero" ? "all" : "active",
@@ -294,6 +280,11 @@ const BookingsModule = () => {
     return result;
   }, [bookings, searchTerm, filters, currentUser]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+    setCurrentPageHistory(1);
+}, [searchTerm, filters]); 
+
   const activeBookings = useMemo(() => {
     return filteredAndSortedBookings
       .filter((b) => ["pendiente", "confirmada"].includes(b.status))
@@ -303,6 +294,12 @@ const BookingsModule = () => {
         return dateTimeA - dateTimeB;
       });
   }, [filteredAndSortedBookings]);
+
+  const indexOfLastBooking = currentPage * bookingsPerPage;
+  const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
+  const currentActiveBookings = activeBookings.slice(indexOfFirstBooking, indexOfLastBooking);
+
+  const totalPages = Math.ceil(activeBookings.length / bookingsPerPage);
 
   const historicalBookings = useMemo(() => {
     return filteredAndSortedBookings
@@ -315,6 +312,12 @@ const BookingsModule = () => {
         return timestampB - timestampA;
       });
   }, [filteredAndSortedBookings]);
+
+  const indexOfLastBookingHistory = currentPageHistory * bookingsPerPageHistory;
+  const indexOfFirstBookingHistory = indexOfLastBookingHistory - bookingsPerPageHistory;
+  const currentActiveBookingsHistory = historicalBookings.slice(indexOfFirstBookingHistory, indexOfLastBookingHistory);
+
+  const totalPagesHistory = Math.ceil(historicalBookings.length / bookingsPerPageHistory);
 
   useEffect(() => {
     if (showNotification) {
@@ -390,7 +393,7 @@ const onRetry = () => {
     <div className="bg-gradient-to-tr from-black to-blue-700/30 min-h-screen p-4 sm:p-6 text-white">
       {showNotification && (
         <NotificationToast
-          message={notificationMessage} 
+          message={notificationMessage}
           onClose={() => setShowNotification(false)}
         />
       )}
@@ -496,7 +499,7 @@ const onRetry = () => {
         Reservas Activas
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {activeBookings.map((booking) => (
+        {currentActiveBookings.map((booking) => (
           <BookingCard
             key={booking.id}
             booking={booking}
@@ -506,6 +509,29 @@ const onRetry = () => {
           />
         ))}
       </div>
+      {activeBookings.length > 0 && (
+        <div className="flex justify-center items-center mt-6 space-x-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 rounded-lg bg-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Anterior
+          </button>
+          <span className="text-gray-400">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 rounded-lg bg-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
       {activeBookings.length === 0 && !loading && (
         <p className="text-center text-gray-500 py-8">
           No hay reservas activas.
@@ -530,7 +556,7 @@ const onRetry = () => {
         {showHistory && (
           <div className="mt-4 p-4 bg-gray-800/50 rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {historicalBookings.map((booking) => (
+              {currentActiveBookingsHistory.map((booking) => (
                 <BookingCard
                   key={booking.id}
                   booking={booking}
@@ -541,6 +567,29 @@ const onRetry = () => {
                 />
               ))}
             </div>
+            {historicalBookings.length > 0 && (
+        <div className="flex justify-center items-center mt-6 space-x-4">
+          <button
+            onClick={() => setCurrentPageHistory((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPageHistory === 1}
+            className="px-4 py-2 rounded-lg bg-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Anterior
+          </button>
+          <span className="text-gray-400">
+            Página {currentPageHistory} de {totalPagesHistory}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPageHistory((prev) => Math.min(prev + 1, totalPagesHistory))
+            }
+            disabled={currentPageHistory === totalPagesHistory}
+            className="px-4 py-2 rounded-lg bg-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
             {historicalBookings.length === 0 && !loading && (
               <div className="mt-4 flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-gray-700 bg-gray-800/50 p-8 text-center">
                 <History className="h-10 w-10 text-gray-500" />
@@ -564,8 +613,9 @@ const onRetry = () => {
       {isBookingFormOpen && (
         <BookingForm
           booking={editingBooking}
-          onClose={() => {setIsBookingFormOpen(false)
-            setEditingBooking(null)
+          onClose={() => {
+            setIsBookingFormOpen(false);
+            setEditingBooking(null);
           }}
           onSaveSuccess={() => {
             setIsBookingFormOpen(false);
