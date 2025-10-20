@@ -459,6 +459,18 @@ const validateForm = () => {
       return;
     }
 
+    const getSafeId = (item) => item._id || item.id;
+    
+      const selectedBarber = barbers.find(b => getSafeId(b) === formData.barberId);
+      const selectedSite = sites.find(s => getSafeId(s) === formData.siteId);
+      const selectedService = services.find(s => s._id === formData.serviceId);
+
+      if (!selectedBarber || !selectedSite || !selectedService) {
+          console.log ("Error: No se encontró la información completa del barbero, sede o servicio seleccionado.", 'error');
+          setIsLoading(false);
+          return;
+      }
+
   // El resto del código de handleSubmit permanece igual...
     let finalEndTime = null;
     const currentSelectedSlot = availableSlots.find(
@@ -488,6 +500,10 @@ const validateForm = () => {
       date: selectedDate,
       startTime: selectedTime,
       endTime: finalEndTime,
+      siteNameSnapshot: selectedSite.name_site || selectedSite.name,
+      barberNameSnapshot: selectedBarber.name,
+      serviceNameSnapshot: selectedService.name,
+      servicePriceSnapshot: selectedService.price,
     };
 
     try {
