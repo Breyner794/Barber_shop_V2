@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calendar, Scissors, MapPin, Users, BarChart3, ArrowRight, AlertCircle, LoaderCircle, Shield, Loader2 } from 'lucide-react';
+import { Calendar, Scissors, MapPin, Users, BarChart3, ArrowRight, AlertCircle, LoaderCircle, Shield, Loader2, TrendingUp, ShoppingCart, UserSearch } from 'lucide-react';
 import { format, parseISO, isToday, isTomorrow, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { NavLink } from 'react-router-dom';
-
-// Importa tu apiService y tu hook de autenticación
-import apiService from '../../api/services.js'; // Ajusta la ruta si es diferente
-import { useAuth } from '../../context/AuthContext.jsx';// Ajusta la ruta si es diferente
-
-// Importa componentes de Recharts para gráficos
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import apiService from '../../api/services.js'; 
+import { useAuth } from '../../context/AuthContext.jsx';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import formatCurrency from '../../utils/formatCurrency.jsx';
+import Pagination from '../Pagination/pagination.jsx';
+import usePagination from '../../hook/usePagination.js';
+import NetRevenueCard from '../analytics/NetRevenueCard.jsx';
+import SiteRevenueCard from '../analytics/SiteRevenueCard.jsx';
 
 // Pequeña función auxiliar para el saludo
 const getGreeting = () => {
@@ -67,7 +68,36 @@ const DashboardOverview = () => {
     const [customCancellationStartDate, setCustomCancellationStartDate] = useState(startDateOfMonth);
     const [customCancellationEndDate, setCustomCancellationEndDate] = useState(endDate);
 
+    const [triggerFetch, setTriggerFetch] = useState(0);
+
     const isAdminOrSuperAdmin = currentUser?.role === 'admin' || currentUser?.role === 'superadmin';
+
+    const {
+        currentItems: currentClients,
+        currentPage: clientsPage,
+        itemsPerPage: clientsPerPage,
+        totalItems: totalClients,
+        handlePageChange: handleClientsPageChange,
+        handleItemsPerPageChange: handleClientsPerPageChange
+    } = usePagination(recurringClients, 6);
+    
+    const {
+        currentItems: currentBarbers,
+        currentPage: barbersPage,
+        itemsPerPage: barbersPerPage,
+        totalItems: totalBarbers,
+        handlePageChange: handleBarbersPageChange,
+        handleItemsPerPageChange: handleBarbersPerPageChange
+    } = usePagination(revenueByBarber, 6);
+
+    const {
+        currentItems: currentServices,
+        currentPage: servicesPage,
+        itemsPerPage: servicesPerPage,
+        totalItems: totalServices,
+        handlePageChange: handleServicesPageChange,
+        handleItemsPerPageChange: handleServicesPerPageChange
+    } = usePagination(revenueByService, 6);
 
     const fetchTotalRevenue = useCallback(async (start, end) => {
       if(!isAdminOrSuperAdmin) return;
@@ -87,7 +117,7 @@ const DashboardOverview = () => {
         if (!isAdminOrSuperAdmin) return; // Solo para admins
         setBarberRevenueLoading(true);
         try {
-            const revByBarber = await apiService.getRevenueByBarberOrService(start, end, 'barber');
+            const revByBarber = await apiService.getRevenueBreakdownByBarber(start, end);
             setRevenueByBarber(revByBarber.data);
         } catch (err) {
             console.error("Error fetching revenue by barber:", err);
@@ -297,6 +327,7 @@ const DashboardOverview = () => {
 
     const handleApplyRevenueFilter = () => {
         fetchTotalRevenue(customRevenueStartDate, customRevenueEndDate);
+        setTriggerFetch(prev => prev + 1);
     };
 
     const handleApplyBarberRevenueFilter = () => {
@@ -428,13 +459,13 @@ const DashboardOverview = () => {
                     const currentColors = colorClasses[stat.color];
 
                     return (
-                        <div key={stat.title} className={`bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6 flex items-center gap-6 transition-colors duration-300 ${currentColors.border}`}>
+                        <div key={stat.title} className={`bg-gradient-to-br from-black-900/30 to-blue-900/30 border-2 border-gray-700 rounded-2xl p-6 flex items-center gap-6 transition-colors duration-300 ${currentColors.border}`}>
                             <div className={`p-4 rounded-lg ${currentColors.bg}`}>
                                 <stat.icon className={`w-8 h-8 ${currentColors.text}`} />
                             </div>
-                            <div>
-                                <p className="text-sm font-medium text-gray-400">{stat.title}</p>
-                                <p className="text-4xl font-bold text-white">{stat.value}</p>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-400 break-words truncate">{stat.title}</p>
+                                <p className="text-4xl font-bold text-white break-all">{stat.value}</p>
                             </div>
                         </div>
                     );
@@ -444,7 +475,7 @@ const DashboardOverview = () => {
             {/* --- SECCIÓN INFERIOR (PRÓXIMAS CITAS Y GRÁFICO DE RESERVAS DIARIAS) --- */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Columna de Próximas Citas */}
-                <div className="lg:col-span-2 bg-gray-800/50 border-2 border-gray-700 rounded-2xl">
+                <div className="lg:col-span-2 bg-gradient-to-br from-blue-900/30 to-black-900/30 border border-blue-700 rounded-2xl">
                     <div className="p-5 flex justify-between items-center border-b border-gray-700">
                         <h3 className="text-xl font-bold text-white">Próximas reservas</h3>
                         <NavLink to="/dashboard/bookings" className="text-sm font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1">
@@ -491,7 +522,7 @@ const DashboardOverview = () => {
                 </div>
 
                 {/* Columna de Gráfico de Reservas Diarias */}
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-5 flex flex-col">
+                <div className="bg-gradient-to-br from-black-900/30 to-blue-900/30 border border-blue-700 rounded-2xl p-5 flex flex-col">
                     <h3 className="text-xl font-bold text-white mb-4">Reservas de los últimos 7 días</h3>
                     <div className="flex-grow h-64"> {/* Altura fija para el gráfico */}
                         <ResponsiveContainer width="100%" height="100%">
@@ -517,326 +548,319 @@ const DashboardOverview = () => {
                 </div>
             </div>
 
-            {/* --- SECCIONES DE ANÁLISIS ADICIONALES (VISIBLES SEGÚN EL ROL) --- */}
-
-            {/* Recaudación Total (Solo Admin/SuperAdmin) */}
+            {/* --- SELECTOR DE FECHAS UNIFICADO (SOLO ADMIN/SUPERADMIN) --- */}
             {isAdminOrSuperAdmin && (
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Ingresos totales</h3>
-                    {/* Controles de fecha para admins */}
-                    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="revenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
+                <div className="bg-gradient-to-br from-black-900/30 to-blue-900/30 border-2 border-blue-700/50 rounded-xl shadow-md p-6 mb-6">
+                    <div className="flex items-center gap-3 mb-4">
+                        <Calendar className="text-blue-600" size={24} />
+                        <h2 className="text-xl font-semibold text-white">Seleccionar Período de Análisis</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label htmlFor="globalStartDate" className="block text-sm font-medium text-gray-300 mb-2">
+                                Fecha Inicial
+                            </label>
                             <input
                                 type="date"
-                                id="revenueStartDate"
-                                className="datetime-input-complete"
+                                id="globalStartDate"
                                 value={customRevenueStartDate}
-                                onChange={(e) => setCustomRevenueStartDate(e.target.value)}
+                                onChange={(e) => {
+                                    setCustomRevenueStartDate(e.target.value);
+                                    setCustomBarberRevenueStartDate(e.target.value);
+                                    setCustomServiceRevenueStartDate(e.target.value);
+                                }}
+                                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition datetime-input-complete"
                             />
                         </div>
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="revenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
+
+                        <div>
+                            <label htmlFor="globalEndDate" className="block text-sm font-medium text-gray-300 mb-2">
+                                Fecha Final
+                            </label>
                             <input
                                 type="date"
-                                id="revenueEndDate"
-                                className="datetime-input-complete"
+                                id="globalEndDate"
                                 value={customRevenueEndDate}
-                                onChange={(e) => setCustomRevenueEndDate(e.target.value)}
+                                onChange={(e) => {
+                                    setCustomRevenueEndDate(e.target.value);
+                                    setCustomBarberRevenueEndDate(e.target.value);
+                                    setCustomServiceRevenueEndDate(e.target.value);
+                                }}
+                                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition datetime-input-complete"
                             />
                         </div>
                         <button
-                            onClick={handleApplyRevenueFilter}
-                            disabled={revenueLoading}
-                            className={`px-6 py-2 rounded-lg font-semibold transition-colors duration-200 w-full sm:w-auto mt-4 sm:mt-0
-                                ${revenueLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
-                            `}
+                            onClick={() => {
+                                handleApplyRevenueFilter();
+                                handleApplyBarberRevenueFilter();
+                                handleApplyServiceRevenueFilter();
+                            }}
+                            disabled={revenueLoading || barberRevenueLoading || serviceRevenueLoading}
+                            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-blue-400 disabled:to-blue-500 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
                         >
-                            {revenueLoading ? 'Cargando...' : 'Aplicar filtro'}
+                            {(revenueLoading || barberRevenueLoading || serviceRevenueLoading) ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Cargando...
+                                </>
+                            ) : (
+                                <>
+                                    <TrendingUp size={20} />
+                                    Consultar
+                                </>
+                            )}
                         </button>
                     </div>
-                    {/* Visualización del total de revenue */}
-                    {totalRevenue ? (
-                        <>
-                            <p className="text-4xl font-bold text-green-400">${totalRevenue.totalRevenue.toFixed(2)}</p>
-                            <p className="text-gray-400 mt-2 text-sm">
-                                Para el periodo: <strong className='text-sm text-blue-400'>{totalRevenue.startDate}</strong> hasta <strong className='text-sm text-blue-400'>{totalRevenue.endDate}</strong>
-                            </p>
-                        </>
-                    ) : (
-                        revenueLoading ? (
-                            <p className="text-gray-400 text-lg">Cargando ingresos...</p>
-                        ) : (
-                            <p className="text-gray-400 text-lg">No hay datos de ingresos para este período.</p>
-                        )
+
+                    {/* Opcional: Mensaje de error si lo necesitas */}
+                    {error && (
+                        <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                            <p className="text-red-700 font-medium">{error}</p>
+                        </div>
                     )}
                 </div>
             )}
 
-            {/* Recaudación por Barbero (Admin/SuperAdmin ven todos, Barbero ve solo el suyo) */}
-            {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Ingresos por Barber</h3>
-                    {/* Controles de fecha para admins */}
-                    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="barberRevenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
-                            <input
-                                type="date"
-                                id="barberRevenueStartDate"
-                                className="datetime-input-complete"
-                                value={customBarberRevenueStartDate}
-                                onChange={(e) => setCustomBarberRevenueStartDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="barberRevenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
-                            <input
-                                type="date"
-                                id="barberRevenueEndDate"
-                                className="datetime-input-complete"
-                                value={customBarberRevenueEndDate}
-                                onChange={(e) => setCustomBarberRevenueEndDate(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            onClick={handleApplyBarberRevenueFilter}
-                            disabled={barberRevenueLoading}
-                            className={`px-6 py-2 rounded-lg font-semibold transition-colors duration-200 w-full sm:w-auto mt-4 sm:mt-0
-                                ${barberRevenueLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
-                            `}
-                        >
-                            {barberRevenueLoading ? 'Cargando...' : 'Aplicar filtro'}
-                        </button>
+            {/* --- SECCIONES DE ANÁLISIS ADICIONALES (VISIBLES SEGÚN EL ROL) --- */}
+
+            {/* Recaudación Total (Solo Admin/SuperAdmin) */}
+            {isAdminOrSuperAdmin && (
+                <NetRevenueCard
+                    startDate={customRevenueStartDate}
+                    endDate={customRevenueEndDate}
+                    triggerFetch={triggerFetch}
+                />
+            )}
+
+            {isAdminOrSuperAdmin && (
+                <SiteRevenueCard
+                    startDate={customRevenueStartDate}
+                    endDate={customRevenueEndDate}
+                    triggerFetch={triggerFetch}
+                />
+            )}
+
+            {isAdminOrSuperAdmin && (
+                <div className="bg-gradient-to-br from-blue-900/30 to-black-900/30 border-2 border-blue-700 rounded-2xl p-6">
+                    <div className="p-6 mt-6">
+                        <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                            <span><UserSearch/></span>
+                            Desglose por Barbero
+                        </h2>
+                        <p className="text-sm font-medium text-gray-300 mb-2">
+                            Período: {totalRevenue.startDate} al {totalRevenue.endDate}
+                        </p>
                     </div>
-                    {/* Visualización del revenue por barbero */}
-                    {revenueByBarber.length > 0 ? (
-                        <div className="space-y-2">
-                            {revenueByBarber.map(item => (
-                                <div key={item.barberId} className="flex justify-between items-center text-gray-300">
-                                    <span>{item.barberName} {item.barberLastName || ''}</span>
-                                    <span className="font-semibold text-white">${item.totalRevenue.toFixed(2)}</span>
-                                </div>
-                            ))}
-                        </div>
+                    {barberRevenueLoading ? (
+                        <p className="text-gray-400 text-lg text-center">Cargando ingresos por barbero...</p>
+                    ) : currentBarbers.length > 0 ? (
+                        <>
+                            {/* Vista de Tabla para Desktop */}
+                            <div className="hidden md:block overflow-x-auto">
+                                <table className="w-full">
+                                    <thead className="bg-gray-800/50 border border-gray-700">
+                                        <tr>
+                                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                                Barbero
+                                            </th>
+                                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                                Citas
+                                            </th>
+                                            <th className="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                                Total Servicios
+                                            </th>
+                                            <th className="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                                Comisión (37.5%)
+                                            </th>
+                                            <th className="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                                Para Negocio (62.5%)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-500/10">
+                                        {currentBarbers.map(item => (
+                                            <tr key={item.barberId} className="bg-gray-700/30 rounded-b-lg hover:bg-gray-700/50 border border-gray-700">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                                                            {item.barberName.charAt(0)}
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-medium text-gray-400">
+                                                                {item.barberName} {item.barberLastName}
+                                                            </p>
+                                                            <p className="text-xs text-slate-500">ID: {item.barberId}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <span className="inline-flex items-center justify-center w-12 h-12 bg-blue-900/30 text-blue-400 rounded-full font-bold">
+                                                        {item.appointmentCount}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-right font-semibold text-gray-400">
+                                                    {formatCurrency(item.totalServices)}
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <span className="text-purple-700 font-semibold">
+                                                        {formatCurrency(item.barberCommission)}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <span className="text-green-400 font-semibold">
+                                                        {formatCurrency(item.businessShare)}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Vista de Tarjetas para Mobile */}
+                            <div className="md:hidden space-y-4 mt-4">
+                                {currentBarbers.map(item => (
+                                    <div
+                                        key={item.barberId}
+                                        className="bg-gray-800/50 rounded-lg p-4 border-2 border-gray-700 hover:border-blue-500/50 transition-colors"
+                                    >
+                                        {/* Header de la tarjeta */}
+                                        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-700">
+                                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                                                {item.barberName.charAt(0)}
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="font-semibold text-gray-400 text-base">
+                                                    {item.barberName} {item.barberLastName}
+                                                </p>
+                                                <p className="text-xs text-slate-500">ID: {item.barberId.slice(-6)}</p>
+                                            </div>
+                                            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-900/30 text-blue-400 rounded-full font-bold">
+                                                {item.appointmentCount}
+                                            </div>
+                                        </div>
+
+                                        {/* Información financiera */}
+                                        <div className="space-y-3">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-gray-400 text-sm font-medium">Total Servicios</span>
+                                                <span className="font-bold text-gray-400 text-lg">
+                                                    {formatCurrency(item.totalServices)}
+                                                </span>
+                                            </div>
+
+                                            <div className="flex justify-between items-center -mx-4 px-4 py-2">
+                                                <span className="text-purple-700 text-sm font-medium">
+                                                    Comisión <span className="text-xs">(37.5%)</span>
+                                                </span>
+                                                <span className="text-purple-700 font-bold">
+                                                    {formatCurrency(item.barberCommission)}
+                                                </span>
+                                            </div>
+
+                                            <div className="flex justify-between items-center -mx-4 px-4 py-2">
+                                                <span className="text-green-400 text-sm font-medium">
+                                                    Para Negocio <span className="text-xs">(62.5%)</span>
+                                                </span>
+                                                <span className="text-green-400 font-bold">
+                                                    {formatCurrency(item.businessShare)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <Pagination
+                                currentPage={barbersPage}
+                                totalItems={totalBarbers}
+                                itemsPerPage={barbersPerPage}
+                                onPageChange={handleBarbersPageChange}
+                                onItemsPerPageChange={handleBarbersPerPageChange}
+                            />
+                        </>
                     ) : (
-                        barberRevenueLoading ? (
-                            <p className="text-gray-400 text-lg">Cargando ingresos por barbero...</p>
-                        ) : (
-                            <p className="text-gray-400 text-lg">No hay datos de ingresos para este período.</p>
-                        )
+                        <p className="text-gray-400 text-lg text-center">No hay datos de ingresos para este período.</p>
                     )}
                 </div>
             )}
 
             {/* Recaudación por Servicio (Solo Admin/SuperAdmin) */}
-            {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Ingresos por servicio</h3>
-                    {/* Controles de fecha para admins */}
-                    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="serviceRevenueStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
-                            <input
-                                type="date"
-                                id="serviceRevenueStartDate"
-                                className="datetime-input-complete"
-                                value={customServiceRevenueStartDate}
-                                onChange={(e) => setCustomServiceRevenueStartDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="serviceRevenueEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
-                            <input
-                                type="date"
-                                id="serviceRevenueEndDate"
-                                className="datetime-input-complete"
-                                value={customServiceRevenueEndDate}
-                                onChange={(e) => setCustomServiceRevenueEndDate(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            onClick={handleApplyServiceRevenueFilter}
-                            disabled={serviceRevenueLoading}
-                            className={`px-6 py-2 rounded-lg font-semibold transition-colors duration-200 w-full sm:w-auto mt-4 sm:mt-0
-                                ${serviceRevenueLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
-                            `}
-                        >
-                            {serviceRevenueLoading ? 'Cargando...' : 'Aplicar filtro'}
-                        </button>
-                    </div>
-                    {/* Visualización del revenue por servicio */}
-                    {revenueByService.length > 0 ? (
-                        <div className="space-y-2">
-                            {revenueByService.map(item => (
-                                <div key={item.serviceId} className="flex justify-between items-center text-gray-300">
-                                    <span>{item.serviceName}</span>
-                                    <span className="font-semibold text-white">${item.totalRevenue.toFixed(2)}</span>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        serviceRevenueLoading ? (
-                            <p className="text-gray-400 text-lg">Cargando ingresos por servicio...</p>
-                        ) : (
-                            <p className="text-gray-400 text-lg">No hay datos de ingresos para este período.</p>
-                        )
-                    )}
-                </div>
-            )}
+            {isAdminOrSuperAdmin && (
+                <div className="bg-gradient-to-br from-blue-900/30 to-black-900/30 border-2 border-blue-700 rounded-2xl p-6">
+                    <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-3 mb-4"><span><ShoppingCart/></span> Ingresos por servicio</h3>
 
-            {/* Tasa de Ocupación (Admin/SuperAdmin ven todos, Barbero ve solo el suyo) */}
-            {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Tasa de ocupación</h3>
-                    {/* Controles de fecha y barbero para admins */}
-                    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="occupancyStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
-                            <input
-                                type="date"
-                                id="occupancyStartDate"
-                                className="datetime-input-complete"
-                                value={customOccupancyStartDate}
-                                onChange={(e) => setCustomOccupancyStartDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="occupancyEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
-                            <input
-                                type="date"
-                                id="occupancyEndDate"
-                                className="datetime-input-complete"
-                                value={customOccupancyEndDate}
-                                onChange={(e) => setCustomOccupancyEndDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="occupancyBarberSelect" className="block text-sm font-medium text-gray-400 mb-1">Barbero:</label>
-                            <select
-                                id="occupancyBarberSelect"
-                                className="w-full p-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                value={selectedOccupancyBarberId}
-                                onChange={(e) => setSelectedOccupancyBarberId(e.target.value)}
-                            >
-                                <option value="">Seleccionar barbero</option>
-                                {allBarbers.map(barber => (
-                                    <option key={barber._id} value={barber._id}>
-                                        {barber.name} {barber.last_name}
-                                    </option>
+                    {serviceRevenueLoading ? (
+                        <p className="text-gray-400 text-lg text-center">Cargando ingresos por servicio...</p>
+                    ) : currentServices.length > 0 ? (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {currentServices.map(item => (
+                                    <div key={item.serviceId} className="flex flex-col p-4 bg-gray-700/30 rounded-lg hover:bg-gray-700/50 transition-colors border border-gray-600/30">
+                                        <span className="text-gray-300 text-sm mb-2">
+                                            {item.serviceName || (
+                                                <span className="text-red-400 italic">
+                                                    [Servicio Eliminado ID: {item.serviceId.slice(-8)}]
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span className="font-bold text-green-400 text-2xl">
+                                            ${formatCurrency(item.totalRevenue)}
+                                        </span>
+                                    </div>
                                 ))}
-                            </select>
-                        </div>
-                        <button
-                            onClick={handleApplyOccupancyFilter}
-                            disabled={occupancyLoading || !selectedOccupancyBarberId} // Deshabilitar si no hay barbero seleccionado
-                            className={`px-6 py-2 rounded-lg font-semibold transition-colors duration-200 w-full sm:w-auto mt-4 sm:mt-0
-                                ${occupancyLoading || !selectedOccupancyBarberId ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
-                            `}
-                        >
-                            {occupancyLoading ? 'Cargando...' : 'Aplicar filtro'}
-                        </button>
-                    </div>
-                    {/* Visualización de la tasa de ocupación */}
-                    {occupancyRate ? (
-                        <>
-                            <p className="text-4xl font-bold text-blue-400">{occupancyRate.occupancyRate}</p>
-                            <p className="text-gray-400 mt-2 text-sm">
-                                Reservado: {occupancyRate.bookedMinutes} min / Disponible: {occupancyRate.totalAvailableMinutes} min
-                            </p>
-                            <p className="text-gray-500 text-xs mt-1">
-                                Para el periodo: <strong className='text-sm text-blue-400'>{occupancyRate.startDate}</strong> hasta <strong className='text-sm text-blue-400'>{occupancyRate.endDate}</strong> (Barbero: <strong className='text-sm text-blue-400'>{allBarbers.find(b => b._id === occupancyRate.barberId)?.name || 'N/A'}</strong>)
-                            </p>
+                            </div>
+
+                            {/* Solo mostrar paginación si hay datos */}
+                            <Pagination
+                                currentPage={servicesPage}
+                                totalItems={totalServices}
+                                itemsPerPage={servicesPerPage}
+                                onPageChange={handleServicesPageChange}
+                                onItemsPerPageChange={handleServicesPerPageChange}
+                            />
                         </>
                     ) : (
-                        occupancyLoading ? (
-                            <p className="text-gray-400 text-lg">Cargando tasa de ocupación...</p>
-                        ) : (
-                            <p className="text-gray-400 text-lg">No hay datos de ocupación para este periodo ni para la peluquería.</p>
-                        )
-                    )}
-                </div>
-            )}
-
-            {/* Estado de Servicios (Solo Admin/SuperAdmin) */}
-            {isAdminOrSuperAdmin && serviceStatus && (
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Estado de los servicios</h3>
-                    <p className="text-lg text-green-400">Servicios Activos: {serviceStatus.activeCount}</p>
-                    <p className="text-lg text-red-400">Servicios inactivos: {serviceStatus.inactiveCount}</p>
-                    {/* Puedes añadir una lista de servicios aquí si lo deseas */}
-                </div>
-            )}
-
-            {/* Tasa de Cancelación (Solo Admin/SuperAdmin) */}
-            {isAdminOrSuperAdmin && ( // Solo mostrar si es admin/superadmin
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Tasa de cancelación</h3>
-                    {/* Controles de fecha para admins */}
-                    <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center">
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="cancellationStartDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de inicio:</label>
-                            <input
-                                type="date"
-                                id="cancellationStartDate"
-                                className="datetime-input-complete"
-                                value={customCancellationStartDate}
-                                onChange={(e) => setCustomCancellationStartDate(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label htmlFor="cancellationEndDate" className="block text-sm font-medium text-gray-400 mb-1">Fecha de finalización:</label>
-                            <input
-                                type="date"
-                                id="cancellationEndDate"
-                                className="datetime-input-complete"
-                                value={customCancellationEndDate}
-                                onChange={(e) => setCustomCancellationEndDate(e.target.value)}
-                            />
-                        </div>
-                        <button
-                            onClick={handleApplyCancellationFilter}
-                            disabled={cancellationLoading}
-                            className={`px-6 py-2 rounded-lg font-semibold transition-colors duration-200 w-full sm:w-auto mt-4 sm:mt-0
-                                ${cancellationLoading ? 'bg-blue-600/50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}
-                            `}
-                        >
-                            {cancellationLoading ? 'Cargando...' : 'Aplicar filtro'}
-                        </button>
-                    </div>
-                    {/* Visualización de la tasa de cancelación */}
-                    {cancellationRate ? (
-                        <>
-                            <p className="text-4xl font-bold text-red-400">{cancellationRate.cancellationRate}</p>
-                            <p className="text-gray-400 mt-2 text-sm">
-                                Canceladas: {cancellationRate.cancelledAppointments} / Total: {cancellationRate.totalAppointments}
-                            </p>
-                            <p className="text-gray-500 text-xs mt-1">
-                                Para el periodo: <strong className='text-sm text-blue-400'>{cancellationRate.startDate}</strong> hasta <strong className='text-sm text-blue-400'>{cancellationRate.endDate}</strong>
-                            </p>
-                        </>
-                    ) : (
-                        cancellationLoading ? (
-                            <p className="text-gray-400 text-lg">Cargando tasa de cancelación...</p>
-                        ) : (
-                            <p className="text-gray-400 text-lg">No hay datos de cancelación para este período.</p>
-                        )
+                        <p className="text-gray-400 text-lg text-center">No hay datos de ingresos para este período.</p>
                     )}
                 </div>
             )}
 
             {/* Clientes Recurrentes (Solo Admin/SuperAdmin) */}
-            {isAdminOrSuperAdmin && recurringClients.length > 0 && (
-                <div className="bg-gray-800/50 border-2 border-gray-700 rounded-2xl p-6">
-                    <h3 className="text-xl font-bold text-white mb-4">Clientes recurrentes</h3>
-                    <div className="space-y-2">
-                        {recurringClients.map(client => (
-                            <div key={client._id} className="flex justify-between items-center text-gray-300">
-                                <span>{client.clientName} ({client._id})</span> {/* _id es el número de teléfono */}
-                                <span className="font-semibold text-white">Reservas: {client.totalBookings}</span>
+            {isAdminOrSuperAdmin && currentClients.length > 0 && (
+                <div className="bg-gradient-to-br from-blue-900/30 to-black-900/30 border-2 border-blue-700 rounded-2xl p-6">
+                    <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-3 mb-4">
+                        <span><Users/></span> Clientes recurrentes
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {currentClients.map(client => (
+                            <div
+                                key={client._id}
+                                className="flex flex-col p-4 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-lg hover:from-purple-900/30 hover:to-blue-900/30 transition-all duration-200 border border-purple-700/30 hover:border-purple-600/50 shadow-lg"
+                            >
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex-1">
+                                        <p className="text-white font-semibold text-lg mb-1">{client.clientName}</p>
+                                        <p className="text-gray-400 text-sm flex items-center gap-1">
+                                            <span>📱</span> {client._id}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-600/30">
+                                    <span className="text-gray-400 text-sm">Total reservas:</span>
+                                    <span className="font-bold text-blue-400 text-xl">{client.totalBookings}</span>
+                                </div>
                             </div>
                         ))}
                     </div>
+                    <Pagination
+                        currentPage={clientsPage}
+                        totalItems={totalClients}
+                        itemsPerPage={clientsPerPage}
+                        onPageChange={handleClientsPageChange}
+                        onItemsPerPageChange={handleClientsPerPageChange}
+                    />
                 </div>
             )}
         </div>

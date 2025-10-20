@@ -1099,6 +1099,42 @@ const apiService = {
       }
     },
 
+    getRevenueBreakdownByBarber: async (startDate, endDate) => {
+      try {
+          const response = await apiClient.get('/analytics/revenue/breakdown', {
+              params: { startDate, endDate }
+          });
+          return response.data; 
+      } catch (error) {
+          console.error('Error fetching revenue breakdown by barber:', error.response?.data || error.message);
+          throw new Error(error.response?.data?.message || 'Failed to fetch revenue breakdown by barber');
+      }
+    },
+
+    getNetRevenueByDateRange: async (startDate, endDate) => {
+      try {
+          const response = await apiClient.get('/analytics/revenue/net', {
+              params: { startDate, endDate }
+          });
+          return response.data; 
+      } catch (error) {
+          console.error('Error fetching net revenue by date range:', error.response?.data || error.message);
+          throw new Error(error.response?.data?.message || 'Failed to fetch net revenue by date range');
+      }
+    },
+
+    getRevenueBySite: async (startDate, endDate) => {
+      try {
+          const response = await apiClient.get('/analytics/revenue-by-site', {
+              params: { startDate, endDate }
+          });
+          return response.data; 
+      } catch (error) {
+          console.error('Error fetching revenue by site:', error.response?.data || error.message);
+          throw new Error(error.response?.data?.message || 'Failed to fetch revenue by site');
+      }
+    },
+
   };
 
 export default apiService;

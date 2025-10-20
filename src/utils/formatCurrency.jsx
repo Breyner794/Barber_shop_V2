@@ -1,0 +1,9 @@
+const formatCurrency = (amount) => {
+  if (!amount) return '0,00';
+  return Number(amount).toLocaleString('es-CO', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+};
+
+export default formatCurrency;
