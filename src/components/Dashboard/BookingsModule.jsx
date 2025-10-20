@@ -92,19 +92,21 @@ const BookingsModule = () => {
         isWalkIn: booking.isWalkIn || false,
         completedAt: booking.completedAt || null,
         // --- FIN NUEVOS CAMPOS ---
-        barberName: `${booking.barberId?.name || "Barbero"} ${
-          booking.barberId?.last_name || ""
-        }`,
+        barberName: (
+          booking.barberId?.name
+            ? `${booking.barberId.name} ${booking.barberId.last_name || ''}`.trim()
+            : ''
+        ) || booking.barberNameSnapshot || 'Barbero no especificado',
         barberId:
           typeof booking.barberId === "object"
             ? booking.barberId?._id
             : booking.barberId,
-        serviceName: booking.serviceId?.name || "Servicio no especificado",
+        serviceName: booking.serviceId?.name || booking.serviceNameSnapshot || "Servicio no especificado",
         serviceId:
           typeof booking.serviceId === "object"
             ? booking.serviceId?._id
             : booking.serviceId,
-        locationName: booking.siteId?.name_site || "Sede no especificada",
+        locationName: booking.siteId?.name_site || booking.siteNameSnapshot || "Sede no especificada",
         locationId:
           typeof booking.siteId === "object"
             ? booking.siteId?._id

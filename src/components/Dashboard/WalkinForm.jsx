@@ -172,11 +172,29 @@ const WalkinForm = ({ onClose, onSaveSuccess, barbers, services, sites }) => {
     setIsLoading(true);
 
     try {
-      const response = await apiService.createCompletedService(formData);
+
+        const getSafeId = (item) => item?._id || item?.id;
+
+        const selectedBarber = barbers.find(b => getSafeId(b) === formData.barberId);
+        const selectedSite = sites.find(s => getSafeId(s) === formData.siteId);
+        const selectedService = services.find(s => getSafeId(s) === formData.serviceId);
+
+        if (!selectedBarber || !selectedSite || !selectedService) {
+            throw new Error("Error de datos: No se encontró la información completa (Barbero, Sede o Servicio) para crear el Snapshot.");
+        }    
+        const payload = {
+            ...formData,
+            siteNameSnapshot: selectedSite.name, 
+            barberNameSnapshot: selectedBarber.name,
+            serviceNameSnapshot: selectedService.name,
+            servicePriceSnapshot: selectedService.price, 
+        };
+
+      const response = await apiService.createCompletedService(payload);
 
       Swal.fire({
         title: "¡Servicio Registrado Exitosamente!",
-        text: `El servicio para ${formData.clientName} ha sido registrado correctamente.`,
+        text: `El servicio para ${payload.clientName} ha sido registrado correctamente.`,
         icon: "success",
         confirmButtonColor: "#2cb9fd",
         customClass: {
