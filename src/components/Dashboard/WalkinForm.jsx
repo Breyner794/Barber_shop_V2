@@ -10,12 +10,19 @@ const WalkinForm = ({ onClose, onSaveSuccess, barbers, services, sites }) => {
   // Función para obtener la hora actual en formato "HH:MM"
   const getCurrentTime = () => new Date().toTimeString().slice(0, 5);
 
+  const getInitialSiteId = () => {
+    if (currentUser?.site_barber && typeof currentUser.site_barber === 'object') {
+        return currentUser.site_barber._id;
+    }
+    return ''; 
+};
+
   const [formData, setFormData] = useState({
     clientName: '',
     clientPhone: '',
     barberId: currentUser.role === 'barbero' ? currentUser._id : '',
     serviceId: '',
-    siteId: currentUser?.site_barber || '',
+    siteId: getInitialSiteId(),
     startTime: getCurrentTime(),
     notes: '',
   });

@@ -43,8 +43,7 @@ const BookingForm = ({
     const initialBarberId =
       (isBarberUser && !isEditing && currentUser._id) || booking?.barberId || "";
     const initialSiteId =
-      (isBarberUser && !isEditing && currentUser?.site_barber._id) ||
-      booking?.locationId || "";
+    (isBarberUser && !isEditing && currentUser?.site_barber?._id) || booking?.locationId || "";
 
       // --- DEBUG 3: Valores iniciales calculados para formData ---
     // console.log("DEBUG 3: Calculando initial formData states:");

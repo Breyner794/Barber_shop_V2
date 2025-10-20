@@ -159,6 +159,19 @@ const BookingsModule = () => {
           name: `${currentUser.name} ${currentUser.last_name}`.trim(),
         };
         setBarbersList([barberInfo]);
+
+        if (currentUser?.site_barber) {
+
+          const formattedSite = {
+            id: currentUser.site_barber._id,
+            name: currentUser.site_barber.name_site,
+          };
+
+          setLocationsList([formattedSite]);
+        } else {
+          // Asegura que la lista no sea undefined si el barbero no tiene sede asignada
+          setLocationsList([]);
+        }
       }
     } catch (err) {
       console.error("Error fetching initial data:", err);
