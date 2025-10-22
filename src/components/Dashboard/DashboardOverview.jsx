@@ -671,10 +671,10 @@ const DashboardOverview = () => {
                                                 Total Servicios
                                             </th>
                                             <th className="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                                Comisión (37.5%)
+                                                Comisión
                                             </th>
                                             <th className="px-6 py-4 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                                Para Negocio (62.5%)
+                                                Para Negocio
                                             </th>
                                         </tr>
                                     </thead>
@@ -752,7 +752,7 @@ const DashboardOverview = () => {
 
                                             <div className="flex justify-between items-center -mx-4 px-4 py-2">
                                                 <span className="text-purple-700 text-sm font-medium">
-                                                    Comisión <span className="text-xs">(37.5%)</span>
+                                                    Comisión <span className="text-xs"></span>
                                                 </span>
                                                 <span className="text-purple-700 font-bold">
                                                     {formatCurrency(item.barberCommission)}
@@ -761,7 +761,7 @@ const DashboardOverview = () => {
 
                                             <div className="flex justify-between items-center -mx-4 px-4 py-2">
                                                 <span className="text-green-400 text-sm font-medium">
-                                                    Para Negocio <span className="text-xs">(62.5%)</span>
+                                                    Para Negocio <span className="text-xs"></span>
                                                 </span>
                                                 <span className="text-green-400 font-bold">
                                                     {formatCurrency(item.businessShare)}

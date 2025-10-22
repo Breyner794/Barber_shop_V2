@@ -236,7 +236,7 @@ const NetRevenueCard = ({ startDate, endDate, triggerFetch }) => {
 
             <div className="flex justify-between items-center p-3 bg-purple-900/30 rounded-lg border border-purple-500/50">
               <span className="text-purple-300 font-medium">
-                ✂️ Comisiones (37.5%)
+                ✂️ Comisiones
               </span>
               <span className="text-purple-200 font-bold text-lg">
                 - {formatCurrency(revenueData.data.totalCommissions)}
