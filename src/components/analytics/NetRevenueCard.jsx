@@ -46,7 +46,6 @@ const NetRevenueCard = ({ startDate, endDate, triggerFetch }) => {
     subtitle,
     color,
     bgColor,
-    percentage,
   }) => (
     <div
       className={`${bgColor} rounded-xl shadow-lg p-6 border-2 ${color} transition-all duration-300 hover:shadow-xl hover:scale-105`}
@@ -59,11 +58,6 @@ const NetRevenueCard = ({ startDate, endDate, triggerFetch }) => {
         >
           <Icon className="text-white" size={28} />
         </div>
-        {percentage && (
-          <div className={`px-3 py-1 rounded-full bg-white/20`}>
-            <span className="text-sm font-bold text-white">{percentage}%</span>
-          </div>
-        )}
       </div>
       <h3 className="text-gray-300 text-sm font-semibold mb-1 uppercase tracking-wide">
         {title}
@@ -73,22 +67,19 @@ const NetRevenueCard = ({ startDate, endDate, triggerFetch }) => {
     </div>
   );
 
-  const ProgressBar = ({ label, value, total, color, percentage }) => {
+  const ProgressBar = ({ label, value, total, color }) => {
     const widthPercentage = total > 0 ? (value / total) * 100 : 0;
 
     return (
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-white font-semibold text-sm">{label}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-white font-bold">
-              {formatCurrency(value)}
-            </span>
-            <span
+          <div className="flex items-center gap-2">            
+              <span
               className={`px-3 py-1 rounded-full text-xs font-bold ${color} text-white`}
             >
-              {percentage}%
-            </span>
+              {formatCurrency(value)}
+            </span>   
           </div>
         </div>
         <div className="w-full bg-slate-700/50 rounded-full h-4 overflow-hidden">
