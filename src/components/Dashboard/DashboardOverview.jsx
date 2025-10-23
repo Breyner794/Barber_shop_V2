@@ -703,7 +703,7 @@ const DashboardOverview = () => {
                                                     {formatCurrency(item.totalServices)}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    <span className="text-purple-700 font-semibold">
+                                                    <span className="text-purple-400 font-semibold">
                                                         {formatCurrency(item.barberCommission)}
                                                     </span>
                                                 </td>
@@ -751,10 +751,10 @@ const DashboardOverview = () => {
                                             </div>
 
                                             <div className="flex justify-between items-center -mx-4 px-4 py-2">
-                                                <span className="text-purple-700 text-sm font-medium">
+                                                <span className="text-purple-400 text-sm font-medium">
                                                     Comisión <span className="text-xs"></span>
                                                 </span>
-                                                <span className="text-purple-700 font-bold">
+                                                <span className="text-purple-400 font-bold">
                                                     {formatCurrency(item.barberCommission)}
                                                 </span>
                                             </div>
