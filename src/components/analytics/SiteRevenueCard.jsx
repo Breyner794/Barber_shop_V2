@@ -46,7 +46,7 @@ const SiteRevenueCard = ({ startDate, endDate, triggerFetch }) => {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-blue-900/30 to-black-900/30 rounded-xl shadow-md p-12 text-center border border-slate-600/30">
+      <div className="bg-gradient-to-br from-blue-900/30 to-black-900/30 rounded-xl shadow-md p-12 text-center border border-blue-700">
         <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
         <p className="text-slate-300 font-medium">Cargando recaudo por sede...</p>
       </div>
@@ -274,7 +274,7 @@ const SiteRevenueCard = ({ startDate, endDate, triggerFetch }) => {
 
                   <div className="flex justify-between items-center bg-green-900/20 -mx-4 px-4 py-2 rounded">
                     <span className="text-slate-300 text-sm font-medium">
-                      Ganancia Neta <span className="text-xs">(62.5%)</span>
+                      Ganancia Neta
                     </span>
                     <span className="text-green-400 font-bold break-all">
                       {formatCurrency(site.netRevenue)}
@@ -283,7 +283,7 @@ const SiteRevenueCard = ({ startDate, endDate, triggerFetch }) => {
 
                   <div className="flex justify-between items-center bg-purple-900/20 -mx-4 px-4 py-2 rounded">
                     <span className="text-slate-300 text-sm font-medium">
-                      Comisiones <span className="text-xs">(37.5%)</span>
+                      Comisiones
                     </span>
                     <span className="text-purple-400 font-bold break-all">
                       {formatCurrency(site.totalCommissions)}
@@ -304,7 +304,7 @@ const SiteRevenueCard = ({ startDate, endDate, triggerFetch }) => {
       </div>
 
       {/* Gráfico de Comparación */}
-      <div className="bg-gradient-to-br from-blue-900/30 to-blue-900/30  rounded-xl shadow-lg p-6 border-2 border-slate-700">
+      <div className="bg-gradient-to-br from-blue-900/30 to-blue-900/30  rounded-xl shadow-lg p-6 border-2 border-blue-700">
         <div className="flex items-center gap-3 mb-6">
           <TrendingUp className="text-blue-400" size={24} />
           <h3 className="text-xl font-bold text-white">Comparación de Sedes</h3>
