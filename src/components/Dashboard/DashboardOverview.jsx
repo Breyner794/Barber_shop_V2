@@ -690,7 +690,7 @@ const DashboardOverview = () => {
                                                             <p className="font-medium text-gray-400">
                                                                 {item.barberName} {item.barberLastName}
                                                             </p>
-                                                            <p className="text-xs text-slate-500">ID: {item.barberId}</p>
+                                                            <p className="text-xs text-slate-500">ID: {item.barberId.slice(-6)}</p>
                                                         </div>
                                                     </div>
                                                 </td>
