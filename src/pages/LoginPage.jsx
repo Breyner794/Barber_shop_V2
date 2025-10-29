@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext'; // Asumimos que AuthContext estará en esta ruta
 import { useNavigate, Link } from 'react-router-dom';
 import { Scissors, Mail, Lock, LogIn, AlertTriangle, LoaderCircle } from 'lucide-react';
+import AuthLoadingScreen from '../components/AuthLoadingScreen';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -31,6 +32,14 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
+
+  if (isAuthLoading) {
+    return <AuthLoadingScreen />;
+  }
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="bg-gradient-to-tr from-black to-blue-700 flex items-center justify-center min-h-screen  text-white">
