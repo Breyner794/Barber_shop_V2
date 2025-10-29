@@ -8,10 +8,16 @@ import { Scissors, Mail, Lock, LogIn, AlertTriangle, LoaderCircle } from 'lucide
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const { login, isAuthenticated, isAuthLoading } = useAuth();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect (() => {
+    if(!isAuthLoading && isAuthenticated){
+      navigate('/dashboard', {replace: true});
+    }
+  }, [isAuthLoading, isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +25,6 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       await login(email, password);
-      navigate('/dashboard'); // Redirige al dashboard después del login exitoso
     } catch (err) {
       setError(err.message || 'Failed to log in. Please check your credentials.');
     } finally {
