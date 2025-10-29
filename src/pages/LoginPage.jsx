@@ -1,7 +1,5 @@
-// src/pages/LoginPage.jsx
-
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext'; // Asumimos que AuthContext estará en esta ruta
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Scissors, Mail, Lock, LogIn, AlertTriangle, LoaderCircle } from 'lucide-react';
 import AuthLoadingScreen from '../components/AuthLoadingScreen';
