@@ -4,6 +4,7 @@ import apiService from '../../api/services.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import Swal from 'sweetalert2';
 import ServiceForm from './ServiceForm.jsx';
+import ServiceImage from './Services/servicesImage.jsx';
 
 const ServicesModule = () => {
   
@@ -197,10 +198,9 @@ const ServicesModule = () => {
           >
             {/* --- Imagen de la Tarjeta --- */}
             <div className="relative">
-                <img
+                <ServiceImage
                   src={service.image_Url}
                   alt={service.name}
-                  className="w-full h-48 object-cover"
                 />
                 {/* --- Badge de Estado sobre la imagen --- */}
               <span
