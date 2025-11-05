@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useBooking } from "../context/BookingContext";
 import apiService from "../api/services"; 
 import { AlertTriangle, PackageX, LoaderCircle } from "lucide-react";
-import ServiceImage from "./Dashboard/Services/servicesImage";
+import ServiceImage from "./Dashboard/Services/ServicesImage";
 
 const COLOR_VARIANTS = {
   blue: {
