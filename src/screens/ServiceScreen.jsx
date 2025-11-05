@@ -8,7 +8,7 @@ import ServiceScreenSkeleton from '../components/Skeleton/ServiceScreenSkeleton'
 import ErrorComponent from '../components/ErrorComponent';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import ServiceImage from '../components/Dashboard/Services/servicesImage';
+import ServiceImage from '../components/Dashboard/Services/ServicesImage';
 
 const ServiceScreen = () => {
 
