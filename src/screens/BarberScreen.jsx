@@ -62,6 +62,7 @@ const BarberScreen = () => {
   };
 
   const handleBack = () => {
+    setBarber(null);
     navigate(-1);
   };
 

@@ -121,6 +121,11 @@ const DateTimeScreen = () => {
   const isDateTimeSelected = selectedDate && selectedSlot;
 
   const handleBack = () => {
+    setTimeSlot({
+        date: null,
+        startTime: null,
+        endTime: null,
+      });
     navigate(-1);
   };
 
@@ -353,8 +358,8 @@ const DateTimeScreen = () => {
             <button
               onClick={handleBack}
               className="group w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
-               border-2 border-gray-400 text-gray-300 bg-transparent
-               hover:bg-white hover:text-black hover:border-gray-300
+                border-2 border-gray-400 text-gray-300 bg-transparent
+                hover:bg-white hover:text-black hover:border-gray-300
                 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400
                 flex items-center justify-center gap-2"
             >
@@ -388,7 +393,7 @@ const DateTimeScreen = () => {
                   </>
                 ) : (
                   <>
-                Continuar
+                    Continuar
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
@@ -396,7 +401,7 @@ const DateTimeScreen = () => {
 
               {/* Gradiente animado (solo aparece si está habilitado) */}
               {isDateTimeSelected && (
-              <div
+                <div
                   className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 via-white to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                 />
               )}
