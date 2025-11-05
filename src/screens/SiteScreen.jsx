@@ -57,7 +57,8 @@ const SiteScreen = () =>{
     };
     
     const handleBack = () =>{
-    navigate(-1);
+      setSite(null);
+      navigate(-1);
     };
 
     const isDisabled = !bookingDetails.site || sites.length === 0;
@@ -91,52 +92,52 @@ return (
         <ProgressBar currentStep={2} />
 
         {sites.length === 0 ? (
-          <div className="text-center py-10 px-6 rounded-lg bg-gray-800/70 backdrop-blur-sm shadow-lg my-12">
-            <p className="text-xl text-white mb-4 font-bold">
-              ¡No hay sedes disponibles en este momento!
-            </p>
-            <p className="text-gray-200">
-              Nuestro equipo está trabajando para añadir nuevas ubicaciones. ¡Vuelve pronto!
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4 mb-8 lg:mb-12">
-            {sites.map((site) => {
-              const isSelected = bookingDetails.site?._id === site._id;
+          <div className="text-center py-10 px-6 rounded-lg bg-gray-800/70 backdrop-blur-sm shadow-lg my-12">
+            <p className="text-xl text-white mb-4 font-bold">
+              ¡No hay sedes disponibles en este momento!
+            </p>
+            <p className="text-gray-200">
+              Nuestro equipo está trabajando para añadir nuevas ubicaciones. ¡Vuelve pronto!
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4 mb-8 lg:mb-12">
+            {sites.map((site) => {
+              const isSelected = bookingDetails.site?._id === site._id;
 
-              const cardClasses = `
+              const cardClasses = `
                   relative bg-black/50 backdrop-blur-sm border-2 rounded-xl p-6 cursor-pointer 
                   flex items-center gap-6 transition-all duration-300 ease-in-out 
                   transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/20 
               ${isSelected
-                  ? "border-blue-500 ring-2 ring-blue-500/50 "
-                  : "border-gray-700 hover:border-blue-600"
-              }
+                  ? "border-blue-500 ring-2 ring-blue-500/50 "
+                  : "border-gray-700 hover:border-blue-600"
+                }
             `;
 
-              return (
-                <div
-                  key={site._id}
-                  className={cardClasses}
-                  onClick={() => setSite(site)}
-                >
-                  <MapPin className="h-10 w-10 text-red-500" />
-                  <div className="flex-grow">
-                    <p className="text-xl font-bold text-white">
-                      {site.name_site}
-                    </p>
-                    <p className="text-sm text-gray-400 mt-1">
-                      {site.address_site}
-                    </p>
-                  </div>
-                  {isSelected && (
-                    <CircleCheckBig className="h-8 w-8 text-blue-400" />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+              return (
+                <div
+                  key={site._id}
+                  className={cardClasses}
+                  onClick={() => setSite(site)}
+                >
+                  <MapPin className="h-10 w-10 text-red-500" />
+                  <div className="flex-grow">
+                    <p className="text-xl font-bold text-white">
+                      {site.name_site}
+                    </p>
+                    <p className="text-sm text-gray-400 mt-1">
+                      {site.address_site}
+                    </p>
+                  </div>
+                  {isSelected && (
+                    <CircleCheckBig className="h-8 w-8 text-blue-400" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className="mt-10 lg:mt-12 flex flex-col sm:flex-row gap-4">
           {/* Botón Anterior */}
@@ -154,8 +155,8 @@ return (
 
           {/* Botón Continuar - MEJORADO */}
           <div className="relative group w-full sm:w-2/3">
-          <button
-            onClick={handleContinue}
+            <button
+              onClick={handleContinue}
               disabled={isDisabled}
               className={`
                 w-full py-4 px-6 text-lg rounded-lg font-extrabold 
@@ -166,7 +167,7 @@ return (
                   : 'bg-red-600 text-white hover:shadow-xl focus:ring-red-500'
                 }
               `}
-          >
+            >
               <span className={`
                 relative z-10 flex items-center justify-center gap-2
                 ${!isDisabled && 'group-hover:text-black transition-colors duration-500'}
@@ -178,11 +179,11 @@ return (
                   </>
                 ) : (
                   <>
-              Continuar
+                    Continuar
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
-            </span>
+              </span>
               
               {/* Gradiente animado solo cuando está habilitado */}
               {!isDisabled && (
@@ -193,7 +194,7 @@ return (
               {isDisabled && (
                 <div className="absolute inset-0 rounded-lg bg-gray-600/20 animate-pulse" />
               )}
-          </button>
+            </button>
           </div>
         </div>
       </div>
