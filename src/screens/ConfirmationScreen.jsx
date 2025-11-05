@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useBooking } from '../context/BookingContext';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import {BriefcaseBusiness, MapPin, CircleUserRound, CalendarRange, Clock } from 'lucide-react'
+import {BriefcaseBusiness, MapPin, CircleUserRound, CalendarRange, Clock, Lock, ArrowLeft, SendHorizontal } from 'lucide-react'
 import ProgressBar from "../components/ProgressBar";
 import apiService from '../api/services';
 import Spinner from '../components/Spinner';
@@ -174,6 +174,13 @@ const ConfirmationScreen = () => {
     }
   };
 
+  const isDisabled = !clientInfo.name || 
+                   !clientInfo.phone || 
+                   isLoading || 
+                   Object.keys(validationErrors).length > 0;
+
+  const confirmButtonText = isLoading ? "Confirmando..." : "Confirmar Reserva";
+
    // Prevenimos renderizar si los detalles no están listos
   if (!bookingDetails.service) return null;
 
@@ -331,33 +338,66 @@ return (
         </div>
 
         <div className="mt-10 lg:mt-12 flex flex-col sm:flex-row gap-4">
-          {/* Botón Anterior */}
+          {/* Botón Anterior - Mantiene el diseño base */}
           <button
             onClick={handleBack}
-            className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
+            className="group w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
                border-2 border-gray-400 text-gray-300 bg-transparent
                hover:bg-white hover:text-black hover:border-gray-300
-               transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400
+            flex items-center justify-center gap-2"
           >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             Anterior
           </button>
 
+          {/* Botón Continuar (Confirmación) - Diseño Condicional */}
           <button
             onClick={handleConfirm}
-            disabled={!clientInfo.name || !clientInfo.phone || isLoading || Object.keys(validationErrors).length > 0}
-            className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
-               transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden
-               disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:shadow-none"
+            // Usamos la nueva variable isDisabled para el control
+            disabled={isDisabled}
+            className={`
+            group relative w-full sm:w-2/3 py-4 px-6 text-lg rounded-lg font-extrabold 
+            transition-all duration-300 overflow-hidden
+            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900
+            ${isDisabled
+                ? 'bg-gradient-to-r from-gray-800 to-gray-700 text-gray-500 cursor-not-allowed border-2 border-gray-600'
+                : 'bg-red-600 text-white hover:shadow-xl focus:ring-red-500'
+              }
+        `}
           >
-            <span className="relative z-10 group-hover:text-black transition-colors duration-500">
-              Confirmar reserva
+            <span className={`
+            relative z-10 flex items-center justify-center gap-2
+            ${!isDisabled && 'group-hover:text-black transition-colors duration-500'}
+        `}>
+              {/* Si está cargando o deshabilitado, muestra el estado correspondiente */}
+              {isLoading ? (
+                <>
+                  <Spinner className="w-5 h-5 animate-spin" />
+                  {confirmButtonText}
+                </>
+              ) : isDisabled ? (
+                <>
+                  <Lock className="w-5 h-5" />
+                  Completar datos
+                </>
+              ) : (
+                <>
+                  {confirmButtonText}
+                  <SendHorizontal className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </span>
-            {/* Gradiente en hover */}
-            <div
-              className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 via-white to-red-600 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out
-                    disabled:group-hover:opacity-0"
-            ></div>
+
+            {/* Gradiente animado solo cuando está habilitado */}
+            {!isDisabled && (
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 via-white to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+            )}
+
+            {/* Efecto de pulso sutil cuando está disabled (y no cargando) */}
+            {isDisabled && !isLoading && (
+              <div className="absolute inset-0 rounded-lg bg-gray-600/20 animate-pulse" />
+            )}
           </button>
         </div>
       </div>

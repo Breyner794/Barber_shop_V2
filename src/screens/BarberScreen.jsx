@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBooking } from "../context/BookingContext";
-import { CircleCheckBig } from "lucide-react";
+import { CircleCheckBig, Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import SkeletonScreenBarber from "../components/Skeleton/BarbersScreenSkeleton";
@@ -64,6 +64,8 @@ const BarberScreen = () => {
   const handleBack = () => {
     navigate(-1);
   };
+
+  const isDisabledBarber = bookingDetails.barber;
 
   if (isLoading){
     return (
@@ -149,30 +151,54 @@ const BarberScreen = () => {
             {/* Botón Anterior */}
             <button
               onClick={handleBack}
-              className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
+            className="group w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
                border-2 border-gray-400 text-gray-300 bg-transparent
                hover:bg-white hover:text-black hover:border-gray-300
-               transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+               transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400
+               flex items-center justify-center gap-2"
             >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               Anterior
             </button>
 
             {/* Botón Continuar */}
             <button
               onClick={handleContinue}
-              disabled={!bookingDetails.barber}
-              className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
-               transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden disabled:cursor-not-allowed disabled:hover:shadow-none"
+              disabled={!isDisabledBarber}
+              className={`
+            group relative w-full sm:w-2/3 py-4 px-6 text-lg rounded-lg font-extrabold 
+            transition-all duration-300 overflow-hidden
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900
+                ${!isDisabledBarber
+                  ? 'bg-gradient-to-r from-gray-800 to-gray-700 text-gray-500 cursor-not-allowed border-2 border-gray-600' 
+                  : 'bg-red-600 text-white hover:shadow-xl focus:ring-red-500'
+                }
+              `}
             >
-              <span className="relative z-10 group-hover:text-black transition-colors duration-500">
+              <span className={`
+                relative z-10 flex items-center justify-center gap-2
+                ${isDisabledBarber && 'group-hover:text-black transition-colors duration-500'}
+              `}>
+                {!isDisabledBarber ? (
+                  <>
+                    <Lock className="w-5 h-5" />
+                    Seleccione un barbero
+                  </>
+                ) : (
+                  <>
                 Continuar
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
               </span>
-              {/* Gradiente en hover */}
-              <div
-                className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 via-white to-red-600 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out
-                    disabled:group-hover:opacity-0"
-              ></div>
+              
+              {isDisabledBarber && (
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 via-white to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+              )}
+
+              {!isDisabledBarber && (
+                <div className="absolute inset-0 rounded-lg bg-gray-600/20 animate-pulse" />
+              )}
             </button>
           </div>
         </div>
