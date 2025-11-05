@@ -4,7 +4,7 @@ import apiService from '../../api/services.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import Swal from 'sweetalert2';
 import ServiceForm from './ServiceForm.jsx';
-import ServiceImage from './Services/servicesImage.jsx';
+import ServiceImage from './Services/ServicesImage.jsx';
 
 const ServicesModule = () => {
   
