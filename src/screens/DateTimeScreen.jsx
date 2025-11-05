@@ -11,6 +11,7 @@ import InlineError from "../components/InlineError";
 import RedirectNotice from "../components/RedirectNotice";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Lock, ArrowLeft, ArrowRight } from "lucide-react";
 
 const DateTimeScreen = () => {
   const { bookingDetails, setTimeSlot } = useBooking();
@@ -116,6 +117,8 @@ const DateTimeScreen = () => {
     navigate("/reservar/confirmacion"); // Próximo paso
     //alert('Navegando a la pantalla de Confirmación (aún no implementada)');
   };
+
+  const isDateTimeSelected = selectedDate && selectedSlot;
 
   const handleBack = () => {
     navigate(-1);
@@ -349,31 +352,59 @@ const DateTimeScreen = () => {
             {/* Botón Anterior */}
             <button
               onClick={handleBack}
-              className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
+              className="group w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
                border-2 border-gray-400 text-gray-300 bg-transparent
                hover:bg-white hover:text-black hover:border-gray-300
-               transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400
+                flex items-center justify-center gap-2"
             >
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               Anterior
             </button>
 
-            {/* Botón Continuar */}
+            {/* Botón Continuar ADAPTADO */}
             <button
               onClick={handleContinue}
-              disabled={!bookingDetails.service}
-              className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
-               transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden
-               disabled:bg-gray-500 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              // Controla si está deshabilitado
+              disabled={!isDateTimeSelected}
+              className={`
+                group relative w-full py-4 px-6 text-lg rounded-lg font-extrabold 
+                transition-all duration-300 overflow-hidden
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900
+                ${!isDateTimeSelected
+                  ? 'bg-gradient-to-r from-gray-800 to-gray-700 text-gray-500 cursor-not-allowed border-2 border-gray-600'
+                  : 'bg-red-600 text-white hover:shadow-xl focus:ring-red-500'
+                }
+            `}
             >
-              <span className="relative z-10 group-hover:text-black transition-colors duration-500">
+              <span className={`
+                relative z-10 flex items-center justify-center gap-2
+                ${isDateTimeSelected && 'group-hover:text-black transition-colors duration-500'}
+            `}>
+                {!isDateTimeSelected ? (
+                  <>
+                    <Lock className="w-5 h-5" />
+                    Seleccione Fecha y Hora
+                  </>
+                ) : (
+                  <>
                 Continuar
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
               </span>
-              {/* Gradiente en hover */}
+
+              {/* Gradiente animado (solo aparece si está habilitado) */}
+              {isDateTimeSelected && (
               <div
-                className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 via-white to-red-600 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out
-                    disabled:group-hover:opacity-0"
-              ></div>
+                  className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 via-white to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                />
+              )}
+
+              {/* Efecto de pulso sutil cuando está disabled */}
+              {!isDateTimeSelected && (
+                <div className="absolute inset-0 rounded-lg bg-gray-600/20 animate-pulse" />
+              )}
             </button>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBooking } from "../context/BookingContext";
-import {MapPin, CircleCheckBig} from "lucide-react"
+import {MapPin, CircleCheckBig, Lock, ArrowRight, ArrowLeft} from "lucide-react"
 import ProgressBar from "../components/ProgressBar";
 import apiService from "../api/services";
 import SiteScreenSkeleton from "../components/Skeleton/SiteScreenSkeleton";
@@ -60,6 +60,8 @@ const SiteScreen = () =>{
     navigate(-1);
     };
 
+    const isDisabled = !bookingDetails.site || sites.length === 0;
+
     // --- Renderizado Condicional ---
   if (isLoading) {
     return (
@@ -106,8 +108,7 @@ return (
                   relative bg-black/50 backdrop-blur-sm border-2 rounded-xl p-6 cursor-pointer 
                   flex items-center gap-6 transition-all duration-300 ease-in-out 
                   transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/20 
-              ${
-                isSelected
+              ${isSelected
                   ? "border-blue-500 ring-2 ring-blue-500/50 "
                   : "border-gray-700 hover:border-blue-600"
               }
@@ -141,32 +142,59 @@ return (
           {/* Botón Anterior */}
           <button
             onClick={handleBack}
-            className="w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
+            className="group w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
                border-2 border-gray-400 text-gray-300 bg-transparent
                hover:bg-white hover:text-black hover:border-gray-300
-               transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+               transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400
+               flex items-center justify-center gap-2"
           >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             Anterior
           </button>
 
-          {/* Botón Continuar */}
+          {/* Botón Continuar - MEJORADO */}
+          <div className="relative group w-full sm:w-2/3">
           <button
             onClick={handleContinue}
-            disabled={!bookingDetails.site || sites.length === 0}
-            className="group relative w-full py-4 px-6 text-lg rounded-lg bg-red-600 text-white font-extrabold 
-               transition-all duration-500 hover:shadow-xl focus:outline-none overflow-hidden
-               disabled:bg-red-600 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              disabled={isDisabled}
+              className={`
+                w-full py-4 px-6 text-lg rounded-lg font-extrabold 
+                transition-all duration-300 relative overflow-hidden
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900
+                ${isDisabled 
+                  ? 'bg-gradient-to-r from-gray-800 to-gray-700 text-gray-500 cursor-not-allowed border-2 border-gray-600' 
+                  : 'bg-red-600 text-white hover:shadow-xl focus:ring-red-500'
+                }
+              `}
           >
-            <span className="relative z-10 group-hover:text-black transition-colors duration-500">
+              <span className={`
+                relative z-10 flex items-center justify-center gap-2
+                ${!isDisabled && 'group-hover:text-black transition-colors duration-500'}
+              `}>
+                {isDisabled ? (
+                  <>
+                    <Lock className="w-5 h-5" />
+                    Selecciona una sede
+                  </>
+                ) : (
+                  <>
               Continuar
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
             </span>
-            {/* Gradiente en hover */}
-            <div
-              className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 via-white to-red-600 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out
-                    disabled:group-hover:opacity-0"
-            ></div>
+              
+              {/* Gradiente animado solo cuando está habilitado */}
+              {!isDisabled && (
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 via-white to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+              )}
+
+              {/* Efecto de pulso sutil cuando está disabled */}
+              {isDisabled && (
+                <div className="absolute inset-0 rounded-lg bg-gray-600/20 animate-pulse" />
+              )}
           </button>
+          </div>
         </div>
       </div>
     </div>
