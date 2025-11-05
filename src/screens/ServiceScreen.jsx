@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBooking } from '../context/BookingContext';
-import { CircleCheckBig } from "lucide-react";
+import { CircleCheckBig, Lock, ArrowRight } from "lucide-react";
 import ProgressBar from '../components/ProgressBar';
 import apiService from '../api/services'
 import ServiceScreenSkeleton from '../components/Skeleton/ServiceScreenSkeleton';
@@ -50,6 +50,8 @@ const ServiceScreen = () => {
   const handleContinue = () => {
     navigate('/reservar/sede');
   };
+
+  const isDisabled = !bookingDetails.service || services.length === 0;
 
    // --- Renderizado Condicional ---
   if (isLoading) {
@@ -137,18 +139,39 @@ const ServiceScreen = () => {
           )}
 
           {/* Botón Continuar */}
-          <div className="relative group  mb-8 lg:mb-12">
-            <button
-              onClick={handleContinue}
-              disabled={!bookingDetails.service || services.length === 0}
-              className="w-full py-4 px-6 text-lg rounded-lg  bg-red-600 text-white font-extrabold transition-all duration-500 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed focus:outline-none"
-            >
-              <span className="relative z-10 group-hover:text-black transition-color duration-500">
-                Continuar
-              </span>
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 via-white to-red-600  opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"></div>
-            </button>
-          </div>
+          {/* Variante 3: Con efecto de pulso cuando está disabled */}
+        <div className="relative group">
+          <button
+            onClick={handleContinue}
+            disabled={isDisabled}
+            className={`
+              w-full py-4 px-6 text-lg rounded-lg font-extrabold 
+              transition-all duration-300 relative overflow-hidden
+              ${isDisabled 
+                ? 'bg-gradient-to-r from-gray-800 to-gray-700 text-gray-500 cursor-not-allowed border-2 border-gray-600' 
+                : 'bg-red-600 text-white hover:shadow-xl'
+              }
+            `}
+          >
+            <span className={`
+              relative z-10 flex items-center justify-center gap-2
+              ${!isDisabled && 'group-hover:text-black transition-colors duration-500'}
+            `}>
+              {isDisabled && <Lock className="w-5 h-5" />}
+              {isDisabled ? 'Selecciona un servicio' : 'Continuar'}
+              {!isDisabled && <ArrowRight className="w-5 h-5" />}
+            </span>
+            
+            {!isDisabled && (
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 via-white to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+            )}
+
+            {/* Efecto de pulso sutil cuando está disabled */}
+            {isDisabled && (
+              <div className="absolute inset-0 rounded-lg bg-gray-600/20 animate-pulse" />
+            )}
+          </button>
+        </div>
         </div>
       </main>
       <Footer />
