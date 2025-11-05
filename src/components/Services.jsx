@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBooking } from "../context/BookingContext";
 import apiService from "../api/services"; 
-
-// Importa los íconos de Lucide React que vamos a usar
-import { Loader2, AlertTriangle, PackageX, LoaderCircle } from "lucide-react";
+import { AlertTriangle, PackageX, LoaderCircle } from "lucide-react";
 import ServiceImage from "./Dashboard/Services/servicesImage";
 
 const COLOR_VARIANTS = {
