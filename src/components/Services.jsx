@@ -5,7 +5,7 @@ import apiService from "../api/services";
 
 // Importa los íconos de Lucide React que vamos a usar
 import { Loader2, AlertTriangle, PackageX, LoaderCircle } from "lucide-react";
-
+import ServiceImage from "./Dashboard/Services/servicesImage";
 
 const COLOR_VARIANTS = {
   blue: {
@@ -279,7 +279,7 @@ const Services = () => {
                           {/* Imagen del servicio */}
                           <div className="relative order-1 lg:order-1">
                             <div className="overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl">
-                              <img
+                              <ServiceImage
                                 src={service.image} 
                                 alt={service.name}
                                 className="w-full h-48 sm:h-64 lg:h-80 object-cover transition-transform duration-700 group-hover:scale-110"

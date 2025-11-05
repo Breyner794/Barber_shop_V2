@@ -8,6 +8,7 @@ import ServiceScreenSkeleton from '../components/Skeleton/ServiceScreenSkeleton'
 import ErrorComponent from '../components/ErrorComponent';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import ServiceImage from '../components/Dashboard/Services/servicesImage';
 
 const ServiceScreen = () => {
 
@@ -105,10 +106,10 @@ const ServiceScreen = () => {
                     onClick={() => setService(service)}
                   >
                     {/* --- SECCIÓN DE LA IMAGEN --- */}
-                    <img
+                    <ServiceImage
                       src={service.image_Url}
                       alt={service.name}
-                      className="w-full h-48 object-cover" // La imagen ocupa todo el ancho, tiene altura fija y no se deforma
+                      className="w-full h-48 object-cover"
                     />
 
                     {/* --- SECCIÓN DEL TEXTO --- */}
