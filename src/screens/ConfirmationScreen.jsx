@@ -206,10 +206,10 @@ return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Columna del Formulario */}
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold border-l-4 border-red-500 pl-4">
+            <h3 className="text-2xl font-bold border-l-4 border-red-500 pl-4 text-gray-100">
               Completa tus datos
             </h3>
-            <div className="space-y-4 text-black">
+            <div className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
@@ -223,12 +223,15 @@ return (
                   id="name"
                   value={clientInfo.name}
                   onChange={handleInputChange}
-                  className="w-full bg-white/80 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
+                  className="w-full bg-gray-800 text-gray-200 border-2 border-gray-600 rounded-lg p-3 
+                       focus:border-blue-500 focus:ring-blue-500 transition placeholder-gray-500"
+                  placeholder="Ej: Juan Pérez"
                 />
                 {validationErrors.name && (
-                                    <p className="text-red-400 text-sm mt-1">{validationErrors.name}</p>
-                                )}
+                  <p className="text-red-400 text-sm mt-1">{validationErrors.name}</p>
+                )}
               </div>
+
               <div>
                 <label
                   htmlFor="phone"
@@ -242,12 +245,15 @@ return (
                   id="phone"
                   value={clientInfo.phone}
                   onChange={handleInputChange}
-                  className="w-full bg-white/80 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
+                  className="w-full bg-gray-800 text-gray-200 border-2 border-gray-600 rounded-lg p-3 
+                       focus:border-blue-500 focus:ring-blue-500 transition placeholder-gray-500"
+                  placeholder="Ej: 310 123 4567"
                 />
                 {validationErrors.phone && (
-                                    <p className="text-red-400 text-sm mt-1">{validationErrors.phone}</p>
-                                )}
+                  <p className="text-red-400 text-sm mt-1">{validationErrors.phone}</p>
+                )}
               </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -261,11 +267,14 @@ return (
                   id="email"
                   value={clientInfo.email}
                   onChange={handleInputChange}
-                  className="w-full bg-white/80 border-2 border-gray-700 rounded-lg p-3 focus:border-blue-500 focus:ring-blue-500 transition"
+
+                  className="w-full bg-gray-800 text-gray-200 border-2 border-gray-600 rounded-lg p-3 
+                       focus:border-blue-500 focus:ring-blue-500 transition placeholder-gray-500"
+                  placeholder="Ej: tu.correo@ejemplo.com"
                 />
                 {validationErrors.email && (
-                                    <p className="text-red-400 text-sm mt-1">{validationErrors.email}</p>
-                                )}
+                  <p className="text-red-400 text-sm mt-1">{validationErrors.email}</p>
+                )}
               </div>
             </div>
           </div>
@@ -342,8 +351,8 @@ return (
           <button
             onClick={handleBack}
             className="group w-full sm:w-1/3 py-3 px-6 text-lg font-bold rounded-lg 
-               border-2 border-gray-400 text-gray-300 bg-transparent
-               hover:bg-white hover:text-black hover:border-gray-300
+            border-2 border-gray-400 text-gray-300 bg-transparent
+            hover:bg-white hover:text-black hover:border-gray-300
             transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400
             flex items-center justify-center gap-2"
           >
