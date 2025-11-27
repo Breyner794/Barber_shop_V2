@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Store, MapPin, TrendingUp, DollarSign, Scissors, Users, PiggyBank, Award } from 'lucide-react';
+import { Store, MapPin, TrendingUp, Award } from 'lucide-react';
 import apiService from '../../api/services';
 
 const SiteRevenueCard = ({ startDate, endDate, triggerFetch }) => {
@@ -84,61 +84,6 @@ const SiteRevenueCard = ({ startDate, endDate, triggerFetch }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header con Totales Generales */}
-      <div className="bg-gradient-to-br from-blue-900/30 to-blue-900/30 rounded-xl shadow-lg p-6 border-2 border-blue-700">
-        <div className="flex items-center gap-3 mb-6">
-          <Store className="text-blue-400" size={28} />
-          <div>
-            <h2 className="text-2xl font-bold text-white">Recaudo por Sede</h2>
-            <p className="text-slate-400 text-sm">
-              📅 {revenueData.startDate} al {revenueData.endDate}
-            </p>
-          </div>
-        </div>
-
-        {/* Totales Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
-            <div className="flex items-center gap-2 mb-2">
-              <DollarSign className="text-blue-400" size={18} />
-              <span className="text-slate-400 text-xs font-medium">Total Recaudado</span>
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-white break-all">
-              {formatCurrency(revenueData.totals.totalRevenue)}
-            </p>
-          </div>
-
-          <div className="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
-            <div className="flex items-center gap-2 mb-2">
-              <PiggyBank className="text-green-400" size={18} />
-              <span className="text-slate-400 text-xs font-medium">Ganancia Neta</span>
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-green-400 break-all">
-              {formatCurrency(revenueData.totals.netRevenue)}
-            </p>
-          </div>
-
-          <div className="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="text-purple-400" size={18} />
-              <span className="text-slate-400 text-xs font-medium">Comisiones</span>
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-purple-400 break-all">
-              {formatCurrency(revenueData.totals.totalCommissions)}
-            </p>
-          </div>
-
-          <div className="bg-slate-700/30 rounded-lg p-4 border border-slate-600/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Scissors className="text-orange-400" size={18} />
-              <span className="text-slate-400 text-xs font-medium">Total Citas</span>
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-white">
-              {revenueData.totals.totalAppointments}
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* Sede Destacada */}
       {topSite && (
